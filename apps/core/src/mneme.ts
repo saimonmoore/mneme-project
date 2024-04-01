@@ -3,6 +3,8 @@ import Hyperswarm from 'hyperswarm';
 import Autobase from 'autobase';
 import Hyperbee from 'hyperbee';
 import ram from 'random-access-memory';
+// @ts-ignore
+import pear from 'pear';
 
 // @ts-ignore
 import { AutobaseManager } from '@lejeunerenard/autobase-manager';
@@ -29,6 +31,7 @@ import type { BeeBatch, HypercoreStream, PeerInfo } from '@/@types/global.d.ts';
 
 const SWARM_TOPIC = 'org.saimonmoore.mneme.swarm';
 const DEFAULT_STORAGE = 'mneme';
+const bootstrap = process.env.TEST ? [{ host: '127.0.0.1', port: 49736 }] : undefined
 
 class Mneme {
   store: Corestore;
@@ -50,6 +53,7 @@ class Mneme {
 
   async start() {
     logger.info('Starting Mneme...');
+    const { teardown } = pear;
     const writer = this.store.get({ name: 'writer' });
     const viewOutput = this.store.get({ name: 'view' });
 
@@ -80,7 +84,7 @@ class Mneme {
       const topic = Buffer.from(sha256(SWARM_TOPIC), 'hex');
       logger.debug('Starting to swarm...');
 
-      this.swarm = new Hyperswarm();
+      this.swarm = new Hyperswarm({ bootstrap });
       this.swarm.on('update', (a, b) => {
         logger.info('Swarm update', { a, b });
       });
@@ -161,6 +165,10 @@ class Mneme {
     this.recordUseCase = sessionRequiredInterceptor(
       new RecordUseCase(this.bee, this.autobase, this.sessionUseCase)
     );
+
+    teardown(() => {
+      this.swarm?.destroy();
+    });
     logger.debug('Mneme ready');
   }
 

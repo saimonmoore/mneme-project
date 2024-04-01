@@ -34,8 +34,13 @@ declare module 'corestore' {
 }
 
 declare module 'hyperswarm' {
+  type Bootstrap = {
+    host: string;
+    port: number;
+  };
+  
   class Hyperswarm {
-    constructor();
+    constructor(options?: { bootstrap: Bootstrap[] | undefined });
 
     join(topic: Buffer, { server: boolean, client: boolean }): any;
     flush(): Promise<void>;

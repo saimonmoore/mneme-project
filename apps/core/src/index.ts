@@ -1,27 +1,18 @@
-import minimist from 'minimist';
-import { Mneme } from './mneme.js';
-import {
-  RNClient,
-  SessionCommandEvents,
-  SessionResultEvents,
-} from './RNClient.js';
-import { logger } from '@/infrastructure/logging/index.js';
+import { Mneme } from "./mneme.js";
+import { logger } from "@/infrastructure/logging/index.js";
+import { MnemeServer } from "./server/index.js";
 
-const args = minimist(process.argv, {
-  alias: {
-    storage: 's',
-  },
-  default: {
-    swarm: true,
-  },
-  boolean: ['ram', 'swarm'],
-});
+// @ts-ignore
+import Pear from "pear";
 
-export const mneme = new Mneme(args.ram, args.storage, args.swarm);
+const useRAM = Pear.config.env["USE_RAM"] === "true";
+const storage = Pear.config.storage;
 
-export { RNClient as Client, SessionCommandEvents, SessionResultEvents };
+const mneme = new Mneme(useRAM, storage, true);
+const server = MnemeServer();
 
-if (args.storage) {
-  logger.info(`Starting Mneme with storage: ${args.storage}`);
-  await mneme.start();
-}
+logger.info(`Starting Mneme with storage: ${storage}`);
+await mneme.start();
+
+server.start(mneme);
+
