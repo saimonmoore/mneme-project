@@ -1,0 +1,28 @@
+{
+  "name": "@mneme/components",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "rimraf dist && tsc",
+    "postinstall": "yarn build",
+    "watch": "tsc --watch"
+  },
+  "dependencies": {
+    "react-native": "0.71.6"
+  },
+  "peerDependencies": {
+    "react": "18.2.0"
+  },
+  "devDependencies": {
+    "eslint-config-custom": "*",
+    "tsconfig": "*",
+    "@types/react": "^18.0.22",
+    "@types/react-native": "^0.71.5",
+    "eslint": "^7.32.0",
+    "rimraf": "^3.0.2",
+    "typescript": "^5.0.3"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

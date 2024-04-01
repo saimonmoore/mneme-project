@@ -1,0 +1,12 @@
+diff --git a/node_modules/@microlink/mql/package.json b/node_modules/@microlink/mql/package.json
+index 9e62284..acf772a 100644
+--- a/node_modules/@microlink/mql/package.json
++++ b/node_modules/@microlink/mql/package.json
+@@ -8,6 +8,7 @@
+     "require": "./src/node.js",
+     "default": "./lightweight/index.js"
+   },
++  "main": "./lightweight/index.js",
+   "author": {
+     "email": "josefrancisco.verdu@gmail.com",
+     "name": "Kiko Beats",

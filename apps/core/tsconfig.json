@@ -1,0 +1,35 @@
+{
+  "extends": "tsconfig/base.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "declaration": true,
+    "strict": true,
+    "baseUrl": ".",
+    "outDir": "./dist",
+    "target": "es2017",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "incremental": true,
+    "removeComments": true,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmitHelpers": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "allowSyntheticDefaultImports": true,
+  },
+  "include": [
+    "**/*.ts",
+  ],
+  "exclude": ["node_modules", "test", "dist", "**/*test.ts"],
+}
