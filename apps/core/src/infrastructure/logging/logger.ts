@@ -1,3 +1,5 @@
+import { env } from '@/pear-compat.js';
+
 type Level = 'debug' | 'info' | 'log' | 'warn' | 'error';
 
 const levels: Record<Level, number> = {
@@ -33,6 +35,7 @@ const getLogger = (level: Level) => {
   return logger;
 };
 
-const logger = getLogger(process.env.NODE_ENV === 'test' ? 'error' : 'debug');
+// @ts-ignore
+const logger = getLogger(env().NODE_ENV === 'test' ? 'error' : 'debug');
 
 export { logger, getLogger };

@@ -1,11 +1,11 @@
-import { logger } from '@/infrastructure/logging/index.js';
+import { logger } from "@/infrastructure/logging/logger.js";
 
 export function sessionRequiredInterceptor(object: any) {
   const handler = {
     get(target: any, propKey: string, receiver: any) {
       const origMethod = target[propKey];
 
-      if (typeof origMethod === 'function') {
+      if (typeof origMethod === "function") {
         const descriptor = Object.getOwnPropertyDescriptor(target, propKey);
 
         if (
@@ -28,7 +28,7 @@ export function sessionRequiredInterceptor(object: any) {
       }
 
       if (!origMethod) {
-        logger.error('Method not found ', { target, propKey, receiver });
+        logger.error("Method not found ", { target, propKey, receiver });
         return;
       }
 

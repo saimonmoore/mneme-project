@@ -1,16 +1,15 @@
 import { createHTTPServer } from "@trpc/server/adapters/standalone";
 import { z } from "zod";
 import { publicProcedure, router } from "./trpc.js";
-import { Mneme } from "@/mneme.js";
-// @ts-ignore
-import Pear from "pear";
+import { Mneme } from "@/Mneme/index.js";
+import { config } from "@/pear-compat.js";
 
 const LoginSchema = {
   email: z
     .string()
     .min(1, { message: "`email` is required" })
     .email("This is not a valid email."),
-  // password: z.string().min(1, { message: "`password` is required" }),
+  password: z.string().min(1, { message: "`password` is required" }),
 };
 
 const SignupSchema = {
@@ -21,7 +20,7 @@ const SignupSchema = {
     .email("This is not a valid email."),
   avatarUrl: z.string().min(1, { message: "`avatarUrl` is required" }),
   hash: z.string(),
-  //password: z.string().min(1, { message: "`password` is required" }),
+  password: z.string().min(1, { message: "`password` is required" }),
 };
 
 let mneme: Mneme;
@@ -29,7 +28,7 @@ let mneme: Mneme;
 const mnemeRouter = router({
   session: {
     login: publicProcedure.input(z.object(LoginSchema)).query(async (opts) => {
-      await mneme.login(opts.input.email);
+      await mneme.login(opts.input.email, opts.input.password);
       return { ok: true };
     }),
     signup: publicProcedure
@@ -52,7 +51,8 @@ export const MnemeServer = () => ({
       router: mnemeRouter,
     });
 
-    const port = parseInt(Pear.config.env["PORT"] || "3737", 10);
+    // @ts-ignore
+    const port = parseInt(config().env["PORT"] || "3737", 10);
     server.listen(port);
   },
 });

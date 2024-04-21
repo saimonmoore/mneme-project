@@ -5,7 +5,6 @@
   "default": {},
   "title": "Mneme User Schema",
   "required": [
-    "publicKey",
     "displayName",
     "avatar",
     "email",
@@ -13,14 +12,6 @@
     "updatedAt"
   ],
   "properties": {
-    "publicKey": {
-      "type": "string",
-      "default": "",
-      "title": "The publicKey Schema",
-      "examples": [
-        "103283b30db86e1fffd19ffa327d3dc98f079cb6a606f4c5c9c98ee14b405566"
-      ]
-    },
     "displayName": {
       "type": "string",
       "default": "",
@@ -64,7 +55,6 @@
   },
   "examples": [
     {
-      "publicKey": "103283b30db86e1fffd19ffa327d3dc98f079cb6a606f4c5c9c98ee14b405566",
       "displayName": "Simon Moore",
       "avatar": "https://upload.wikimedia.org/wikipedia/commons/b/b6/Simon_Moore_2014.jpg",
       "email": "simon.moore@mneme.org",

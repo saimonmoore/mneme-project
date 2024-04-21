@@ -1,18 +1,45 @@
-import { Mneme } from "./mneme.js";
-import { logger } from "@/infrastructure/logging/index.js";
-import { MnemeServer } from "./server/index.js";
+import { Mneme } from "@/Mneme/Mneme.js";
+import { User } from "@/modules/User/domain/entities/User.js";
+import { Record } from "@/modules/Record/domain/entities/Record.js";
+// import { MnemeServer } from "@/server";
+// import { env, config } from "@/pear-compat";
 
-// @ts-ignore
-import Pear from "pear";
+const isTestRunning = process.env["NODE_ENV"] === "test";
 
-const useRAM = Pear.config.env["USE_RAM"] === "true";
-const storage = Pear.config.storage;
+let mneme;
 
-const mneme = new Mneme(useRAM, storage, true);
-const server = MnemeServer();
+if (!isTestRunning) {
+  console.log("======================");
+  console.log("Starting Mneme demo...");
+  console.log("======================");
+  const args = process.argv.slice(2);
+  const bootstrapPrivateCorePublicKey = args[0];
+  const storage = args[1];
 
-logger.info(`Starting Mneme with storage: ${storage}`);
-await mneme.start();
+  // @ts-ignore
+  if (global.Pear && Pear.config.dev) {
+    console.log(`Starting pear in dev mode...`);
+    // @ts-ignore
+    const { Inspector } = await import("pear-inspect");
+    const inspector = await new Inspector();
+    const key = await inspector.enable();
+    console.log(`Debug with pear://runtime/devtools/${key.toString("hex")}`);
+  }
 
-server.start(mneme);
+  console.log("Starting Mneme with args", { args });
 
+  mneme = new Mneme(bootstrapPrivateCorePublicKey, storage);
+  mneme.info();
+
+  // const server = MnemeServer();
+
+  await mneme.start();
+
+  // @ts-ignore
+  // server.start(mneme);
+}
+
+export { Mneme, User, Record };
+
+// For hrepl
+export { mneme };

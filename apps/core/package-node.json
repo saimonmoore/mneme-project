@@ -1,0 +1,56 @@
+{
+  "name": "mneme",
+  "main": "dist/index.js",
+  "type": "module",
+  "pear": {
+    "name": "mneme",
+    "type": "terminal"
+  },
+  "license": "Apache-2.0",
+  "scripts": {
+    "dev-pear": "npm run build && ./scripts/proxy-root-node-modules.sh npx pear dev .",
+    "dev": "tsx src/index.ts",
+    "dev:watch": "tsx watch --clear-screen=false src/index.ts",
+    "build": "rimraf dist && tsc --build --verbose && tsc-alias",
+    "lint": "TIMING=1 eslint \"**/*.ts*\"",
+    "check:types": "tsc --noEmit",
+    "server": "./scripts/proxy-root-node-modules.sh bare server.js",
+    "test": "NODE_ENV=test jest",
+    "test:jest:strict": "NODE_ENV=test jest --detect-open-handles",
+    "test:jest:watch": "NODE_ENV=test jest --watch",
+    "test:brittle": "NODE_ENV=test brittle __tests__/e2e.brittle.test.js",
+    "test:brittle:watch": "nodemon --watch . --exec 'npm run test:brittle:all'",
+    "test:e2e": "NODE_ENV=test brittle __tests__/all.brittle.js",
+    "test:brittle:generate": "brittle -r __tests__/all.brittle.js ./**/*.brittle.test.js"
+  },
+  "dependencies": {
+    "@trpc/client": "next",
+    "@trpc/server": "next",
+    "autobase": "^6.0.0-rc10",
+    "b4a": "^1.6.6",
+    "camelcase": "^7.0.1",
+    "corestore": "^6.18.1",
+    "crypto": "^1.0.1",
+    "eventemitter2": "^6.4.9",
+    "graceful-goodbye": "^1.3.0",
+    "hyperbee": "^2.19.0",
+    "hyperdht": "^6.14.0",
+    "hyperswarm": "^4.7.14",
+    "istextorbinary": "^9.5.0",
+    "jsonschema": "^1.4.1",
+    "lexicographic-integer": "^1.1.0",
+    "random-access-memory": "^6.2.1",
+    "reflect-metadata": "^0.1.13",
+    "zod": "^3.22.5"
+  },
+  "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "brittle": "^3.0.0",
+    "eslint-config-custom": "*",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.0",
+    "prettier-config": "*",
+    "rimraf": "^3.0.2",
+    "tsconfig": "*"
+  }
+}

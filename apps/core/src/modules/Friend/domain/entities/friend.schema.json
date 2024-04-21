@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "http://mneme.org/friend.schema.json",
+  "type": "object",
+  "default": {},
+  "title": "Mneme Friend Schema",
+  "required": [
+    "displayName",
+    "avatar",
+    "createdAt",
+    "updatedAt"
+  ],
+  "properties": {
+    "displayName": {
+      "type": "string",
+      "default": "",
+      "title": "The displayName Schema",
+      "examples": [
+        "Simon Moore"
+      ]
+    },
+    "avatar": {
+      "type": "string",
+      "default": "",
+      "title": "The avatar Schema",
+      "examples": [
+        "https://upload.wikimedia.org/wikipedia/commons/b/b6/Simon_Moore_2014.jpg"
+      ]
+    },
+    "createdAt": {
+      "type": "string",
+      "default": "",
+      "title": "The createdAt Schema",
+      "examples": [
+        "2023-03-26T07:09:37.765Z"
+      ]
+    },
+    "updatedAt": {
+      "type": "string",
+      "default": "",
+      "title": "The updatedAt Schema",
+      "examples": [
+        "2023-03-26T07:09:37.765Z"
+      ]
+    }
+  },
+  "examples": [
+    {
+      "displayName": "Simon Moore",
+      "avatar": "https://upload.wikimedia.org/wikipedia/commons/b/b6/Simon_Moore_2014.jpg",
+      "email": "simon.moore@mneme.org",
+      "createdAt": "2023-03-26T07:09:37.765Z",
+      "updatedAt": "2023-03-26T07:09:37.765Z"
+    }
+  ]
+}

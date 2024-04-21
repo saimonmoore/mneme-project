@@ -1,26 +1,80 @@
-import { sha256 } from '@/modules/Shared/infrastructure/helpers/hash.js';
+import { sha256 } from "@/infrastructure/helpers/hash.js";
+import { UserInputDto } from "@/modules/User/domain/dtos/UserInputDto.js";
+import { UserDto } from "@/modules/User/domain/dtos/UserDto.js";
+import { UserSchema } from "@/modules/User/domain/entities/UserSchema.js";
 
-export type User = {
+export class User {
+  static USERS_KEY = "org.mneme.users!";
+  static ACTIONS = {
+    CREATE: "createUser",
+    UPDATE: "updateUser",
+  };
+
   email: string;
-  displayName: string;
-  avatarUrl: string;
-  hash?: string;
-};
+  userName?: string;
+  encryptedPassword?: string;
+  displayName?: string;
+  avatarUrl?: string;
+  _writers: Set<string>;
+  createdAt: Date;
+  updatedAt: Date;
 
-export class UserEntity {
-  email: string;
-  hash: string;
-  displayName: string;
-  avatarUrl: string;
-
-  static create(user: User) {
-    return new UserEntity(user);
-  }
-
-  constructor({ hash, email, displayName, avatarUrl }: User) {
+  constructor({
+    email,
+    userName,
+    displayName,
+    avatarUrl,
+    password,
+    encryptedPassword,
+  }: UserInputDto) {
     this.email = email;
-    this.hash = hash || sha256(email);
+    this.userName = userName;
     this.displayName = displayName;
     this.avatarUrl = avatarUrl;
+    this.encryptedPassword =
+      encryptedPassword || (password && sha256(password));
+    this._writers = new Set();
+    this.createdAt = new Date();
+    this.updatedAt = new Date();
+
+    this.validate();
+  }
+
+  static fromProperties(properties: UserInputDto) {
+    return new User(properties);
+  }
+
+  get hash(): string {
+    return sha256(this.email);
+  }
+
+  get key() {
+    return User.USERS_KEY + this.hash;
+  }
+
+  set writers(writers: string | string[]) {
+    Array(writers || [])
+      .flat()
+      .forEach((writer) => this._writers.add(writer));
+  }
+
+  get writers() {
+    return Array.from(this._writers);
+  }
+
+  validate() {
+    return UserSchema.parse(this.toProperties());
+  }
+
+  toProperties(): UserDto {
+    return {
+      email: this.email,
+      userName: this.userName,
+      displayName: this.displayName,
+      avatarUrl: this.avatarUrl,
+      encryptedPassword: this.encryptedPassword,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+    };
   }
 }

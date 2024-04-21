@@ -1,4 +1,5 @@
-import { logger } from '@/infrastructure/logging/index.js';
+import { SessionRequiredError } from "@/infrastructure/errors/SessionRequiredError.js";
+import { logger } from "@/infrastructure/logging/logger.js";
 
 export function sessionRequired(
   // @ts-ignore
@@ -14,8 +15,8 @@ export function sessionRequired(
     const session = this.session;
 
     if (!session.isLoggedIn()) {
-      logger.error('You must be logged in to use this method');
-      return { error: 'You must be logged in to use this method' };
+      logger.error("You must be logged in to use this method");
+      throw new SessionRequiredError();
     }
 
     return originalMethod.apply(this, args);

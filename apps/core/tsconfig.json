@@ -1,22 +1,25 @@
 {
   "extends": "tsconfig/base.json",
   "compilerOptions": {
-    "module": "ESNext",
-    "moduleResolution": "node",
+    "target": "es2022",
+    "module": "ES2022",
     "baseUrl": ".",
-    "outDir": "./dist",
-    "target": "es2017",
+    "outDir": "dist",
+    "strict": true,
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     },
+    "types": ["node", "jest"],
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
     "incremental": false,
     "removeComments": true,
     "allowJs": true,
-    "noEmit": false,
-    "noEmitHelpers": false,
+    "typeRoots": [
+      "./src/@types/",
+      "../../node_modules/@types/"
+    ]
   },
-  "include": [
-    "**/*.ts",
-  ],
-  "exclude": ["node_modules", "test", "dist", "**/*test.ts"],
+  "include": ["src/**/*.ts", "jest.config.js", "@types/**/*.d.ts"],
 }
