@@ -1,28 +1,24 @@
 import { Record } from "@/modules/Record/domain/entities/Record.js";
-import { TagDto } from "@/modules/Record/domain/dtos/TagDto.js";
-import { TagInputDto } from "@/modules/Record/domain/dtos/TagInputDto.js";
+import { KeywordDto } from "@/modules/Record/domain/dtos/KeywordDto.js";
+import { KeywordInputDto } from "@/modules/Record/domain/dtos/KeywordInputDto.js";
 import { TagSchema } from "@/modules/Record/domain/entities/TagSchema.js";
 import { sha256 } from "@/infrastructure/helpers/hash.js";
 import { User } from "@/modules/User/domain/entities/User.js";
 
-export class Tag {
-  static TAGS_KEY = "org.mneme.tags";
-  static TAGS_BY_LABEL_KEY = "org.mneme.tagsByLabel";
+export class Keyword {
+  static KEYWORDS_KEY = "org.mneme.keywords";
+  static KEYWORDS_BY_LABEL_KEY = "org.mneme.keywordsByLabel";
 
-  static TAGS_BY_USER_KEY = (userKey: string) =>
-    `${User.USERS_KEY}${userKey}!${Tag.TAGS_KEY}!`;
-  static MY_TAGS_BY_LABEL_KEY = (userKey: string) =>
-    `${User.USERS_KEY}${userKey}!${Tag.TAGS_BY_LABEL_KEY}!`;
+  static KEYWORDS_BY_USER_KEY = (userKey: string) =>
+    `${User.USERS_KEY}${userKey}!${Keyword.KEYWORDS_KEY}!`;
+  static MY_KEYWORDS_BY_LABEL_KEY = (userKey: string) =>
+    `${User.USERS_KEY}${userKey}!${Keyword.KEYWORDS_BY_LABEL_KEY}!`;
 
   label: string;
-  wikiLink: string;
+  wikiLink?: string;
   _records: Set<Record>;
 
-  get hash(): string {
-    return sha256(this.label);
-  }
-
-  constructor({ label, wikiLink }: TagInputDto) {
+  constructor({ label, wikiLink }: KeywordInputDto) {
     this.label = label;
     this.wikiLink = wikiLink;
 
@@ -31,8 +27,12 @@ export class Tag {
     this.validate();
   }
 
-  static fromProperties(properties: TagInputDto) {
-    return new Tag(properties);
+  static fromProperties(properties: KeywordInputDto) {
+    return new Keyword(properties);
+  }
+
+  get hash(): string {
+    return sha256(this.label);
   }
 
   set records(records: Record | Record[]) {
@@ -49,7 +49,7 @@ export class Tag {
     return TagSchema.parse(this.toProperties());
   }
 
-  toProperties(): TagDto {
+  toProperties(): KeywordDto {
     return {
       label: this.label,
       wikiLink: this.wikiLink,

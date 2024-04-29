@@ -1,8 +1,8 @@
 import camelcase from "camelcase";
 
+import { AutobeeStore } from "@/infrastructure/db/AutobeeStore/index.js";
 import { SessionUseCase } from "@/modules/Session/application/usecases/SessionUseCase/SessionUseCase.js";
 import { sessionRequired } from "@/modules/Session/application/decorators/sessionRequired.js";
-import { PrivateStore } from "@/infrastructure/db/stores/PrivateStore/index.js";
 import { Record } from "@/modules/Record/domain/entities/Record.js";
 import { Keyword } from "@/modules/Record/domain/entities/Keyword.js";
 import { Tag } from "@/modules/Record/domain/entities/Tag.js";
@@ -32,12 +32,20 @@ export interface RecordDeleteOperation {
 }
 
 export class RecordUseCase {
-  privateStore: PrivateStore;
+  store: AutobeeStore;
   session: SessionUseCase;
 
-  constructor(privateStore: PrivateStore, session: SessionUseCase) {
-    this.privateStore = privateStore;
+  constructor(store: AutobeeStore, session: SessionUseCase) {
+    this.store = store;
     this.session = session;
+  }
+
+  @sessionRequired
+  async *myData() {
+    // @ts-ignore
+    for await (const data of await this.store.createReadStream()) {
+      yield data;
+    }
   }
 
   // /userHash/record/recordHash
@@ -48,7 +56,7 @@ export class RecordUseCase {
     const currentUserHash = currentUser?.hash;
 
     // @ts-ignore
-    for await (const data of this.privateStore.createReadStream({
+    for await (const data of await this.store.createReadStream({
       gt: Record.RECORDS_BY_USER_KEY(currentUserHash as string),
       lt: `${Record.RECORDS_BY_USER_KEY(currentUserHash as string)}~`,
     })) {
@@ -66,7 +74,7 @@ export class RecordUseCase {
     const currentUserHash = currentUser?.hash;
 
     // @ts-ignore
-    for await (const data of this.privateStore.createReadStream({
+    for await (const data of await this.store.createReadStream({
       gt: Keyword.KEYWORDS_BY_USER_KEY(currentUserHash as string),
       lt: `${Keyword.KEYWORDS_BY_USER_KEY(currentUserHash as string)}~`,
     })) {
@@ -85,7 +93,7 @@ export class RecordUseCase {
     const currentUserHash = currentUser?.hash;
 
     // @ts-ignore
-    for await (const data of this.privateStore.createReadStream({
+    for await (const data of await this.store.createReadStream({
       gte:
         Keyword.MY_KEYWORDS_BY_LABEL_KEY(currentUserHash as string) +
         camelcase(text),
@@ -110,7 +118,7 @@ export class RecordUseCase {
     const currentUserHash = currentUser?.hash;
     const keywordHash = sha256(keyword);
 
-    const result = await this.privateStore.get(
+    const result = await this.store.get(
       `${Keyword.KEYWORDS_BY_USER_KEY(currentUserHash as string)}${keywordHash}`
     );
 
@@ -119,7 +127,7 @@ export class RecordUseCase {
       return;
     }
 
-    yield* this.findRecords(result.value.records);
+    yield* this.findRecordsByKey(result.value.records);
   }
 
   @sessionRequired
@@ -128,12 +136,12 @@ export class RecordUseCase {
     const currentUserHash = currentUser?.hash;
 
     // @ts-ignore
-    for await (const data of this.bee.createReadStream({
+    for await (const data of await this.store.createReadStream({
       gt: Tag.TAGS_BY_USER_KEY(currentUserHash as string),
       lt: `${Tag.TAGS_BY_USER_KEY(currentUserHash as string)}~`,
     })) {
       const tag = Tag.fromProperties({
-        ...data.value.keyword,
+        ...data.value.tag,
       });
 
       tag.records = data.value.records;
@@ -147,10 +155,9 @@ export class RecordUseCase {
     const currentUserHash = currentUser?.hash;
 
     // @ts-ignore
-    for await (const data of this.privateStore.createReadStream({
+    for await (const data of await this.store.createReadStream({
       gte:
-        Tag.MY_TAGS_BY_LABEL_KEY(currentUserHash as string) +
-        camelcase(text),
+        Tag.MY_TAGS_BY_LABEL_KEY(currentUserHash as string) + camelcase(text),
       lt:
         Tag.MY_TAGS_BY_LABEL_KEY(currentUserHash as string) +
         camelcase(text) +
@@ -170,7 +177,7 @@ export class RecordUseCase {
     const currentUser = this.session.loggedInUser();
     const currentUserHash = currentUser?.hash;
 
-    const result = await this.privateStore.get(
+    const result = await this.store.get(
       `${Tag.TAGS_BY_USER_KEY(currentUserHash as string)}${tagHash}`
     );
 
@@ -179,7 +186,7 @@ export class RecordUseCase {
       return;
     }
 
-    yield* this.findRecords(result.value.records);
+    yield* this.findRecordsByKey(result.value.records);
   }
 
   // /userHash/records/recordHash
@@ -191,10 +198,11 @@ export class RecordUseCase {
     const currentUser = this.session.loggedInUser();
 
     const record = new Record(data);
+    record.setCreator(currentUser as User);
 
-    logger.info("Created record: " + data);
+    logger.info("Created record: ", { data, record });
 
-    return await this.privateStore.appendOperation(
+    return await this.store.appendOperation(
       JSON.stringify({
         type: Record.ACTIONS.CREATE,
         record: record.toProperties(),
@@ -204,9 +212,7 @@ export class RecordUseCase {
   }
 
   private async findAndSetCreator(record: Record) {
-    const result = await this.privateStore.get(
-      User.USERS_KEY + record.creatorId
-    );
+    const result = await this.store.get(User.USERS_KEY + record.creatorId);
 
     if (!result) {
       logger.info("No creator found for record: " + record.creatorId);
@@ -218,12 +224,12 @@ export class RecordUseCase {
     record.setCreator(creator);
   }
 
-  private async *findRecords(records: Record[]) {
+  private async *findRecordsByKey(records: string[]) {
     const currentUser = this.session.loggedInUser();
     const currentUserHash = currentUser?.hash;
 
     for (const key of records) {
-      const entry = await this.privateStore.get(
+      const entry = await this.store.get(
         Record.RECORDS_BY_USER_KEY(currentUserHash as string) + key
       );
 

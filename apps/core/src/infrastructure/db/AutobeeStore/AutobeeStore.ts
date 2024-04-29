@@ -90,7 +90,7 @@ export class AutobeeStore {
     // Skip append event for hyperbee's header block
     if (this.autoBee.view.version === 1) return;
 
-    for await (const node of this.autoBee.createReadStream()) {
+    for await (const node of await this.autoBee.createReadStream()) {
       console.log("[AutobeeStore#handleAppendEvents] ==========> entry: ", {
         key: node.key,
         value: node.value,

@@ -1,3 +1,4 @@
+import minimist from 'minimist';
 import { Mneme } from "@/Mneme/Mneme.js";
 import { User } from "@/modules/User/domain/entities/User.js";
 import { Record } from "@/modules/Record/domain/entities/Record.js";
@@ -12,9 +13,17 @@ if (!isTestRunning) {
   console.log("======================");
   console.log("Starting Mneme demo...");
   console.log("======================");
-  const args = process.argv.slice(2);
-  const bootstrapPrivateCorePublicKey = args[0];
-  const storage = args[1];
+
+  const args = minimist(process.argv, {
+    alias: {
+      storage: 's',
+      bootstrap: 'b',
+    },
+    default: {
+    },
+  });
+  const bootstrapPrivateCorePublicKey = args.bootstrap;
+  const storage = args.storage || "./data";
 
   // @ts-ignore
   if (global.Pear && Pear.config.dev) {
@@ -26,7 +35,7 @@ if (!isTestRunning) {
     console.log(`Debug with pear://runtime/devtools/${key.toString("hex")}`);
   }
 
-  console.log("Starting Mneme with args", { args });
+  console.log("Starting Mneme with args", { storage, bootstrapPrivateCorePublicKey });
 
   mneme = new Mneme(bootstrapPrivateCorePublicKey, storage);
   mneme.info();

@@ -26,7 +26,7 @@
   "dependencies": {
     "@trpc/client": "next",
     "@trpc/server": "next",
-    "autobase": "^6.0.0-rc10",
+    "autobase": "6.0.28",
     "b4a": "^1.6.6",
     "camelcase": "^7.0.1",
     "corestore": "^6.18.1",
@@ -39,12 +39,14 @@
     "istextorbinary": "^9.5.0",
     "jsonschema": "^1.4.1",
     "lexicographic-integer": "^1.1.0",
+    "minimist": "^1.2.8",
     "random-access-memory": "^6.2.1",
     "reflect-metadata": "^0.1.13",
     "zod": "^3.22.5"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
+    "@types/minimist": "^1.2.5",
     "brittle": "^3.0.0",
     "eslint-config-custom": "*",
     "jest": "^29.7.0",

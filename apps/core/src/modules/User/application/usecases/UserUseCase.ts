@@ -40,7 +40,7 @@ export class UserUseCase {
   @sessionRequired
   async *users() {
     // @ts-ignore
-    for await (const data of this.privateStore.createReadStream({
+    for await (const data of await this.privateStore.createReadStream({
       gt: User.USERS_KEY,
       lt: `${User.USERS_KEY}~`,
     })) {

@@ -1,4 +1,4 @@
 export type TagInputDto = {
   label: string;
-  wikiLink: string;
+  wikiLink?: string;
 };

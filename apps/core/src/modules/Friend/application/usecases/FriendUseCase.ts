@@ -4,8 +4,9 @@ import { SessionUseCase } from '@/modules/Session/application/usecases/SessionUs
 import { sessionRequired } from '@/modules/Session/application/decorators/sessionRequired.js';
 import { Friend } from '@/modules/Friend/domain/entities/Friend.js';
 import { logger } from '@/infrastructure/logging/logger.js';
-import { FriendInputDto } from '@/modules/Friend/domain/dtos/FriendInputDto.js';
 import { PrivateStore } from '@/infrastructure/db/stores/PrivateStore/index.js';
+
+import type { FriendInputDto } from '@/modules/Friend/domain/dtos/FriendInputDto.js';
 
 export interface FriendCreateOperation {
   type: 'createFriend';
@@ -34,7 +35,7 @@ export class FriendUseCase {
     const currentUserHash = currentUser?.hash;
 
     // @ts-ignore
-    for await (const data of this.privateStore.createReadStream({
+    for await (const data of await this.privateStore.createReadStream({
       gt: Friend.USER_FRIENDS_KEY(currentUserHash as string),
       lt: `${Friend.USER_FRIENDS_KEY(currentUserHash as string)}~`,
     })) {
@@ -59,7 +60,7 @@ export class FriendUseCase {
     const currentUserHash = currentUser?.hash;
 
     // @ts-ignore
-    for await (const data of this.privateStore.createReadStream({
+    for await (const data of await this.privateStore.createReadStream({
       gte: Friend.USER_FRIENDS_BY_NAME_KEY(currentUserHash as string) + camelcase(text),
       lt:
         Friend.USER_FRIENDS_BY_NAME_KEY(currentUserHash as string) + camelcase(text) + '~',
@@ -86,7 +87,7 @@ export class FriendUseCase {
     const currentUserHash = currentUser?.hash;
 
     // @ts-ignore
-    for await (const data of this.privateStore.createReadStream({
+    for await (const data of await this.privateStore.createReadStream({
       gte: Friend.USER_FRIENDS_BY_USERNAME_KEY(currentUserHash as string) + camelcase(text),
       lt:
         Friend.USER_FRIENDS_BY_USERNAME_KEY(currentUserHash as string) + camelcase(text) + '~',
@@ -105,11 +106,8 @@ export class FriendUseCase {
   }
 
   @sessionRequired
-  async addFriend(friend: Friend) {
-    const currentUser = this.session.loggedInUser();
-    const currentUserHash = currentUser?.hash;
-
-    friend.userKey = currentUserHash as string;
+  async addFriend(friendData: FriendInputDto) {
+    const friend = new Friend(friendData);
 
     await this.privateStore.appendOperation(
       JSON.stringify({

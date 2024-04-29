@@ -83,11 +83,11 @@ export default class Autobee extends Autobase<Hyperbee> {
     }
   }
 
-  appendOperation(operation: string) {
+  async appendOperation(operation: string) {
     return this.append(operation);
   }
 
-  appendWriter(key: string) {
+  async appendWriter(key: string) {
     return this.appendOperation(
       JSON.stringify({
         type: "addWriter",
@@ -96,15 +96,15 @@ export default class Autobee extends Autobase<Hyperbee> {
     );
   }
 
-  get(key: string, opts?: GetOptions) {
+  async get(key: string, opts?: GetOptions) {
     return this.view.get(key, opts);
   }
 
-  peek(range: Range, opts?: PeekOpts) {
+  async peek(range: Range, opts?: PeekOpts) {
     return this.view.peek(range, opts);
   }
 
-  createReadStream(range?: Range, opts?: GetOptions) {
+  async createReadStream(range?: Range, opts?: GetOptions) {
     return this.view.createReadStream(range, opts);
   }
 }

@@ -11,7 +11,7 @@ export const RecordSchema = z.object({
     .string()
     .refine((value) => Object.values(Record.getMnemeRecordTypeList()).includes(value as MnemeRecordType)),
   language: z.string().nullish(),
-  creatorId: z.string(),
+  creatorId: z.string().nullish(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });

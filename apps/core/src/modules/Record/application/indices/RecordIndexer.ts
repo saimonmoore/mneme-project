@@ -47,12 +47,14 @@ export class RecordIndexer implements AutobeeIndexer {
   }
 
   async indexCreateRecord(batch: HyperbeeBatch, operation: RecordOperations) {
-    const { record: recordData, user } = operation;
+    const { record: recordData, user: userData } = operation;
 
-    if (!user) {
+    if (!userData) {
       logger.error('user is undefined');
       return;
     }
+
+    const user = new User(userData);
 
     const record = new Record(recordData);
     const result = await this.privateStore.get(Record.RECORD_BY_USER_KEY(user.hash as string, record.hash));
@@ -72,13 +74,14 @@ export class RecordIndexer implements AutobeeIndexer {
   }
 
   async indexCreateTagsForRecord(batch: HyperbeeBatch, operation: RecordOperations) {
-    const { record: recordData, user } = operation;
+    const { record: recordData, user: userData } = operation;
 
-    if (!user) {
+    if (!userData) {
       logger.error('user is undefined');
       return;
     }
 
+    const user = new User(userData);
     const record = new Record(recordData);
 
     const tags = Array.from(record.tags || new Set([]));
@@ -113,13 +116,13 @@ export class RecordIndexer implements AutobeeIndexer {
   }
 
   async indexCreateKeywordsForRecord(batch: HyperbeeBatch, operation: RecordOperations) {
-    const { record: recordData, user } = operation;
+    const { record: recordData, user: userData } = operation;
 
-    if (!user) {
+    if (!userData) {
       logger.error('user is undefined');
       return;
     }
-
+    const user = new User(userData);
     const record = new Record(recordData);
 
     const keywords = Array.from(record.keywords || new Set([]));
@@ -165,11 +168,9 @@ export class RecordIndexer implements AutobeeIndexer {
       throw new EntityNotFoundError(record.constructor.name);
     }
 
-    const existingRecord = result.value?.record;
-
     // index by userName: index by value
     await batch.put(record.key, {
-      record: { ...existingRecord, ...record.toProperties() },
+      record: record.toProperties(),
     });
   }
 }

@@ -36,9 +36,9 @@ export type MnemeRecord = {
 export class Record {
   static RECORDS_KEY = "org.mneme.records!";
   static RECORDS_BY_USER_KEY = (userKey: string) =>
-    `${User.USERS_KEY}${userKey}!${Record.RECORDS_KEY}!`;
+    `${User.USERS_KEY}${userKey}!${Record.RECORDS_KEY}`;
   static RECORD_BY_USER_KEY = (userKey: string, recordHash: string) =>
-    `${User.USERS_KEY}${userKey}!${Record.RECORDS_KEY}!${recordHash}`;
+    `${User.USERS_KEY}${userKey}!${Record.RECORDS_KEY}${recordHash}`;
 
   static ACTIONS = {
     CREATE: "createRecord",
@@ -82,7 +82,12 @@ export class Record {
   }
 
   setCreator(user: User) {
+    if (!user) {
+      throw new Error("User is required to set creator");
+    }
+
     this.creator = user;
+    this.creatorId = user.hash;
   }
 
   static getMnemeRecordTypeList() {
@@ -131,6 +136,7 @@ export class Record {
     return {
       url: this.url,
       type: this.type,
+      language: this.language,
       keywords: this.keywords,
       tags: this.tags,
       creatorId: this.creatorId,

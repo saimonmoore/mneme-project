@@ -12,6 +12,7 @@ import { RecordUseCase } from "@/modules/Record/application/usecases/RecordUseCa
 import { UserInputDto } from "@/modules/User/domain/dtos/UserInputDto.js";
 import { RecordInputDto } from "@/modules/Record/domain/dtos/RecordInputDto.js";
 import { SessionUseCase } from "@/modules/Session/application/usecases/SessionUseCase/index.js";
+import { FriendInputDto } from "@/modules/Friend/domain/dtos";
 
 export class Mneme {
   static OUT_OF_BAND_SYNC_KEY_DELIMITER = ":";
@@ -30,7 +31,11 @@ export class Mneme {
   sessionManager: SessionUseCase;
   friendManager: FriendUseCase;
 
-  constructor(bootstrapCorePublicKeys?: string, storage?: string, testingDHT?: any) {
+  constructor(
+    bootstrapCorePublicKeys?: string,
+    storage?: string,
+    testingDHT?: any
+  ) {
     const [bootstrapPrivateCorePublicKey, bootstrapPublicCorePublicKey] =
       (bootstrapCorePublicKeys &&
         bootstrapCorePublicKeys.split(Mneme.OUT_OF_BAND_SYNC_KEY_DELIMITER)) ||
@@ -56,9 +61,18 @@ export class Mneme {
     // Application
     this.sessionManager = new SessionUseCase(this.privateStore);
     this.userManager = new UserUseCase(this.privateStore, this.sessionManager);
-    this.friendManager = new FriendUseCase(this.privateStore, this.sessionManager);
-    this.privateRecordManager = new RecordUseCase(this.privateStore, this.sessionManager);
-    this.publicRecordManager = new RecordUseCase(this.publicStore, this.sessionManager);
+    this.friendManager = new FriendUseCase(
+      this.privateStore,
+      this.sessionManager
+    );
+    this.privateRecordManager = new RecordUseCase(
+      this.privateStore,
+      this.sessionManager
+    );
+    this.publicRecordManager = new RecordUseCase(
+      this.publicStore,
+      this.sessionManager
+    );
 
     // Networking
     this.swarmManager = new SwarmManager(
@@ -119,6 +133,26 @@ export class Mneme {
     return user;
   }
 
+  async logout() {
+    await this.sessionManager.logout();
+  }
+
+  async *myFriends() {
+    yield* this.friendManager.friends();
+  }
+
+  async *friendsByName(text: string) {
+    yield* this.friendManager.friendsByName(text);
+  }
+
+  async *friendsByUserName(text: string) {
+    yield* this.friendManager.friendsByUserName(text);
+  }
+
+  async addFriend(friend: FriendInputDto) {
+    await this.friendManager.addFriend(friend);
+  }
+
   async addPrivateRecord(record: RecordInputDto) {
     await this.privateRecordManager.addRecord(record);
   }
@@ -133,11 +167,75 @@ export class Mneme {
     (await this.publicStore) && this.publicStore.destroy();
   }
 
+  async *myKeywords() {
+    yield* this.privateRecordManager.myKeywords();
+  }
+
+  async *myPublicKeywords() {
+    yield* this.publicRecordManager.myKeywords();
+  }
+
+  async *myKeywordsByLabel(text: string) {
+    yield* this.privateRecordManager.myKeywordsByLabel(text);
+  }
+
+  async *myPublicKeywordsByLabel(text: string) {
+    yield* this.publicRecordManager.myKeywordsByLabel(text);
+  }
+
+  async *myRecordsForKeyword(keyword: string) {
+    yield* this.privateRecordManager.myRecordsForKeyword(keyword);
+  }
+
+  async *myPublicRecordsForKeyword(keyword: string) {
+    yield* this.publicRecordManager.myRecordsForKeyword(keyword);
+  }
+
+  async *myTags() {
+    yield* this.privateRecordManager.myTags();
+  }
+
+  async *myPublicTags() {
+    yield* this.publicRecordManager.myTags();
+  }
+
+  async *myTagsByLabel(text: string) {
+    yield* this.privateRecordManager.myTagsByLabel(text);
+  }
+
+  async *myPublicTagsByLabel(text: string) {
+    yield* this.publicRecordManager.myTagsByLabel(text);
+  }
+
+  async *myRecordsForTag(tag: string) {
+    yield* this.privateRecordManager.myRecordsForTag(tag);
+  }
+
+  async *myPublicRecordsForTag(tag: string) {
+    yield* this.publicRecordManager.myRecordsForTag(tag);
+  }
+
+  async *myRecords() {
+    yield* this.privateRecordManager.myRecords();
+  }
+
+  async *myPublicRecords() {
+    yield* this.publicRecordManager.myRecords();
+  }
+  
+  async *myPrivateData() {
+    console.log("WARN!: REMOVE ME!");
+    yield* this.privateRecordManager.myData();
+  }
+
   setupEventBus() {
     this.eventBus.on(Mneme.EVENTS.USER_LOGIN, (user: User) => {
       console.log("info: You are now logged in...", { user: user.email });
       console.log();
-      console.log("info: Use the following key to synchronise Mneme to your other devices: ", this.outOfBandSyncKey);
+      console.log(
+        "info: Use the following key to synchronise Mneme to your other devices: ",
+        this.outOfBandSyncKey
+      );
     });
 
     this.eventBus.on(Mneme.EVENTS.MNEME_READY, () => {
