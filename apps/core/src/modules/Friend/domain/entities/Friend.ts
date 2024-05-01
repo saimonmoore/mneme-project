@@ -1,4 +1,4 @@
-import camelcase from "camelcase";
+import { camelcase } from '@/infrastructure/helpers/camelcase.js';
 
 import { sha256 } from "@/infrastructure/helpers/hash.js";
 import { FriendInputDto } from "@/modules/Friend/domain/dtos/FriendInputDto.js";

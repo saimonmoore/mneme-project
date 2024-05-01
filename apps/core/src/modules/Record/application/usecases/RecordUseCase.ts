@@ -1,4 +1,4 @@
-import camelcase from "camelcase";
+import { camelcase } from '@/infrastructure/helpers/camelcase.js';
 
 import { AutobeeStore } from "@/infrastructure/db/AutobeeStore/index.js";
 import { SessionUseCase } from "@/modules/Session/application/usecases/SessionUseCase/SessionUseCase.js";

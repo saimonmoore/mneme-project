@@ -1,5 +1,5 @@
-// TODO: What do we use for Pear?
-import crypto from 'crypto';
+// @ts-ignore
+import crypto from 'bare-crypto';
 
 export type Hash = string & { readonly length: 64 };
 

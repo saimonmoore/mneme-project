@@ -1,5 +1,6 @@
 import fs from 'fs';
 import os from 'os';
+import process from 'process';
 
 export const env = () => {
     // @ts-ignore
@@ -22,3 +23,12 @@ export const config = () => {
         return Pear.config.env;
     }
 };
+
+// TODO: Implement teardown for node
+export const teardown = (cb: () => void) => {
+    // @ts-ignore
+    if (typeof global.Pear !== 'undefined') {
+        // @ts-ignore
+        return Pear.teardown(cb);
+    }
+}

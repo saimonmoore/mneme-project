@@ -1,4 +1,4 @@
-import camelcase from "camelcase";
+import { camelcase } from '@/infrastructure/helpers/camelcase.js';
 
 import { AutobeeIndexer } from "@/infrastructure/db/AutobeeStore/index.js";
 import { PrivateStore } from "@/infrastructure/db/stores/PrivateStore/index.js";

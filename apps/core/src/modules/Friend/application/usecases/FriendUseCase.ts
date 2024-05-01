@@ -1,4 +1,4 @@
-import camelcase from 'camelcase';
+import { camelcase } from '@/infrastructure/helpers/camelcase.js';
 
 import { SessionUseCase } from '@/modules/Session/application/usecases/SessionUseCase/index.js';
 import { sessionRequired } from '@/modules/Session/application/decorators/sessionRequired.js';
