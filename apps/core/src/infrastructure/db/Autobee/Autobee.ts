@@ -83,11 +83,13 @@ export default class Autobee extends Autobase<Hyperbee> {
     }
   }
 
-  async appendOperation(operation: string) {
+  // Don't make this method async, it causes InvalidSignatureError
+  appendOperation(operation: string) {
     return this.append(operation);
   }
 
-  async appendWriter(key: string) {
+  // Don't make this method async, it causes InvalidSignatureError
+  appendWriter(key: string) {
     return this.appendOperation(
       JSON.stringify({
         type: "addWriter",
