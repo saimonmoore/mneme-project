@@ -8,8 +8,10 @@ import { Keyword } from "@/modules/Record/domain/entities/Keyword.js";
 import { Tag } from "@/modules/Record/domain/entities/Tag.js";
 import { User } from "@/modules/User/domain/entities/User.js";
 
-import { logger } from "@/infrastructure/logging/logger.js";
+import { Logger } from "@/infrastructure/logging/logger.js";
 import { sha256 } from "@/infrastructure/helpers/hash.js";
+
+const logger = Logger.getInstance();
 
 import type { RecordInputDto } from "@/modules/Record/domain/dtos/RecordInputDto.js";
 

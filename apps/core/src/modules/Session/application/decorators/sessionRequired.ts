@@ -1,5 +1,7 @@
 import { SessionRequiredError } from "@/infrastructure/errors/SessionRequiredError.js";
-import { logger } from "@/infrastructure/logging/logger.js";
+import { Logger } from "@/infrastructure/logging/logger.js";
+
+const logger = Logger.getInstance();
 
 export function sessionRequired(
   // @ts-ignore

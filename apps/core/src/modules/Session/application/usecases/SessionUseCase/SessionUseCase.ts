@@ -1,8 +1,10 @@
 import { User } from "@/modules/User/domain/entities/User.js";
 import { PrivateStore } from "@/infrastructure/db/stores/PrivateStore/index.js";
 
-import { logger } from "@/infrastructure/logging/logger.js";
+import { Logger } from "@/infrastructure/logging/logger.js";
 import { sha256 } from "@/infrastructure/helpers/hash.js";
+
+const logger = Logger.getInstance();
 
 class SessionUseCase {
   privateStore: PrivateStore;

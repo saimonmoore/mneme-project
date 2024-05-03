@@ -4,10 +4,12 @@ import { FriendUseCase } from "@/modules/Friend/application/usecases/FriendUseCa
 import { SessionUseCase } from "@/modules/Session/application/usecases/SessionUseCase/index.js";
 import { PrivateStore } from "@/infrastructure/db/stores/PrivateStore/index.js";
 import { Friend } from "@/modules/Friend/domain/entities/Friend.js";
-import { logger } from "@/infrastructure/logging/logger.js";
+import { Logger } from "@/infrastructure/logging/logger.js";
 import { User } from "@/modules/User/domain/entities/User.js";
 import { sha256 } from "@/infrastructure/helpers/hash.js";
 import { SessionRequiredError } from "@/infrastructure/errors/SessionRequiredError.js";
+
+const logger = Logger.getInstance();
 
 describe("FriendUseCase", () => {
   let friendUseCase: FriendUseCase;

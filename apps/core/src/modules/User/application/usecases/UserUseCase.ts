@@ -4,7 +4,9 @@ import { sessionRequired } from "@/modules/Session/application/decorators/sessio
 import { User } from "@/modules/User/domain/entities/User.js";
 import { UserInputDto } from "@/modules/User/domain/dtos/UserInputDto.js";
 
-import { logger } from "@/infrastructure/logging/logger.js";
+import { Logger } from "@/infrastructure/logging/logger.js";
+
+const logger = Logger.getInstance();
 
 export interface UserCreateOperation {
   type: "createUser";

@@ -3,10 +3,12 @@ import { camelcase } from '@/infrastructure/helpers/camelcase.js';
 import { SessionUseCase } from '@/modules/Session/application/usecases/SessionUseCase/index.js';
 import { sessionRequired } from '@/modules/Session/application/decorators/sessionRequired.js';
 import { Friend } from '@/modules/Friend/domain/entities/Friend.js';
-import { logger } from '@/infrastructure/logging/logger.js';
+import { Logger } from '@/infrastructure/logging/logger.js';
 import { PrivateStore } from '@/infrastructure/db/stores/PrivateStore/index.js';
 
 import type { FriendInputDto } from '@/modules/Friend/domain/dtos/FriendInputDto.js';
+
+const logger = Logger.getInstance();
 
 export interface FriendCreateOperation {
   type: 'createFriend';

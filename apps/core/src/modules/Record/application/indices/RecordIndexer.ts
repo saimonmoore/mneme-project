@@ -8,12 +8,14 @@ import { Tag } from "@/modules/Record/domain/entities/Tag.js";
 import { Keyword } from "@/modules/Record/domain/entities/Keyword.js";
 import { RecordInputDto } from "@/modules/Record/domain/dtos/RecordInputDto.js";
 
-import { logger } from '@/infrastructure/logging/logger.js';
+import { Logger } from '@/infrastructure/logging/logger.js';
 import { EntityExistsError } from "@/infrastructure/errors/EntityExistsError.js";
 import { EntityNotFoundError } from "@/infrastructure/errors/EntityNotFoundError.js";
 
 import type { RecordCreateOperation, RecordUpdateOperation } from "@/modules/Record/application/usecases/RecordUseCase.js";
 import type { Batch as HyperbeeBatch } from "@/@types/hyperbee.js";
+
+const logger = Logger.getInstance();
 
 export type RecordOperation = {
   record: RecordInputDto;

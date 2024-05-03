@@ -1,5 +1,4 @@
 import { env } from '@/pear-compat.js';
-
 type Level = 'debug' | 'info' | 'log' | 'warn' | 'error';
 
 const levels: Record<Level, number> = {
@@ -10,32 +9,48 @@ const levels: Record<Level, number> = {
   error: 3,
 };
 
-type Logger = Console & { level: Level };
+export class Logger {
+  private static instance: Logger;
+  private level: Level;
 
-const getLogger = (level: Level) => {
-  const logger = new Proxy(console, {
-    get(target: Logger, prop: Level, receiver) {
-      if (levels[prop] < levels[target.level]) {
-        return () => {};
-      }
+  private constructor(level: Level) {
+    this.level = level;
+  }
 
-      return Reflect.get(target, prop, receiver);
-    },
-    set(target: Logger, prop, value) {
-      if (prop === 'level') {
-        target.level = value;
-      }
+  public static getInstance(): Logger {
+    if (!Logger.instance) {
+      Logger.instance = new Logger(env().NODE_ENV === 'test' ? 'error' : 'debug');
+    }
+    return Logger.instance;
+  }
 
-      return true;
-    },
-  }) as Logger;
+  public debug(message: string, opts?: unknown): void {
+    if (levels.debug >= levels[this.level]) {
+      console.log(message, opts);
+    }
+  }
 
-  logger.level = level;
+  public info(message: string, opts?: unknown): void {
+    if (levels.info >= levels[this.level]) {
+      console.log(message, opts);
+    }
+  }
 
-  return logger;
-};
+  public log(message: string, opts?: unknown): void {
+    if (levels.log >= levels[this.level]) {
+      console.log(message, opts);
+    }
+  }
 
-// @ts-ignore
-const logger = getLogger(env().NODE_ENV === 'test' ? 'error' : 'debug');
+  public warn(message: string, opts?: unknown): void {
+    if (levels.warn >= levels[this.level]) {
+      console.warn(message, opts);
+    }
+  }
 
-export { logger, getLogger };
+  public error(message: string, opts?: unknown): void {
+    if (levels.error >= levels[this.level]) {
+      console.error(message, opts);
+    }
+  }
+}

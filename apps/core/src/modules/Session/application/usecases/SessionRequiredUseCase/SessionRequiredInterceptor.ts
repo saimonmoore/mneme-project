@@ -1,4 +1,6 @@
-import { logger } from "@/infrastructure/logging/logger.js";
+import { Logger } from "@/infrastructure/logging/logger.js";
+
+const logger = Logger.getInstance();
 
 export function sessionRequiredInterceptor(object: any) {
   const handler = {
