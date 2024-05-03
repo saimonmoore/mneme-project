@@ -92,6 +92,16 @@
     "zlib": "npm:bare-node-zlib@^1.0.0",
     "zod": "^3.22.5"
   },
+  "imports": {
+    "readline": {
+      "bare": "bare-readline",
+      "default": "readline"
+    },
+    "readline/*": {
+      "bare": "bare-readline/*",
+      "default": "readline/*"
+    }
+  },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
     "@types/minimist": "^1.2.5",
