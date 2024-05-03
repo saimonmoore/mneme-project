@@ -1,6 +1,7 @@
 {
   "name": "mneme",
   "main": "dist/src/index-pear.js",
+  "version": "0.0.1",
   "type": "module",
   "pear": {
     "name": "mneme",
