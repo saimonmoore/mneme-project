@@ -102,9 +102,10 @@ export class Mneme {
 
     await this.swarmManager.start();
 
-    goodbye(async () => {
-      await this.destroy();
-    });
+    // TODO: https://github.com/mafintosh/graceful-goodbye/pull/6
+    // goodbye(async () => {
+    //   await this.destroy();
+    // });
   }
 
   async signup(potentialUserData: UserInputDto) {
