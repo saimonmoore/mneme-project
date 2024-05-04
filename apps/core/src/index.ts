@@ -5,7 +5,7 @@ import { Friend } from "@/modules/Friend/domain/entities/Friend.js";
 
 async function initBareCLI() {
     console.log("Initializing bare CLI");
-    const { Cli: MnemeCli } = await import("./bare-cli");
+    const { Cli: MnemeCli } = await import("./bare-cli.js");
     const cli = new MnemeCli();
     cli.start();
 
@@ -14,7 +14,7 @@ async function initBareCLI() {
 
 async function initNodeCLI() {
     console.log("Initializing node CLI");
-    const { Cli: MnemeCli } = await import("./node-cli");
+    const { Cli: MnemeCli } = await import("./node-cli.js");
     const cli = new MnemeCli();
     cli.start();
 

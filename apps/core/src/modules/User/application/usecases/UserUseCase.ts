@@ -46,7 +46,10 @@ export class UserUseCase {
       gt: User.USERS_KEY,
       lt: `${User.USERS_KEY}~`,
     })) {
-      yield User.fromProperties(data.value.user as UserInputDto);
+      const user = User.fromProperties(data.value.user as UserInputDto);
+      user.writers = data.value.writers;
+
+      yield user;
     }
   }
 

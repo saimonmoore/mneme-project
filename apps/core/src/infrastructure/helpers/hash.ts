@@ -1,5 +1,5 @@
 // @ts-ignore
-import crypto from 'bare-crypto';
+import crypto from 'crypto';
 
 export type Hash = string & { readonly length: 64 };
 

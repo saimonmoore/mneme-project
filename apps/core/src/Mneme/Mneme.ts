@@ -137,6 +137,11 @@ export class Mneme {
   async logout() {
     await this.sessionManager.logout();
   }
+  
+  // TODO: ADMIN only
+  async *users() {
+    yield* this.userManager.users();
+  }
 
   async *myFriends() {
     yield* this.friendManager.friends();

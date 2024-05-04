@@ -9,6 +9,7 @@
   },
   "license": "Apache-2.0",
   "scripts": {
+    "switch-to-node": "./scripts/switch-interpreter.sh node && rm -fr node_modules && yarn install",
     "dev-pear": "./scripts/proxy-root-node-modules.sh pear dev .",
     "pear1": "clear; rm -fr data; yarn run build && yarn run dev-pear",
     "pear2": "clear; rm -fr data2; yarn run dev-pear -- -s data2 -b ",
@@ -102,6 +103,14 @@
     "readline/*": {
       "bare": "bare-readline/*",
       "default": "readline/*"
+    },
+    "crypto": {
+      "bare": "bare-crypto",
+      "default": "crypto"
+    },
+    "crypto/*": {
+      "bare": "bare-crypto/*",
+      "default": "crypto/*"
     }
   },
   "devDependencies": {
