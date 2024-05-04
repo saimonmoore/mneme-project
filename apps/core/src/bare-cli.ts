@@ -24,8 +24,8 @@ class Cli {
     }
 
     const args = this.mnemeArgs();
-    const bootstrapPrivateCorePublicKey = args.bootstrap;
-    const storage = args.storage || "./data";
+    const bootstrapPrivateCorePublicKey = args.b;
+    const storage = args.s || "./data";
 
     console.log("Starting Mneme with args", { storage, bootstrapPrivateCorePublicKey });
 
