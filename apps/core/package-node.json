@@ -9,7 +9,7 @@
   },
   "license": "Apache-2.0",
   "scripts": {
-    "switch-to-bare": "./scripts/switch-interpreter.sh bare && rm -fr node_modules && yarn install",
+    "switch-to-bare": "./scripts/switch-interpreter.sh bare && rm -fr node_modules && rm -fr ../../node_modules && yarn install",
     "dev": "tsx src/index.ts",
     "dev:watch": "tsx watch --clear-screen=false src/index.ts",
     "peer1": "clear; rm -fr data; yarn run build && hrepl dist/src/index.js",
