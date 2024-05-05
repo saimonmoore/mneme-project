@@ -1,5 +1,5 @@
 import Corestore from "corestore";
-import goodbye from "graceful-goodbye";
+// import goodbye from "graceful-goodbye";
 import EventEmitter from "eventemitter2";
 
 import { PrivateStore } from "@/infrastructure/db/stores/PrivateStore/index.js";

@@ -41,7 +41,9 @@ class Cli {
 
     const args = this.mnemeArgs();
     const bootstrapPrivateCorePublicKey = args.b;
-    const storage = args.s || "./data";
+    const storagePrefix = args.s ? `-${args.s}` : '';
+    // @ts-ignore
+    const storage = path.join(Pear.config.storage,`./mneme-hyperdata${storagePrefix}`);
 
     console.log("Starting Mneme with args", { storage, bootstrapPrivateCorePublicKey });
 
