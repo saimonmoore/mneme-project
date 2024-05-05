@@ -1,1 +1,0 @@
-this.mneme.signup({ userName: 'excsm', displayName: 'Saimon Moore', email: 's@m.org', password: 'papapa', avatarUrl: 'https://images.com/saimon.png'})
