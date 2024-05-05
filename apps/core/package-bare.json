@@ -13,6 +13,8 @@
     "dev-pear": "./scripts/proxy-root-node-modules.sh pear dev .",
     "pear1": "clear; rm -fr data; yarn run build && yarn run dev-pear",
     "pear2": "clear; rm -fr data2; yarn run dev-pear -- -s 2 -b ",
+    "stage:dev": "pear stage --ignore src,test,.turbo dev",
+    "stage:prod": "pear stage --ignore src,test,.turbo production",
     "dev": "tsx src/index.ts",
     "dev:watch": "tsx watch --clear-screen=false src/index.ts",
     "build": "rimraf dist && tsc --build --verbose && tsc-alias",
