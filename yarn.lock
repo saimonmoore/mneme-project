@@ -4122,7 +4122,7 @@ bare-readline@*, bare-readline@^1.0.0, bare-readline@^1.0.3:
     bare-ansi-escapes "^2.0.0"
     bare-stream "^1.0.0"
 
-bare-repl@*, bare-repl@^2.0.0:
+bare-repl@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/bare-repl/-/bare-repl-2.0.1.tgz#cc841dcda002bba08de7216f5bda0c36a64a5600"
   integrity sha512-0ie3fYV6cEkO1udGtAu+oLSbPp7DnzBaAWGe1CetgQVM5Msky4y/CM2oWYS1K4s+KoKOznlI9Z+GmGaJ8Ut9BA==
@@ -11124,13 +11124,6 @@ remove-trailing-slash@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/remove-trailing-slash/-/remove-trailing-slash-0.1.1.tgz#be2285a59f39c74d1bce4f825950061915e3780d"
   integrity sha512-o4S4Qh6L2jpnCy83ysZDau+VORNvnFw07CKSAymkd6ICNVEPisMyzlc00KlvvicsxKck94SEwhDnMNdICzO+tA==
-
-"repl@npm:bare-node-repl@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/bare-node-repl/-/bare-node-repl-1.0.1.tgz#99514261eeb3e8fdd4d2ea86ca28b16822a04372"
-  integrity sha512-CwBYC7HmsT1pEdS+zgLbGZB073c/6AxJWScuYFnxWAFmaFckEla2C13g0RKQ9m2GAShYdoM5QtWsQWT2ihMo6w==
-  dependencies:
-    bare-repl "*"
 
 require-directory@^2.1.1:
   version "2.1.1"

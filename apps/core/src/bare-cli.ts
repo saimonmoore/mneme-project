@@ -6,6 +6,7 @@ import readline from 'readline'  // Module for reading user input in terminal
 import tty from 'tty'            // Module to control terminal behavior
 
 import { Mneme } from "@/Mneme/Mneme.js";
+import { MnemeRepl } from "@/MnemeRepl.js";
 import { User } from "@/modules/User/domain/entities/User.js";
 import { Record } from "@/modules/Record/domain/entities/Record.js";
 import { Friend } from "@/modules/Friend/domain/entities/Friend.js";
@@ -14,6 +15,7 @@ import { config, teardown } from "@/pear-compat";
 
 class Cli {
   mneme: Mneme;
+  repl: any;
 
   async start() {
     this.info();
@@ -39,7 +41,8 @@ class Cli {
     // @ts-ignore
     // server.start(mneme);
 
-    await this.repl();
+    // this.replRepl();
+    this.readlineRepl();
   }
 
   // TODO: Implement args for node version
@@ -71,16 +74,34 @@ class Cli {
 
   private evalAsyncFn(fn: string) {
     console.log("Evaluating async function...", { fn });
-     eval('(async () => { return await ' + fn + ' })()').then((result: string) => {
+    eval('(async () => { return await ' + fn + ' }).bind(this.mneme)()').then((result: string) => {
       console.log(result);
       console.log();
-     }).catch((error: any) => {
+    }).catch((error: any) => {
       console.log("Error: ", error);
       console.log();
-     });
+    });
   }
 
-  private async repl() {
+  private evalAsyncGenFn(fn: string) {
+    const command = '(async () => { try { for await (const data of ' + fn + ') console.log(data) } catch { console.log(' + fn + ') }}).bind(this.mneme)()';
+    console.log("Evaluating async generator function...", { command });
+
+    eval(command).then((result: string) => {
+      console.log(result);
+      console.log();
+    }).catch((error: any) => {
+      console.log("Error: ", error);
+      console.log();
+    });
+  }
+
+  private replRepl() {
+    this.repl = new MnemeRepl(this.mneme);
+    this.repl.start();
+  }
+
+  private async readlineRepl() {
 
     const rl = readline.createInterface({
       input: new tty.ReadStream(0),
@@ -109,6 +130,10 @@ class Cli {
           console.log();
           if (line.trim().startsWith('await')) {
             this.evalAsyncFn(line.trim());
+            break;
+          }
+          if (line.trim().startsWith('.log')) {
+            this.evalAsyncGenFn(line.trim().split('.log')[1].trim());
             break;
           }
           // eslint-disable-next-line no-case-declarations
