@@ -1,11 +1,11 @@
 #!/bin/bash
 
 function node {
-  ln -nfs package-node.json package.json
+  cp package-node.json package.json
 }
 
 function bare {
-  ln -nfs package-bare.json package.json
+  cp package-bare.json package.json
 }
 
 $1
