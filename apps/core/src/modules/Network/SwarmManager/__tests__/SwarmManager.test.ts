@@ -9,7 +9,7 @@ import {
 
 import NoiseSecretStream from "hyperswarm-secret-stream";
 import { PeerDiscovery, PeerInfo } from "hyperswarm";
-import EventEmitter2 from "eventemitter2";
+import { EventEmitter } from "events";
 import b4a from "b4a";
 
 import { SwarmManager } from "@/modules/Network/SwarmManager/index.js";
@@ -56,7 +56,7 @@ describe("SwarmManager", () => {
 
   const eventBus = {
     emit: jest.fn(),
-  } as Partial<EventEmitter2> as jest.Mocked<EventEmitter2>;
+  } as Partial<EventEmitter> as jest.Mocked<EventEmitter>;
 
   const privateStore = {
     discoveryKey: b4a.from(Buffer.from(privateDiscoveryKeyString), "hex"),

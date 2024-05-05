@@ -3,7 +3,7 @@
   "main": "index.html",
   "type": "module",
   "pear": {
-    "name": "demo",
+    "name": "mneme-desktop",
     "type": "desktop",
     "gui": {
       "backgroundColor": "#1F2430",

@@ -1,7 +1,7 @@
 import Hyperswarm, { PeerDiscoverySession, PeerInfo } from "hyperswarm";
 import NoiseSecretStream from "hyperswarm-secret-stream";
 import b4a from "b4a";
-import EventEmitter2 from "eventemitter2";
+import { EventEmitter } from "events";
 import { isText, getEncoding } from "istextorbinary";
 
 import { Mneme } from "@/Mneme/index.js";
@@ -24,7 +24,7 @@ export class SwarmManager {
   privateStore: PrivateStore;
   publicStore: PublicStore;
   stores: Stores;
-  eventBus: EventEmitter2;
+  eventBus: EventEmitter;
   userManager: UserUseCase;
   swarm: Hyperswarm;
   connection: NoiseSecretStream;
@@ -32,7 +32,7 @@ export class SwarmManager {
   constructor(
     stores: Stores,
     userManager: UserUseCase,
-    eventBus: EventEmitter2,
+    eventBus: EventEmitter,
     testingDHT?: any
   ) {
     this.privateStore = stores.private;

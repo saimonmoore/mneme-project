@@ -63,7 +63,6 @@
     "console": "npm:bare-node-console@^1.0.1",
     "corestore": "^6.18.1",
     "crypto": "npm:bare-node-crypto@^1.0.0",
-    "eventemitter2": "^6.4.9",
     "events": "npm:bare-node-events@^1.0.1",
     "express": "^4.19.2",
     "fs": "npm:bare-node-fs@^1.0.2",

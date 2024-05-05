@@ -106,7 +106,7 @@ export class AutobeeStore {
       {
         apply: this.handleApplyEvents.bind(this),
       }
-    ).on("error", console.error);
+    ).on("error", (error: Error) => { console.error('[Autobee#error]====> ', { error }); });
 
     return autobee;
   }

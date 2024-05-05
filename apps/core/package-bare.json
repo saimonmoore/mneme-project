@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "type": "module",
   "pear": {
-    "name": "mneme",
+    "name": "mneme-core",
     "type": "terminal"
   },
   "license": "Apache-2.0",
@@ -13,8 +13,8 @@
     "dev-pear": "./scripts/proxy-root-node-modules.sh pear dev .",
     "pear1": "clear; rm -fr \"/Users/saimon.moore/Library/Application Support/pear/app-storage/by-name/mneme/mneme-hyperdata\"; yarn run build && yarn run dev-pear",
     "pear2": "clear; rm -fr \"/Users/saimon.moore/Library/Application Support/pear/app-storage/by-name/mneme/mneme-hyperdata-2\"; yarn run dev-pear -- -s 2 -b ",
-    "stage:dev": "pear stage --ignore src,test,.turbo dev",
-    "stage:prod": "pear stage --ignore src,test,.turbo production",
+    "stage:dev": "pear stage --ignore src,test,.turbo,data dev",
+    "stage:prod": "pear stage --ignore src,test,.turbo,data production",
     "dev": "tsx src/index.ts",
     "dev:watch": "tsx watch --clear-screen=false src/index.ts",
     "build": "rimraf dist && tsc --build --verbose && tsc-alias",
@@ -63,7 +63,6 @@
     "console": "npm:bare-node-console@^1.0.1",
     "corestore": "^6.18.1",
     "crypto": "npm:bare-node-crypto@^1.0.0",
-    "eventemitter2": "^6.4.9",
     "events": "npm:bare-node-events@^1.0.1",
     "express": "^4.19.2",
     "fs": "npm:bare-node-fs@^1.0.2",
