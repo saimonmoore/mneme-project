@@ -1,9 +1,8 @@
-// @ts-ignore
 import process from 'process'  // Module for reading user input in terminal
-// @ts-ignore
 import readline from 'readline'  // Module for reading user input in terminal
-// @ts-ignore
 import tty from 'tty'            // Module to control terminal behavior
+import path from 'path';
+import fs from 'fs';
 
 import { Mneme } from "@/Mneme/Mneme.js";
 import { MnemeRepl } from "@/MnemeRepl.js";
@@ -16,6 +15,21 @@ import { config, teardown } from "@/pear-compat";
 class Cli {
   mneme: Mneme;
   repl: any;
+  historyFile: string;
+  rl: readline.Interface;
+
+  constructor() {
+    // @ts-ignore
+    this.historyFile = path.join(global.Pear.config.storage, 'history.txt');
+    console.log("History file: ", this.historyFile);
+
+    this.rl = readline.createInterface({
+      input: new tty.ReadStream(0),
+      output: new tty.WriteStream(1),
+      prompt: 'mneme> ',
+    });
+    this.readHistory();
+  }
 
   async start() {
     this.info();
@@ -45,16 +59,15 @@ class Cli {
     this.readlineRepl();
   }
 
-  // TODO: Implement args for node version
   private mnemeArgs() {
     // @ts-ignore
-    return global.Pear ? global.Pear.config.args.reduce((acc, curr, idx) => {
+    return global.Pear.config.args.reduce((acc, curr, idx) => {
       if (idx % 2 === 0) {
         // @ts-ignore
         acc[curr.slice(1)] = global.Pear.config.args[idx + 1];
       }
       return acc;
-    }, {}) : {};
+    }, {});
   }
 
   private info() {
@@ -73,8 +86,8 @@ class Cli {
   }
 
   private evalAsyncFn(fn: string) {
-    console.log("Evaluating async function...", { fn });
-    eval('(async () => { return await ' + fn + ' }).bind(this.mneme)()').then((result: string) => {
+    const command = '(async () => { return await ' + fn + ' }).bind(this.mneme)()';
+    eval(command).then((result: string) => {
       console.log(result);
       console.log();
     }).catch((error: any) => {
@@ -85,7 +98,6 @@ class Cli {
 
   private evalAsyncGenFn(fn: string) {
     const command = '(async () => { try { for await (const data of ' + fn + ') console.log(data) } catch { console.log(' + fn + ') }}).bind(this.mneme)()';
-    console.log("Evaluating async generator function...", { command });
 
     eval(command).then((result: string) => {
       console.log(result);
@@ -103,15 +115,9 @@ class Cli {
 
   private async readlineRepl() {
 
-    const rl = readline.createInterface({
-      input: new tty.ReadStream(0),
-      output: new tty.WriteStream(1),
-      prompt: 'mneme> ',
-    });
-
     // @ts-ignore
-    rl.input.setMode(tty.constants.MODE_RAW);
-    rl.on('data', (line: string) => {
+    this.rl.input.setMode(tty.constants.MODE_RAW);
+    this.rl.on('data', (line: string) => {
       switch (line.trim()) {
         case '?':
           console.log();
@@ -146,17 +152,27 @@ class Cli {
           console.log(result);
           break;
       }
-      console.log('...');
-      rl.prompt();
+      // @ts-ignore
+      fs.writeFileSync(this.historyFile, this.rl._history.entries.join('\n') + '\n');
+      this.rl.prompt();
     }).on('close', () => {
       console.log();
       console.log('Have a great day!');
       teardown(() => this.mneme.destroy())
       process.exit(0);
     });
-    rl.prompt();
+    this.rl.prompt();
   }
 
+  private readHistory() {
+    try {
+      const data = fs.readFileSync(this.historyFile, 'utf8');
+      // @ts-ignore
+      this.rl._history.entries = data.trim().split('\n');
+    } catch (err) {
+      fs.writeFileSync(this.historyFile, '');
+    }
+  }
 }
 
 export { Cli, Friend, Mneme, Record, User };
