@@ -1,19 +1,13 @@
 export const MnemeTheme = {
-  light: {
-    colours: {
-      body: "#fff",
-      text: "#333",
-      primary: "#007bff",
-      secondary: "#6c757d",
-    },
-  },
-
-  dark: {
-    colours: {
-      body: "#333",
-      text: "#fff",
-      primary: "#213547",
-      secondary: "#6c757d",
-    },
-  },
+  spacing: {
+    xxSmall: "4px",
+    xSmall: "8px",
+    small: "12px",
+    medium: "16px",
+    xMedium: "24px",
+    xxMedium: "32px",
+    large: "40px",
+    xLarge: "48px",
+    xxLarge: "64px",
+  }
 };
