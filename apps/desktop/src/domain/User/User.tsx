@@ -1,3 +1,4 @@
+import {immerable} from "immer";
 import { Expose, plainToInstance } from "class-transformer";
 import { IsEmail, IsNotEmpty, Length, validate } from "class-validator";
 
@@ -20,6 +21,7 @@ export type UserError = {
 };
 
 export class User {
+  [immerable] = true;
 
   @IsNotEmpty()
   @Expose()

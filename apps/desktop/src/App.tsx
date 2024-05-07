@@ -16,7 +16,7 @@ import viteLogo from "/vite.svg";
 import { Page } from "./ui/core/Page/Page";
 import { LoginView } from "./view/Login/Login";
 import { MnemeTheme } from "./ui/theme";
-import { SessionProvider, useSession } from "./context/Session";
+import { useMnemeStore } from "./store";
 
 type MnemeTheme = "light" | "dark";
 
@@ -35,14 +35,14 @@ const LoggedOutLayout = ({ children }: { children: React.ReactNode }) => {
 };
 
 const LoggedInLayout = ({ children }: { children: React.ReactNode }) => {
-  const setCurrentUser = useSession().setCurrentUser;
+  const logout = useMnemeStore((state) => state.logout);
 
   return (
     <Flex direction="column" align="center">
       <Heading>Mneme</Heading>
       {children}
       <Box>
-        <Button variant="soft" size="2" onClick={() => setCurrentUser(undefined)}>
+        <Button variant="soft" size="2" onClick={() => logout()}>
           Logout
         </Button>
       </Box>
@@ -51,42 +51,37 @@ const LoggedInLayout = ({ children }: { children: React.ReactNode }) => {
 };
 
 const Main = () => {
-  const session = useSession();
-  console.log("=============> ", { session });
+  const currentUser = useMnemeStore((state) => state.currentUser);
+  console.log("=============> ", { currentUser });
   return (
     <Box>
       <img src={viteLogo} alt="Vite Logo" />
-      {!session?.currentUser && (
-        <LoggedOutLayout>{<LoginView />}</LoggedOutLayout>
-      )}
-      {session?.currentUser && <LoggedInLayout>Dashboard</LoggedInLayout>}
+      {!currentUser && <LoggedOutLayout>{<LoginView />}</LoggedOutLayout>}
+      {currentUser && <LoggedInLayout>Dashboard</LoggedInLayout>}
     </Box>
   );
 };
 function App() {
   const [currentTheme, setCurrentTheme] = useState<MnemeTheme>("light");
-  // const theme = MnemeTheme[currentTheme as keyof typeof MnemeTheme];
 
   return (
     <Theme appearance={currentTheme} accentColor="indigo">
       <ThemePanel />
       <MnemeThemeProvider>
-        <SessionProvider>
-          <Page>
-            <Main />
-            <Box>
-              <Button
-                variant="soft"
-                size="2"
-                onClick={() =>
-                  setCurrentTheme(currentTheme === "light" ? "dark" : "light")
-                }
-              >
-                {currentTheme === "light" ? "dark" : "light"}
-              </Button>
-            </Box>
-          </Page>
-        </SessionProvider>
+        <Page>
+          <Main />
+          <Box>
+            <Button
+              variant="soft"
+              size="2"
+              onClick={() =>
+                setCurrentTheme(currentTheme === "light" ? "dark" : "light")
+              }
+            >
+              {currentTheme === "light" ? "dark" : "light"}
+            </Button>
+          </Box>
+        </Page>
       </MnemeThemeProvider>
     </Theme>
   );

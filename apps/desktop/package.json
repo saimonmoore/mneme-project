@@ -27,10 +27,12 @@
     "@radix-ui/themes": "^3.0.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "immer": "^10.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "reflect-metadata": "^0.2.2",
-    "styled-components": "^6.1.9"
+    "styled-components": "^6.1.9",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",

@@ -5,8 +5,9 @@ import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { Login, LoginError } from "../../domain/Login/Login";
 
 import { EmailWrapper, PasswordWrapper } from "./Login.styles";
-import { useSession } from "../../context/Session";
+// import { useSession } from "../../context/Session";
 import { User } from "../../domain/User/User";
+import { useMnemeStore } from "../../store";
 
 const Errors = ({ errors }: { errors?: string[] }) => (
   <Box>
@@ -21,7 +22,7 @@ const Errors = ({ errors }: { errors?: string[] }) => (
 );
 
 export const LoginView = () => {
-  const setCurrentUser = useSession().setCurrentUser;
+  const setCurrentUser = useMnemeStore((state) => state.login);
   const [errors, setErrors] = useState<LoginError>({} as LoginError);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -30,6 +31,7 @@ export const LoginView = () => {
   );
 
   const loginUser = () => {
+    // TODO: call API to login
     const user = User.create({
       email: login.email,
       password: login.password,

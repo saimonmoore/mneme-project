@@ -1,3 +1,4 @@
+import {immerable} from "immer";
 import { Expose, plainToInstance } from "class-transformer";
 import { IsEmail, IsNotEmpty, Length, Min, validate } from "class-validator";
 
@@ -14,6 +15,8 @@ export type LoginError = {
 };
 
 export class Login {
+  [immerable] = true;
+
   @IsNotEmpty()
   @IsEmail()
   @Expose()
