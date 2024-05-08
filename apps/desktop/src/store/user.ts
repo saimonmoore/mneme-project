@@ -2,13 +2,11 @@ import { StateCreator } from "zustand";
 import { User } from "../domain/User/User";
 import { Store } from ".";
 
-export interface SessionState {
-    currentUser?: User;
-    login: (user?: User) => void
-    logout: () => void
+export interface UserState {
+    signup: (user?: User) => void
 }
 
-export const createSessionStore: StateCreator<
+export const createUserStore: StateCreator<
     Store,
     [
         ["zustand/devtools", never],
@@ -16,16 +14,10 @@ export const createSessionStore: StateCreator<
         ["zustand/immer", never],
     ],
     [],
-    SessionState
+    UserState
 > = (set) => ({
-    currentUser: undefined,
-    login: (user?: User) => {
-        // Perform some async operation to login
+    signup: (user?: User) => {
         set(() => ({ currentUser: user }));
-    },
-    logout: () => {
-        // Perform some async operation to logout
-        set(() => ({ currentUser: undefined }));
     },
 });
 

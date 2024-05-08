@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import { useState } from "react";
 import { ThemeProvider } from "styled-components";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import "@radix-ui/themes/styles.css";
 import {
@@ -51,14 +52,18 @@ const LoggedInLayout = ({ children }: { children: React.ReactNode }) => {
 };
 
 const Main = () => {
+  const queryClient = new QueryClient();
   const currentUser = useMnemeStore((state) => state.currentUser);
+
   console.log("=============> ", { currentUser });
   return (
-    <Box>
-      <img src={viteLogo} alt="Vite Logo" />
-      {!currentUser && <LoggedOutLayout>{<LoginView />}</LoggedOutLayout>}
-      {currentUser && <LoggedInLayout>Dashboard</LoggedInLayout>}
-    </Box>
+    <QueryClientProvider client={queryClient}>
+      <Box>
+        <img src={viteLogo} alt="Vite Logo" />
+        {!currentUser && <LoggedOutLayout>{<LoginView />}</LoggedOutLayout>}
+        {currentUser && <LoggedInLayout>Dashboard</LoggedInLayout>}
+      </Box>
+    </QueryClientProvider>
   );
 };
 function App() {

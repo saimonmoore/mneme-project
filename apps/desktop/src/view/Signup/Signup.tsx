@@ -2,48 +2,53 @@ import { useEffect, useState } from "react";
 import { Box, Button, Flex, Spinner, TextField } from "@radix-ui/themes";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 
-import { User } from "../../domain/User/User";
 import { useMnemeStore } from "../../store";
-import { Login, LoginError } from "../../domain/Login/Login";
-import { EmailWrapper, PasswordWrapper } from "./Login.styles";
+import { User, UserError } from "../../domain/User/User";
+import { EmailWrapper, PasswordWrapper } from "./Signup.styles";
 import { Errors } from "../../ui/viewComponents/Errors/Errors";
 
-export const LoginView = () => {
+export const SignupView = () => {
   const setCurrentUser = useMnemeStore((state) => state.login);
-  const [errors, setErrors] = useState<LoginError>({} as LoginError);
+  const [errors, setErrors] = useState<UserError>({} as UserError);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [login, setLogin] = useState<Login>(
-    Login.create({ email: "", password: "" })
-  );
+  const [user, setUser] = useState<User | undefined>();
 
-  const loginUser = () => {
-    // TODO: call API to login
-    const user = User.create({
-      email: login.email,
-      password: login.password,
+  const signupUser = () => {
+    if (!user) return;
+
+    // TODO: Allow password on user
+    // TODO: Finish user form
+    // TODO: call usecase to signup
+    // TODO: Autocreate zustand selectors
+    // TODO: Setup zustand subscriptions
+    const newUser = User.create({
+      email: user.email,
+      password: user.password,
       userName: "excsm",
       displayName: "Saimon",
       avatarUrl: "Saimon",
     });
 
-    setCurrentUser(user);
+    setCurrentUser(newUser);
   };
 
   useEffect(() => {
-    async function validateLogin() {
-      login.email = email;
-      login.password = password;
+    async function validateUser() {
+      if (!user) return;
 
-      const errors = await login.validate();
+      user.email = email;
+      user.encyptedPassword = password;
+
+      const errors = await user.validate();
       if (errors) {
         setErrors(errors);
       }
 
-      setLogin(login);
+      setUser(user);
     }
 
-    validateLogin();
+    validateUser();
   }, [email, password]);
 
   return (
@@ -53,7 +58,7 @@ export const LoginView = () => {
           <EmailWrapper>
             <TextField.Root
               placeholder="Signin with your email"
-              value={login.email}
+              value={user?.email}
               onChange={(e) => setEmail(e.target.value)}
               size="3"
             />
@@ -65,7 +70,7 @@ export const LoginView = () => {
             <TextField.Root
               type="password"
               placeholder="Password"
-              value={login.password}
+              value={user?.password}
               onChange={(e) => setPassword(e.target.value)}
               size="3"
             />
@@ -76,11 +81,11 @@ export const LoginView = () => {
         )}
 
         {!errors.email?.length && !errors.password?.length && (
-          <Button variant="soft" size="3" onClick={() => loginUser()}>
+          <Button variant="soft" size="3" onClick={() => signupUser()}>
             <Spinner loading={false}>
               <ArrowRightIcon />
             </Spinner>
-            Login
+            Signup
           </Button>
         )}
       </Box>
