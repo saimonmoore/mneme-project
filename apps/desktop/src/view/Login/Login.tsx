@@ -1,6 +1,16 @@
 import { useEffect, useState } from "react";
-import { Box, Button, Flex, Spinner, TextField, Text } from "@radix-ui/themes";
-import { ArrowRightIcon } from "@radix-ui/react-icons";
+import {
+  ArrowRightIcon,
+  Box,
+  Button,
+  ButtonText,
+  Icon,
+  VStack,
+  Spinner,
+  Input,
+  InputField,
+  Text,
+} from "@mneme/components";
 
 import { Login, LoginError } from "../../domain/Login/Login";
 
@@ -13,7 +23,7 @@ const Errors = ({ errors }: { errors?: string[] }) => (
   <Box>
     {(errors || []).map((error) => (
       <Box as="span" key={error}>
-        <Text color="gray" size="1">
+        <Text color="gray" size="md">
           {error}
         </Text>
       </Box>
@@ -60,28 +70,30 @@ export const LoginView = () => {
   }, [email, password]);
 
   return (
-    <Flex gap="2" direction="column" align="center">
-      <Box minWidth="60px">
+    <VStack space="md">
+      <Box w="$20">
         {
           <EmailWrapper>
-            <TextField.Root
-              placeholder="Signin with your email"
-              value={login.email}
-              onChange={(e) => setEmail(e.target.value)}
-              size="3"
-            />
+            <Input size="md">
+              <InputField
+                placeholder="Signin with your email"
+                value={login.email}
+                onChangeText={(newEmail) => setEmail(newEmail)}
+              />
+            </Input>
           </EmailWrapper>
         }
         {!!email.length && <Errors errors={errors.email} />}
         {!errors.email?.length && (
           <PasswordWrapper>
-            <TextField.Root
-              type="password"
-              placeholder="Password"
-              value={login.password}
-              onChange={(e) => setPassword(e.target.value)}
-              size="3"
-            />
+            <Input size="md">
+              <InputField
+                type="password"
+                placeholder="password"
+                value={login.password}
+                onChangeText={(newPassword) => setPassword(newPassword)}
+              />
+            </Input>
           </PasswordWrapper>
         )}
         {!errors.email?.length && !!password.length && (
@@ -89,14 +101,14 @@ export const LoginView = () => {
         )}
 
         {!errors.email?.length && !errors.password?.length && (
-          <Button variant="soft" size="3" onClick={() => loginUser()}>
+          <Button variant="outline" size="md" onPress={() => loginUser()}>
             <Spinner loading={false}>
-              <ArrowRightIcon />
+              <Icon as={ArrowRightIcon} />
             </Spinner>
-            Login
+            <ButtonText>Login</ButtonText>
           </Button>
         )}
       </Box>
-    </Flex>
+    </VStack>
   );
 };

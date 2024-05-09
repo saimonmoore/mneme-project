@@ -23,6 +23,9 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
+    "@gluestack-style/react": "^1.0.56",
+    "@gluestack-ui/config": "^1.1.18",
+    "@gluestack-ui/themed": "^1.1.25",
     "@radix-ui/react-icons": "^1.3.0",
     "@radix-ui/themes": "^3.0.3",
     "class-transformer": "^0.5.1",
@@ -30,8 +33,12 @@
     "immer": "^10.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-native": "^0.74.1",
+    "react-native-svg": "^15.2.0",
+    "react-native-web": "^0.19.11",
     "reflect-metadata": "^0.2.2",
     "styled-components": "^6.1.9",
+    "@mneme/components": "*",
     "zustand": "^4.5.2"
   },
   "devDependencies": {
@@ -39,6 +46,7 @@
     "@types/minimist": "^1.2.5",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
+    "@types/react-native": "^0.73.0",
     "@types/styled-components": "^5.1.34",
     "@types/styled-theming": "^2.2.8",
     "@vitejs/plugin-react": "^4.2.1",
@@ -51,7 +59,9 @@
     "prettier-config": "*",
     "rimraf": "^3.0.2",
     "tsconfig": "*",
-    "vite": "^5.2.0"
+    "vite": "^5.2.0",
+    "vite-plugin-external": "^4.3.1",
+    "vite-plugin-react-native-web": "^1.0.2"
   },
   "resolutions": {
     "styled-components": "^5"

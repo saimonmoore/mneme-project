@@ -1,5 +1,6 @@
 TODO:
 
+- Update to latest version of autobase ✅
 - Login after data directory already exists:
   - Node 1: await mneme.login(email, password) works!
   - Node 2:
@@ -8,7 +9,6 @@ TODO:
 - Test adding/querying friends
 - Test adding/querying records
 - Fix updating updatedAt automatically when entities are updated.
-- Update to latest version of autobase.
 - Fix existing tests.
 - Add new tests.
 - Migrate to bare
