@@ -15,5 +15,8 @@
     "tsc-alias": "^1.8.8",
     "tsx": "^4.7.1",
     "typescript": "^5.4.5"
+  },
+  "resolutions": {
+    "typescript": "5.4.5"
   }
 }

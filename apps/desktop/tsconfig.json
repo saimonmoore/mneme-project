@@ -21,6 +21,11 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "experimentalDecorators": true,
+    "paths": {
+      "@mneme/desktop/*": ["./src/*"],
+      "@mneme/components/*": ["../components/*"],
+      "@mneme/core/*": ["../core/*"]
+    }
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
