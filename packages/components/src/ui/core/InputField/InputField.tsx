@@ -18,4 +18,5 @@ export const Input = ({ children, ...rest }: InputProps) => (
 );
 export const InputField = styled(GluestackInputField, {});
 export const InputSlot = styled(GluestackInputSlot, {});
+export const InputIcon = styled(GluestackInputIcon, {});
 export const MnemeInputIcon = styled(GluestackInputIcon, {});
