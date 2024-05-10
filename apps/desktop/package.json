@@ -16,7 +16,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && pushd dist && ln -nfs index.native.html index.html && popd",
+    "build": "tsc && vite build",
     "build:watch": "tsc && vite build --watch",
     "preview": "vite preview",
     "pear:dev": "pear dev",

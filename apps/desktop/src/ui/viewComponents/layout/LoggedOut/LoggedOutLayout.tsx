@@ -1,8 +1,6 @@
 import {
-  Link,
   VStack,
   Heading,
-  LinkText,
   Icon,
   HStack,
   HelpCircleIcon,
@@ -18,17 +16,14 @@ export const LoggedOutLayout = ({
   return (
     <VStack space="md">
       <Header>
-        <Header.Left>?</Header.Left>
+        <Header.Left>
+          <Icon as={HelpCircleIcon} m="$2" w="$4" h="$4" />
+        </Header.Left>
         <Header.Center>
           <Heading>Welcome to Mneme</Heading>
         </Header.Center>
         <Header.Right>
           <HStack>
-            <Link>
-              <LinkText>
-                <Icon as={HelpCircleIcon} m="$2" w="$4" h="$4" />
-              </LinkText>
-            </Link>
             <ThemeSwitcher />
           </HStack>
         </Header.Right>
