@@ -20,6 +20,7 @@ import {
   PDFBadge,
   YoutubeBadge,
   Pressable,
+  Heading,
 } from "@mneme/components";
 
 export type MnemeURL = {
@@ -122,8 +123,8 @@ export const Dashboard = () => {
   };
 
   return (
-    <Box>
-      <Text>Dashboard</Text>
+    <Box w="$full" alignItems="center">
+      <Heading>Dashboard</Heading>
       <Box>
         <Input>
           <InputField

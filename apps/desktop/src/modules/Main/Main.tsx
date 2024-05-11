@@ -13,7 +13,6 @@ export const Main = () => {
       {!currentUser && <LoggedOutLayout>{<LoginView />}</LoggedOutLayout>}
       {currentUser && (
         <LoggedInLayout>
-          <Heading>Dashboard</Heading>
           <Dashboard />
         </LoggedInLayout>
       )}
