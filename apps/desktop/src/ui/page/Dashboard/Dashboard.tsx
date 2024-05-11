@@ -148,6 +148,7 @@ export const Dashboard = () => {
         ))}
       </VStack>
       <VStack>
+        <Heading mb="$8" italic="true" size="md">Latest Bookmarks</Heading>
         {mockURLs.map((url: MnemeURL) => (
           <URLCard urlRecord={url} />
         ))}
