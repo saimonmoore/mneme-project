@@ -2,6 +2,8 @@
 
 // UI wrapper components
 export * from './ui/core/Badge';
+export * from './ui/core/BadgeText';
+export * from './ui/core/BadgeIcon';
 export * from './ui/core/Box';
 export * from './ui/core/Button';
 export * from './ui/core/ButtonText';
@@ -36,10 +38,10 @@ export * from './store';
 
 // Assets
 
-import HTMLBadge from './assets/images/html-badge.svg';
-import PDFBadge from './assets/images/pdf-badge.svg';
-import TwitterBadge from './assets/images/twitter-badge.svg';
-import YoutubeBadge from './assets/images/youtube-badge.svg';
+import HTMLBadge from './assets/images/HtmlBadge';
+import PDFBadge from './assets/images/PdfBadge';
+import TwitterBadge from './assets/images/TwitterBadge';
+import YoutubeBadge from './assets/images/YoutubeBadge';
 
 export {
     HTMLBadge,

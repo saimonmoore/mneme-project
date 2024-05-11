@@ -1,23 +1,26 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Badge,
+  BadgeText,
   Box,
   Button,
   Icon,
-  Image,
   Input,
   InputField,
   InputIcon,
   InputSlot,
+  Link,
+  LinkText,
   SearchIcon,
   Text,
+  HStack,
   VStack,
   HTMLBadge,
   TwitterBadge,
   PDFBadge,
   YoutubeBadge,
+  Pressable,
 } from "@mneme/components";
-import { HStack } from "@gluestack-ui/themed";
 
 export type MnemeURL = {
   url: string;
@@ -27,10 +30,10 @@ export type MnemeURL = {
 };
 
 const URLIcons = {
-  html: HTMLBadge,
-  pdf: PDFBadge,
-  twitter: TwitterBadge,
-  youtube: YoutubeBadge,
+  html: <HTMLBadge width="24" height="24" />,
+  pdf: <PDFBadge width="24" height="24" />,
+  twitter: <TwitterBadge width="24" height="24" />,
+  youtube: <YoutubeBadge width="24" height="24" />,
 };
 
 enum URLType {
@@ -44,20 +47,38 @@ const URLCard = ({ urlRecord }: { urlRecord: MnemeURL }) => {
   const { url, tags, keywords, type } = urlRecord;
 
   return (
-    <HStack>
-      <VStack>
-        <Image size="xs" source={URLIcons[type]} />
-        <Text>{url}</Text>
-        <HStack>
+    <HStack justifyContent="flex-start" gap="$4" mb="$6" ml="$6">
+      <Box> {URLIcons[type]}</Box>
+      <VStack alignItems="stretch" gap="$2">
+        <Link href={url}>
+          <LinkText>{url}</LinkText>
+        </Link>
+        <HStack justifyContent="flex-end" gap="$2">
           {tags?.map((tag) => (
-            <Badge size="sm" action="info" borderRadius="$sm" key={tag}>
-              {tag}
-            </Badge>
+            <Pressable>
+              <Badge
+                size="sm"
+                action="info"
+                borderRadius="$sm"
+                variant="outline"
+                key={tag}
+              >
+                <BadgeText>{tag}</BadgeText>
+              </Badge>
+            </Pressable>
           ))}
           {keywords?.map((keyword) => (
-            <Badge size="sm" action="success" borderRadius="$sm" key={keyword}>
-              {keyword}
-            </Badge>
+            <Pressable>
+              <Badge
+                size="sm"
+                action="success"
+                borderRadius="$sm"
+                variant="outline"
+                key={keyword}
+              >
+                <BadgeText>{keyword}</BadgeText>
+              </Badge>
+            </Pressable>
           ))}
         </HStack>
       </VStack>
@@ -69,7 +90,7 @@ const mockURLs = [
   {
     url: "https://www.google.com",
     type: URLType.HTML,
-    tags: ["search"],
+    tags: ["p2p"],
     keywords: ["search", "engine"],
   },
   {
@@ -81,30 +102,24 @@ const mockURLs = [
   {
     url: "https://www.twitter.com",
     type: URLType.TWITTER,
-    tags: ["social"],
+    tags: ["bird"],
     keywords: ["social", "media"],
   },
   {
     url: "https://www.pdf.com",
     type: URLType.PDF,
     tags: ["document"],
-    keywords: ["document", "pdf"],
+    keywords: ["adobe", "pdf"],
   },
 ];
 
 export const Dashboard = () => {
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState<string[]>([]);
-  const [activityFeed, setActivityFeed] = useState<string[]>([]);
 
   const handleSearch = (term: string) => {
     setSearchResults([term]);
   };
-
-  useEffect(() => {
-    // fetch activity feed
-    setActivityFeed(["Activity 1", "Activity 2", "Activity 3"]);
-  });
 
   return (
     <Box>
