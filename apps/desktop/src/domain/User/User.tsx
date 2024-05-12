@@ -5,9 +5,11 @@ import {
   IsEmail,
   IsNotEmpty,
   Length,
+  Validate,
   validate,
   ValidateIf,
 } from "class-validator";
+import { Match } from "@mneme/desktop/domain/validators/Match";
 
 import { MINIMUM_PASSWORD_LENGTH, MINIMUM_HASH_LENGTH } from "@mneme/domain";
 
@@ -15,11 +17,13 @@ import type { Hash, UserCommon } from "@mneme/domain";
 
 export type UserInputDto = UserCommon & {
   password: string;
+  passwordConfirmation: string;
 };
 
 export type UserError = {
   email?: string[];
   password?: string[];
+  passwordConfirmation?: string[];
   userName?: string[];
   displayName?: string[];
   avatarUrl?: string[];
@@ -47,6 +51,15 @@ export class User {
   @Length(MINIMUM_PASSWORD_LENGTH)
   @Expose()
   encyptedPassword: string;
+
+  @Length(MINIMUM_PASSWORD_LENGTH)
+  @Expose()
+  password: string;
+
+  @ValidateIf((u: User) => !!u.password)
+  @Match<User>('password')
+  @Expose()
+  passwordConfirmation: string;
 
   @IsNotEmpty()
   @Expose()
