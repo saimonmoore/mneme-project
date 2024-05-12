@@ -52,11 +52,11 @@ export const Dashboard = () => {
         ))}
       </VStack>
       <VStack>
-        <Heading mb="$8" italic="true" size="md">
+        <Heading mb="$8" italic size="md">
           Latest Bookmarks
         </Heading>
         {mockRecords().map((record: Record) => (
-          <RecordCard record={record} />
+          <RecordCard record={record} key={record.url} />
         ))}
       </VStack>
     </Box>

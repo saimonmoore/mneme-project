@@ -22,6 +22,7 @@ export * from './ui/core/Pressable';
 export * from './ui/core/SectionList';
 export * from './ui/core/Spinner';
 export * from './ui/core/Text';
+export * from './ui/core/Toast';
 export * from './ui/core/Tooltip';
 export * from './ui/core/View';
 export * from './ui/core/VirtualizedList';

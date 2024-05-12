@@ -4,6 +4,6 @@ export interface UserCommon {
   encryptedPassword?: string;
   displayName?: string;
   avatarUrl?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

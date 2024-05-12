@@ -27,14 +27,14 @@ export const RecordCard = ({ record }: { record: Record }) => {
 
   return (
     <HStack justifyContent="flex-start" gap="$4" mb="$6" ml="$6">
-      <Box> {URLIcons[type]}</Box>
+      <Box>{URLIcons[type]}</Box>
       <VStack alignItems="stretch" gap="$2">
         <Link href={url}>
           <LinkText>{url}</LinkText>
         </Link>
         <HStack justifyContent="flex-end" gap="$2">
           {Array.from(tags || []).map((tag) => (
-            <Pressable>
+            <Pressable key={tag.label}>
               <Badge
                 size="sm"
                 action="info"
@@ -47,7 +47,7 @@ export const RecordCard = ({ record }: { record: Record }) => {
             </Pressable>
           ))}
           {Array.from(keywords || []).map((keyword) => (
-            <Pressable>
+            <Pressable key={keyword.label}>
               <Badge
                 size="sm"
                 action="success"
