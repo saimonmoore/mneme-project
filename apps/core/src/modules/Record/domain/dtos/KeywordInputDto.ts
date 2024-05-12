@@ -1,4 +1,3 @@
-export type KeywordInputDto = {
-  label: string;
-  wikiLink?: string;
-};
+import type { KeywordCommon } from '@mneme/domain';
+
+export type KeywordInputDto = KeywordCommon & {};

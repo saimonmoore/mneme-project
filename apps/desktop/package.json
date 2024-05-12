@@ -24,6 +24,8 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
+    "@mneme/components": "*",
+    "@mneme/domain": "*",
     "@gluestack-style/react": "^1.0.56",
     "@gluestack-ui/config": "^1.1.18",
     "@gluestack-ui/themed": "^1.1.25",
@@ -39,7 +41,6 @@
     "react-native-web": "^0.19.11",
     "reflect-metadata": "^0.2.2",
     "styled-components": "^6.1.9",
-    "@mneme/components": "*",
     "zustand": "^4.5.2"
   },
   "devDependencies": {

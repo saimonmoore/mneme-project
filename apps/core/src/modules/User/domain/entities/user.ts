@@ -3,6 +3,8 @@ import { UserInputDto } from "@/modules/User/domain/dtos/UserInputDto.js";
 import { UserDto } from "@/modules/User/domain/dtos/UserDto.js";
 import { UserSchema } from "@/modules/User/domain/entities/UserSchema.js";
 
+import type { Hash } from '@mneme/domain';
+
 export class User {
   static USERS_KEY = "org.mneme.users!";
   static ACTIONS = {
@@ -44,7 +46,7 @@ export class User {
     return new User(properties);
   }
 
-  get hash(): string {
+  get hash(): Hash {
     return sha256(this.email);
   }
 

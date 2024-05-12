@@ -1,9 +1,3 @@
-export type UserDto = {
-  email: string;
-  userName?: string;
-  displayName?: string;
-  avatarUrl?: string;
-  encryptedPassword?: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
+import type { UserCommon } from '@mneme/domain';
+
+export type UserDto = UserCommon & {};

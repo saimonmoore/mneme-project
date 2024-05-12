@@ -5,6 +5,8 @@ import { FriendInputDto } from "@/modules/Friend/domain/dtos/FriendInputDto.js";
 import { FriendDto } from "@/modules/Friend/domain/dtos/FriendDto.js";
 import { User } from "@/modules/User/domain/entities/User.js";
 
+import type { Hash } from '@mneme/domain';
+
 export class Friend {
   static USER_FRIENDS_KEY = (userKey: string) =>
     `${User.USERS_KEY}${userKey}!org.mneme.friends!`;
@@ -20,7 +22,7 @@ export class Friend {
 
   userKey: string;
   userName: string;
-  displayName?: string;
+  displayName: string;
   avatarUrl?: string;
   _peerKeys: Set<string>;
   createdAt: Date;
@@ -40,7 +42,7 @@ export class Friend {
     return new Friend(properties);
   }
 
-  get hash(): string {
+  get hash(): Hash {
     return sha256(this.userName);
   }
 

@@ -8,30 +8,13 @@ import { RecordSchema } from "@/modules/Record/domain/entities/RecordSchema.js";
 import { Tag } from "@/modules/Record/domain/entities/Tag.js";
 import { Keyword } from "@/modules/Record/domain/entities/Keyword.js";
 
-export type MnemeTopic = {
-  label: string;
-  wikiLink: string;
-};
+import { RecordType, RecordLanguage } from '@mneme/domain';
+import type { Hash, RecordCommon, RecordUrl } from '@mneme/domain';
 
-export enum MnemeRecordType {
-  TWITTER = "twitter",
-  YOUTUBE = "youtube",
-  HTML = "html",
-  PDF = "pdf",
-}
-
-export type MnemeRecord = {
-  url: string;
-  type: MnemeRecordType;
-  keywords: MnemeTopic[];
-  tags: MnemeTopic[];
-  createdAt: string;
-  updatedAt: string;
-  hash?: string;
-  language?: string;
-  creatorHash: string;
+export type MnemeRecord =  RecordCommon & {
+  creatorHash: Hash;
   creator?: User;
-};
+}
 
 export class Record {
   static RECORDS_KEY = "org.mneme.records!";
@@ -46,14 +29,14 @@ export class Record {
     DELETE: "deleteRecord",
   };
 
-  url: string;
-  language: string | undefined;
-  type: MnemeRecordType;
+  url: RecordUrl;
+  language: RecordLanguage | undefined;
+  type: RecordType;
   _keywords: Set<Tag>;
   _tags: Set<Keyword>;
   createdAt: Date;
   updatedAt: Date;
-  creatorId: string;
+  creatorId: Hash;
   creator: User | undefined;
 
   constructor({
@@ -91,7 +74,7 @@ export class Record {
   }
 
   static getMnemeRecordTypeList() {
-    return Object.values(MnemeRecordType);
+    return Object.values(RecordType);
   } 
 
   static fromProperties(properties: RecordInputDto) {

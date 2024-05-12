@@ -1,8 +1,5 @@
-export type UserInputDto = {
-  email: string;
-  userName?: string;
-  displayName?: string;
-  avatarUrl?: string;
+import type { UserCommon } from '@mneme/domain';
+
+export type UserInputDto = UserCommon & {
   password?: string;
-  encryptedPassword?: string;
 };

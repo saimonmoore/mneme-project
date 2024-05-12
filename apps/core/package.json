@@ -30,6 +30,7 @@
     "test:brittle:generate": "brittle -r __tests__/all.brittle.js ./**/*.brittle.test.js"
   },
   "dependencies": {
+    "@mneme/domain": "*",
     "@trpc/client": "next",
     "@trpc/server": "next",
     "assert": "npm:bare-node-assert@^1.0.0",

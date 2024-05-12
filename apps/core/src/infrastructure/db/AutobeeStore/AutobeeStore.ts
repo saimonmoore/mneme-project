@@ -8,6 +8,8 @@ import type Autobase from "@/@types/autobase.js";
 import type { AutobaseBatch } from "@/@types/autobase.js";
 import type NoiseSecretStream from "@/@types/hyperswarm-secret-stream.js";
 
+import type { Hash } from '@mneme/domain';
+
 export interface AutobeeIndexer {
   handleOperation: (batch: HyperbeeBatch, operation: any) => Promise<void>;
 }
@@ -16,11 +18,11 @@ export class AutobeeStore {
   namespace: string;
   corestore: Corestore;
   core: Corestore;
-  bootstrapPublicKey: string;
+  bootstrapPublicKey: Hash;
   autoBee: Autobee;
   indexers: AutobeeIndexer[];
 
-  constructor(namespace: string, corestore: Corestore, bootstrapPublicKey: string) {
+  constructor(namespace: string, corestore: Corestore, bootstrapPublicKey: Hash) {
     this.namespace = namespace;
     this.corestore = corestore;
     this.core = this.corestore.namespace(namespace);

@@ -1,15 +1,20 @@
-import {immerable} from "immer";
+import { immerable } from "immer";
 import { Expose, plainToInstance } from "class-transformer";
-import { IsEmail, IsNotEmpty, Length, validate } from "class-validator";
+import {
+  IsDate,
+  IsEmail,
+  IsNotEmpty,
+  Length,
+  validate,
+  ValidateIf,
+} from "class-validator";
 
-import { MINIMUM_PASSWORD_LENGTH } from "../../config/constants";
+import { MINIMUM_PASSWORD_LENGTH, MINIMUM_HASH_LENGTH } from "@mneme/domain";
 
-export type UserInputDto = {
-  userName: string;
-  email: string;
+import type { Hash, UserCommon } from "@mneme/domain";
+
+export type UserInputDto = UserCommon & {
   password: string;
-  displayName: string;
-  avatarUrl?: string;
 };
 
 export type UserError = {
@@ -22,6 +27,12 @@ export type UserError = {
 
 export class User {
   [immerable] = true;
+
+  @ValidateIf((u) => !!u.createdAt)
+  @IsNotEmpty()
+  @Length(MINIMUM_HASH_LENGTH)
+  @Expose()
+  hash: Hash;
 
   @IsNotEmpty()
   @Expose()
@@ -44,9 +55,20 @@ export class User {
   @Expose()
   avatarUrl: string;
 
+  @IsDate()
+  @Expose()
+  createdAt: Date;
+
+  @IsDate()
+  @Expose()
+  updatedAt: Date;
+
   static create(userInput: UserInputDto) {
     // TODO: encrypt password
-    return plainToInstance(User, {...userInput, encyptedPassword: userInput.password});
+    return plainToInstance(User, {
+      ...userInput,
+      encyptedPassword: userInput.password,
+    });
   }
 
   async validate() {

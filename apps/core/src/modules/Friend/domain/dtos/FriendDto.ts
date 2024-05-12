@@ -1,7 +1,3 @@
-export type FriendDto = {
-  userName: string;
-  displayName?: string;
-  avatarUrl?: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
+import type { FriendCommon } from '@mneme/domain';
+
+export type FriendDto = FriendCommon & {};

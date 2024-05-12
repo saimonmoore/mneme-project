@@ -1,4 +1,3 @@
-export type TagInputDto = {
-  label: string;
-  wikiLink?: string;
-};
+import type { TagCommon } from '@mneme/domain';
+
+export type TagInputDto = TagCommon & {};
