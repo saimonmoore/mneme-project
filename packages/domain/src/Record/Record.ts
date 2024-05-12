@@ -20,8 +20,8 @@ export interface RecordCommon {
   type: RecordType;
   keywords: Partial<KeywordCommon>[];
   tags: Partial<TagCommon>[];
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
   language?: RecordLanguage;
   creator?: Partial<UserCommon>;
 };

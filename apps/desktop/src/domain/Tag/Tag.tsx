@@ -33,6 +33,10 @@ export class Tag {
     return plainToInstance(Tag, {...tagInput });
   }
 
+  static createCollection(tagInputs: TagInputDto[]) {
+    return tagInputs.map((tag: TagInputDto) => Tag.create(tag));
+  }
+
   async validate() {
     const errors = await validate(this, { validationError: { target: false } });
     return errors.reduce((obj, error) => {

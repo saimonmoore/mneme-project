@@ -34,6 +34,10 @@ export class Keyword {
     return plainToInstance(Keyword, {...keywordInput });
   }
 
+  static createCollection(keywordInputs: KeywordInputDto[]) {
+    return keywordInputs.map((keyword: KeywordInputDto) => Keyword.create(keyword));
+  }
+
   async validate() {
     const errors = await validate(this, { validationError: { target: false } });
     return errors.reduce((obj, error) => {

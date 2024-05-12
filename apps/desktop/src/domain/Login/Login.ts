@@ -2,7 +2,7 @@ import {immerable} from "immer";
 import { Expose, plainToInstance } from "class-transformer";
 import { IsEmail, IsNotEmpty, Length, validate } from "class-validator";
 
-import { MINIMUM_PASSWORD_LENGTH } from "../../config/constants";
+import { MINIMUM_PASSWORD_LENGTH } from "@mneme/domain";
 
 export type LoginInputDto = {
   email: string;

@@ -1,4 +1,3 @@
-import { Heading } from "@mneme/components";
 import { useMnemeStore } from "@mneme/desktop/store";
 import { LoggedInLayout } from "@mneme/desktop/ui/viewComponents/layout/LoggedIn/LoggedInLayout";
 import { LoggedOutLayout } from "@mneme/desktop/ui/viewComponents/layout/LoggedOut/LoggedOutLayout";
