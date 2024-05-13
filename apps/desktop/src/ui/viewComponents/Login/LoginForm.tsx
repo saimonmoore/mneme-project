@@ -9,6 +9,7 @@ import {
   Input,
   InputField,
   Heading,
+  useToast,
 } from "@mneme/components";
 
 import { User } from "@mneme/desktop/domain/User/User";
@@ -17,8 +18,14 @@ import { useMnemeStore } from "@mneme/desktop/store";
 
 import { FieldWrapper } from "./LoginForm.styles";
 import { Errors } from "@mneme/desktop/ui/viewComponents/Errors/Errors";
+import {
+  Notification,
+  NotificationType,
+} from "@mneme/desktop/ui/viewComponents/Notification/Notification";
+import { useLogin } from "@mneme/desktop/application/Session/SessionUseCase";
 
 export const LoginForm = () => {
+  const toast = useToast();
   const setCurrentUser = useMnemeStore((state) => state.login);
   const [errors, setErrors] = useState<LoginError>({} as LoginError);
   const [email, setEmail] = useState<string>("");
@@ -27,26 +34,23 @@ export const LoginForm = () => {
     Login.create({ email: "", password: "" })
   );
 
-  const loginUser = () => {
-    // TODO: call API to login
-    const user = User.create({
-      email: login.email,
-      password: login.password,
-      passwordConfirmation: login.password,
-      userName: "excsm",
-      displayName: "Saimon",
-      avatarUrl: "Saimon",
-    });
+  const { login: doLogin, data, loading, error } = useLogin();
 
-    setCurrentUser(user);
+  const loginUser = () => {
+    if (!login) return;
+
+    doLogin(login);
   };
 
   useEffect(() => {
     async function validateLogin() {
+      if (!login) return;
+
       login.email = email;
       login.password = password;
 
       const errors = await login.validate();
+
       if (errors) {
         setErrors(errors);
       }
@@ -56,6 +60,37 @@ export const LoginForm = () => {
 
     validateLogin();
   }, [email, password]);
+
+  useEffect(() => {
+    if (data) {
+      const loginInputDto = data as Login;
+
+      const newUser = User.create({
+        email: loginInputDto.email,
+        password: loginInputDto.password,
+        passwordConfirmation: loginInputDto.password,
+        userName: "excsm",
+        displayName: "Saimon",
+        avatarUrl: "Saimon",
+      });
+
+      setCurrentUser(newUser);
+    }
+
+    if (error) {
+      toast.show({
+        placement: "top",
+        render: ({ id }: { id: string }) => (
+          <Notification
+            id={id}
+            type={NotificationType.ERROR}
+            title="Login failed"
+            description={`There was an error logging in! (${error.message})`}
+          />
+        ),
+      });
+    }
+  }, [data, error]);
 
   return (
     <VStack space="md">
@@ -92,10 +127,10 @@ export const LoginForm = () => {
 
       {!errors.email?.length && !errors.password?.length && (
         <Button variant="outline" size="md" onPress={() => loginUser()}>
-          <Spinner loading={false}>
+          <ButtonText mr="$2">Login</ButtonText>
+          <Spinner loading={loading} >
             <Icon as={ArrowRightIcon} />
           </Spinner>
-          <ButtonText>Login</ButtonText>
         </Button>
       )}
     </VStack>

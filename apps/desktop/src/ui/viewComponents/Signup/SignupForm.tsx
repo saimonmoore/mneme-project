@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import {
   ArrowRightIcon,
   Button,
+  ButtonText,
   Heading,
   Icon,
   Input,
@@ -21,7 +22,6 @@ import {
   Notification,
   NotificationType,
 } from "@mneme/desktop/ui/viewComponents/Notification/Notification";
-import { ButtonText } from "@gluestack-ui/themed";
 
 export const SignupForm = () => {
   const toast = useToast();
@@ -188,7 +188,7 @@ export const SignupForm = () => {
         <FieldWrapper>
           <Input size="md">
             <InputField
-              placeholder="Upload your avatar"
+              placeholder="Upload your avatar..."
               value={user?.avatarUrl}
               onChangeText={(newAvatarUrl) => setAvatarUrl(newAvatarUrl)}
             />
@@ -199,10 +199,10 @@ export const SignupForm = () => {
 
       {!errors.email?.length && !errors.password?.length && (
         <Button variant="outline" size="md" onPress={() => signupUser()}>
+          <ButtonText mr="$4">Signup</ButtonText>
           <Spinner loading={loading}>
             <Icon as={ArrowRightIcon} />
           </Spinner>
-          <ButtonText>Signup</ButtonText>
         </Button>
       )}
     </VStack>
