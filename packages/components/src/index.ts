@@ -7,6 +7,7 @@ export * from './ui/core/BadgeIcon';
 export * from './ui/core/Box';
 export * from './ui/core/Button';
 export * from './ui/core/ButtonText';
+export * from './ui/core/ButtonIcon';
 export * from './ui/core/Card';
 export * from './ui/core/Center';
 export * from './ui/core/FlatList';

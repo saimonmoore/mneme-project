@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 
-import { Record } from "@mneme/desktop/domain/Record/Record";
 import {
+  AddIcon,
   Box,
   Button,
   ButtonText,
+  ButtonIcon,
   Heading,
   HStack,
   Icon,
@@ -18,27 +19,70 @@ import {
   VStack,
 } from "@mneme/components";
 
-import { mockRecords } from "@mneme/desktop/__mocks__/records";
 import { RecordCard } from "@mneme/desktop/ui/viewComponents/Record/RecordCard";
 import {
   Notification,
   NotificationType,
 } from "@mneme/desktop/ui/viewComponents/Notification/Notification";
-import { useFindRecordsByTag } from "@mneme/desktop/application/Record/RecordUseCase";
+
+import { Record } from "@mneme/desktop/domain/Record/Record";
+import {
+  useFindRecordsByTag,
+  useAddRecord,
+} from "@mneme/desktop/usecases/Record/RecordUseCase";
+import { mockRecords } from "@mneme/desktop/__mocks__/records";
+
+import { RecordLanguage, RecordType, type RecordUrl } from "@mneme/domain";
 
 export const Dashboard = () => {
   const toast = useToast();
   const [search, setSearch] = useState("");
+  const [newUrl, setNewUrl] = useState<RecordUrl | undefined>(undefined);
   const [searchResults, setSearchResults] = useState<Record[]>([]);
+  const [latestRecords, setLatestRecords] = useState<Record[]>(mockRecords());
 
   const { executeQuery, data, loading, error } = useFindRecordsByTag(search);
 
-  const handleSearch = (searchTerm: string) => {
-    setSearch(searchTerm);
-  };
+  const {
+    addRecord: addRecordMutation,
+    data: newRecord,
+    loading: addRecordLoading,
+    error: addRecordError,
+  } = useAddRecord();
+
+  function handleKeyPress() {
+    addRecord();
+  }
+
+  function addRecord() {
+    if (!newUrl) return;
+
+    const record = Record.create({
+      url: newUrl,
+      language: RecordLanguage.ENGLISH,
+      type: RecordType.HTML,
+      tags: [{ label: "tag" }],
+      keywords: [{ label: "keyword" }],
+    });
+
+    console.log("Adding record...", { record });
+    addRecordMutation(record);
+    setNewUrl(undefined);
+    setSearch("");
+  }
+
+  function handleSearch(termOrUrl: string) {
+    if (URL.canParse(termOrUrl)) {
+      setNewUrl(termOrUrl as RecordUrl);
+    } else {
+      setNewUrl(undefined);
+    }
+
+    setSearch(termOrUrl);
+  }
 
   useEffect(() => {
-    if (search && search.length > 2 && !loading) {
+    if (!newUrl && search && search.length > 2 && !loading) {
       executeQuery();
     }
   }, [search]);
@@ -63,24 +107,53 @@ export const Dashboard = () => {
     }
   }, [data, error]);
 
+  useEffect(() => {
+    if (newRecord) {
+      setLatestRecords([newRecord as Record, ...latestRecords]);
+    }
+
+    if (addRecordError) {
+      toast.show({
+        placement: "top",
+        render: ({ id }: { id: string }) => (
+          <Notification
+            id={id}
+            type={NotificationType.ERROR}
+            title="No records found"
+            description={`There was an error persisting your record! (${addRecordError.message})`}
+          />
+        ),
+      });
+    }
+  }, [newRecord, addRecordError]);
+
   return (
     <Box w="$full" alignItems="center">
       <Heading mb="$8">Dashboard</Heading>
       <HStack w="$80" mb="$8">
         <Input mr="$4" w="$80">
           <InputField
-            placeholder="Search ..."
+            placeholder="Paste url or search term..."
             value={search}
-            onChangeText={(term: string) => setSearch(term)}
+            onChangeText={(term: string) => handleSearch(term)}
+            onSubmitEditing={handleKeyPress}
           />
           <InputSlot pr="$2">
             <Spinner loading={loading}>
               <InputIcon>
-                <Icon as={SearchIcon} m="$2" w="$4" h="$4" />
+                {!newUrl && <Icon as={SearchIcon} m="$2" w="$4" h="$4" />}
               </InputIcon>
             </Spinner>
           </InputSlot>
         </Input>
+        {(newUrl || addRecordLoading) && (
+          <Button variant="outline" onPress={() => addRecord()}>
+            <ButtonText mr="$2">Add</ButtonText>
+            <Spinner loading={addRecordLoading}>
+              <ButtonIcon as={AddIcon} />
+            </Spinner>
+          </Button>
+        )}
       </HStack>
       <VStack>
         {searchResults.map((record: Record) => (
@@ -91,7 +164,7 @@ export const Dashboard = () => {
         <Heading mb="$8" italic size="md">
           Latest Bookmarks
         </Heading>
-        {mockRecords().map((record: Record) => (
+        {latestRecords.map((record: Record) => (
           <RecordCard record={record} key={record.url} />
         ))}
       </VStack>

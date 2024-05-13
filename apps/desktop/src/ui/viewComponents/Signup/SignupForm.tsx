@@ -14,7 +14,7 @@ import {
 } from "@mneme/components";
 
 import { useMnemeStore } from "@mneme/desktop/store";
-import { useSignup } from "@mneme/desktop/application/User/UserUseCase";
+import { useSignup } from "@mneme/desktop/usecases/User/UserUseCase";
 import { User, UserError } from "@mneme/desktop/domain/User/User";
 import { FieldWrapper } from "./SignupForm.styles";
 import { Errors } from "@mneme/desktop/ui/viewComponents/Errors/Errors";

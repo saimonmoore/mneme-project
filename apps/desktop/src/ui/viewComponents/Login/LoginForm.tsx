@@ -22,7 +22,7 @@ import {
   Notification,
   NotificationType,
 } from "@mneme/desktop/ui/viewComponents/Notification/Notification";
-import { useLogin } from "@mneme/desktop/application/Session/SessionUseCase";
+import { useLogin } from "@mneme/desktop/usecases/Session/SessionUseCase";
 
 export const LoginForm = () => {
   const toast = useToast();
