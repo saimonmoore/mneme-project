@@ -31,15 +31,18 @@ import {
   useAddRecord,
 } from "@mneme/desktop/usecases/Record/RecordUseCase";
 import { mockRecords } from "@mneme/desktop/__mocks__/records";
-
 import { RecordLanguage, RecordType, type RecordUrl } from "@mneme/domain";
+
+import { useMnemeStore } from "@mneme/desktop/store";
 
 export const Dashboard = () => {
   const toast = useToast();
   const [search, setSearch] = useState("");
   const [newUrl, setNewUrl] = useState<RecordUrl | undefined>(undefined);
   const [searchResults, setSearchResults] = useState<Record[]>([]);
-  const [latestRecords, setLatestRecords] = useState<Record[]>(mockRecords());
+
+  const records = useMnemeStore((state) => state.records);
+  const addRecordToStore = useMnemeStore((state) => state.addRecord);
 
   const { executeQuery, data, loading, error } = useFindRecordsByTag(search);
 
@@ -109,7 +112,7 @@ export const Dashboard = () => {
 
   useEffect(() => {
     if (newRecord) {
-      setLatestRecords([newRecord as Record, ...latestRecords]);
+      addRecordToStore(newRecord as Record);
     }
 
     if (addRecordError) {
@@ -164,7 +167,7 @@ export const Dashboard = () => {
         <Heading mb="$8" italic size="md">
           Latest Bookmarks
         </Heading>
-        {latestRecords.map((record: Record) => (
+        {(records ?? []).map((record: Record) => (
           <RecordCard record={record} key={record.url} />
         ))}
       </VStack>
