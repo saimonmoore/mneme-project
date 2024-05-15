@@ -1,35 +1,4 @@
-import { Mneme } from "@/Mneme/Mneme.js";
-import { User } from "@/modules/User/domain/entities/User.js";
-import { Record } from "@/modules/Record/domain/entities/Record.js";
-import { Friend } from "@/modules/Friend/domain/entities/Friend.js";
-
-async function initBareCLI() {
-    console.log("Initializing bare CLI");
-    const { Cli: MnemeCli } = await import("./bare-cli.js");
-    const cli = new MnemeCli();
-    cli.start();
-
-    return cli;
-}
-
-async function initNodeCLI() {
-    console.log("Initializing node CLI");
-    const { Cli: MnemeCli } = await import("./node-cli.js");
-    const cli = new MnemeCli();
-    cli.start();
-
-    return cli;
-}
-
-let cli;
-
-// @ts-ignore
-if (global.Pear) {
-    cli = await initBareCLI();
-} else {
-    cli = await initNodeCLI();
-}
-
-
-export { Friend, Mneme, Record, User };
-export { cli };
+export * from "@/Mneme/Mneme.js";
+export * from "@/modules/User/domain/entities/User.js";
+export * from "@/modules/Record/domain/entities/Record.js";
+export * from "@/modules/Friend/domain/entities/Friend.js";

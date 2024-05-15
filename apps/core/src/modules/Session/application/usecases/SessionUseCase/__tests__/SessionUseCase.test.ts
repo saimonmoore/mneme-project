@@ -73,6 +73,7 @@ describe("SessionUseCase", () => {
         expect(privateStore.get).toHaveBeenCalledWith(userKey);
         expect(User.fromProperties).toHaveBeenCalledWith(record.value.user);
         expect(sessionUseCase.currentUser?.toProperties()).toBe(
+          // @ts-ignore
           expect.objectContaining(loggedInUser.toProperties())
         );
         expect(result).toBe(user);

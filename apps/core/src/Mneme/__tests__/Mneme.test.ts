@@ -1,5 +1,7 @@
 import { jest, expect } from "@jest/globals";
 
+import type { Hash } from "@mneme/domain";
+
 // import Corestore from "corestore";
 
 jest.mock("corestore", () =>
@@ -46,7 +48,7 @@ import { Mneme } from "../index.js";
 import { User } from "../../modules/User/domain/entities/User.js";
 
 describe("Mneme", () => {
-  const bootstrapPrivateCorePublicKey = "bootstrapPrivateKey";
+  const bootstrapPrivateCorePublicKey = "bootstrapPrivateKey" as unknown as Hash;
   const storage = "./data";
   const testingDHT = "testingDHT";
   const user = new User({

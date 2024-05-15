@@ -11,6 +11,8 @@ describe("Friend", () => {
     userKey: "testuserkey",
     displayName: "Test Friend",
     avatarUrl: "http://example.com/avatar.png",
+    createdAt: new Date(),
+    updatedAt: new Date(),
   };
 
   beforeEach(() => {

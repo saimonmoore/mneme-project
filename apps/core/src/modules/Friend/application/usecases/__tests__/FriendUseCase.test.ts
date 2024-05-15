@@ -8,6 +8,7 @@ import { Logger } from "@/infrastructure/logging/logger.js";
 import { User } from "@/modules/User/domain/entities/User.js";
 import { sha256 } from "@/infrastructure/helpers/hash.js";
 import { SessionRequiredError } from "@/infrastructure/errors/SessionRequiredError.js";
+import { createDecipheriv } from "crypto";
 
 const logger = Logger.getInstance();
 
@@ -62,6 +63,8 @@ describe("FriendUseCase", () => {
               userKey,
               userName: "enrico",
               displayName: "Enrico Stano",
+              createdAt: new Date(),
+              updatedAt: new Date(),
             },
           },
         };
@@ -140,6 +143,8 @@ describe("FriendUseCase", () => {
               userKey,
               userName: "john",
               displayName: "John Smith",
+              createdAt: new Date(),
+              updatedAt: new Date(),
             },
           },
         };
@@ -220,6 +225,8 @@ describe("FriendUseCase", () => {
               userKey,
               userName: "john",
               displayName: "John Smith",
+              createdAt: new Date(),
+              updatedAt: new Date(),
             },
           },
         };
@@ -281,6 +288,8 @@ describe("FriendUseCase", () => {
       userKey,
       userName: "jdoe",
       displayName: "John Doe",
+      createdAt: new Date(),
+      updatedAt: new Date(), 
     });
 
     describe("when user is not logged in", () => {

@@ -73,7 +73,7 @@ export class Record {
     this.creatorId = user.hash;
   }
 
-  static getMnemeRecordTypeList() {
+  static getRecordTypeList() {
     return Object.values(RecordType);
   } 
 
@@ -122,7 +122,7 @@ export class Record {
       language: this.language,
       keywords: this.keywords,
       tags: this.tags,
-      creatorId: this.creatorId,
+      creator: this.creator,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };

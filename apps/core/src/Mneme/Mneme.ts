@@ -14,6 +14,8 @@ import { RecordInputDto } from "@/modules/Record/domain/dtos/RecordInputDto.js";
 import { SessionUseCase } from "@/modules/Session/application/usecases/SessionUseCase/index.js";
 import { FriendInputDto } from "@/modules/Friend/domain/dtos";
 
+import type { Hash } from "@mneme/domain";
+
 export class Mneme {
   static OUT_OF_BAND_SYNC_KEY_DELIMITER = ":";
   static EVENTS = {
@@ -32,7 +34,7 @@ export class Mneme {
   friendManager: FriendUseCase;
 
   constructor(
-    bootstrapCorePublicKeys?: string,
+    bootstrapCorePublicKeys?: Hash,
     storage?: string,
     testingDHT?: any
   ) {
@@ -50,12 +52,12 @@ export class Mneme {
 
     this.privateStore = new PrivateStore(
       this.corestore,
-      bootstrapPrivateCorePublicKey
+      bootstrapPrivateCorePublicKey as Hash
     );
 
     this.publicStore = new PublicStore(
       this.corestore,
-      bootstrapPublicCorePublicKey
+      bootstrapPublicCorePublicKey as Hash
     );
 
     // Application
