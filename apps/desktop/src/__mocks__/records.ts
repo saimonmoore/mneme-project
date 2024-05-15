@@ -1,32 +1,32 @@
-import { RecordLanguage, RecordType } from "@mneme/domain";
+import { RecordLanguage, RecordType, RecordUrl } from "@mneme/domain";
 import { Record, RecordInputDto } from "@mneme/desktop/domain/Record/Record";
 import { Tag, TagInputDto } from "@mneme/desktop/domain/Tag/Tag";
 import { Keyword, KeywordInputDto } from "@mneme/desktop/domain/Keyword/Keyword";
 
 export const mockURLs = [
     {
-        url: "https://www.google.com",
+        url: "https://www.google.com" as RecordUrl,
         type: RecordType.HTML,
         language: RecordLanguage.ENGLISH,
         tags: [{ label: "p2p" }],
         keywords: [{ label: "search" }, { label: "engine" }],
     },
     {
-        url: "https://www.youtube.com",
+        url: "https://www.youtube.com" as RecordUrl,
         type: RecordType.YOUTUBE,
         language: RecordLanguage.ENGLISH,
         tags: [{ label: "video" }],
         keywords: [{ label: "video" }, { label: "youtube" }],
     },
     {
-        url: "https://www.twitter.com",
+        url: "https://www.twitter.com" as RecordUrl,
         type: RecordType.TWITTER,
         language: RecordLanguage.ENGLISH,
         tags: [{ label: "tweet" }],
         keywords: [{ label: "twitter" }, { label: "social" }],
     },
     {
-        url: "https://www.pdf.com",
+        url: "https://www.pdf.com" as RecordUrl,
         type: RecordType.PDF,
         language: RecordLanguage.ENGLISH,
         tags: [{ label: "document" }],

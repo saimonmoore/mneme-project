@@ -30,7 +30,6 @@ import {
   useFindRecordsByTag,
   useAddRecord,
 } from "@mneme/desktop/usecases/Record/RecordUseCase";
-import { mockRecords } from "@mneme/desktop/__mocks__/records";
 import { RecordLanguage, RecordType, type RecordUrl } from "@mneme/domain";
 
 import { useMnemeStore } from "@mneme/desktop/store";
@@ -134,6 +133,7 @@ export const Dashboard = () => {
     <Box w="$full" alignItems="center">
       <Heading mb="$8">Dashboard</Heading>
       <HStack w="$80" mb="$8">
+        {/* @ts-ignore */}
         <Input mr="$4" w="$80">
           <InputField
             placeholder="Paste url or search term..."

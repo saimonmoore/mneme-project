@@ -1,4 +1,4 @@
 export type TagCommon = {
   label: string;
-  wikiLink: string;
+  wikiLink?: string;
 };

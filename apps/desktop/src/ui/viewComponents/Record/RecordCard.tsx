@@ -40,7 +40,7 @@ export const RecordCard = ({ record }: { record: Record }) => {
                 action="info"
                 borderRadius="$sm"
                 variant="outline"
-                key={tag}
+                key={tag.label}
               >
                 <BadgeText>{tag.label}</BadgeText>
               </Badge>
@@ -53,7 +53,7 @@ export const RecordCard = ({ record }: { record: Record }) => {
                 action="success"
                 borderRadius="$sm"
                 variant="outline"
-                key={keyword}
+                key={keyword.label}
               >
                 <BadgeText>{keyword.label}</BadgeText>
               </Badge>
