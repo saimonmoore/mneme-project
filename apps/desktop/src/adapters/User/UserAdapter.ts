@@ -1,5 +1,8 @@
 import { User } from "@mneme/desktop/domain/User/User";
 import { useMutation } from "@tanstack/react-query";
+import { Mneme } from '@mneme/desktop/infrastructure/pear/backend';
+
+console.log('Got Mneme in desktop...', { Mneme });
 
 const signup = async (user: User) => {
     try {

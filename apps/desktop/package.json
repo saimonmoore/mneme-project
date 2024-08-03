@@ -19,7 +19,7 @@
     "build": "tsc && vite build",
     "build:watch": "tsc && vite build --watch",
     "preview": "vite preview",
-    "pear:dev": "pear dev",
+    "pear:dev": "./scripts/proxy-root-node-modules.sh pear dev .",
     "brittle:test": "brittle test/*.test.js",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
@@ -27,6 +27,7 @@
     "@gluestack-style/react": "^1.0.56",
     "@gluestack-ui/config": "^1.1.18",
     "@gluestack-ui/themed": "^1.1.25",
+    "@mneme/core": "^0.0.1",
     "@mneme/components": "*",
     "@mneme/domain": "*",
     "@radix-ui/react-icons": "^1.3.0",

@@ -24,8 +24,7 @@
     "paths": {
       "@mneme/desktop/*": ["./src/*"],
       "@mneme/components/*": ["../components/*"],
-      "@mneme/domain/*": ["../domain/*"],
-      "@mneme/core/*": ["../core/*"]
+      "@mneme/domain/*": ["../domain/*"]
     }
   },
   "include": ["src"],
