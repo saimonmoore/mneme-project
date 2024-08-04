@@ -17,7 +17,6 @@
     "build": "rimraf dist && tsc --build --verbose && tsc-alias",
     "lint": "TIMING=1 eslint \"**/*.ts*\"",
     "check:types": "tsc --noEmit",
-    "server": "./scripts/proxy-root-node-modules.sh bare server.js",
     "test": "NODE_ENV=test jest",
     "test:jest:strict": "NODE_ENV=test jest --detect-open-handles",
     "test:jest:watch": "NODE_ENV=test jest --watch",
@@ -27,8 +26,6 @@
     "test:brittle:generate": "brittle -r __tests__/all.brittle.js ./**/*.brittle.test.js"
   },
   "dependencies": {
-    "@trpc/client": "next",
-    "@trpc/server": "next",
     "autobase": "6.0.28",
     "b4a": "^1.6.6",
     "camelcase": "^7.0.1",

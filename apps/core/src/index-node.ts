@@ -2,7 +2,6 @@ import minimist from 'minimist';
 import { Mneme } from "@/Mneme/Mneme.js";
 import { User } from "@/modules/User/domain/entities/User.js";
 import { Record } from "@/modules/Record/domain/entities/Record.js";
-// import { MnemeServer } from "@/server";
 // import { env, config } from "@/pear-compat";
 
 const isTestRunning = process.env["NODE_ENV"] === "test";
@@ -40,12 +39,7 @@ if (!isTestRunning) {
   mneme = new Mneme(bootstrapPrivateCorePublicKey, storage);
   mneme.info();
 
-  // const server = MnemeServer();
-
   await mneme.start();
-
-  // @ts-ignore
-  // server.start(mneme);
 }
 
 export { Mneme, User, Record };

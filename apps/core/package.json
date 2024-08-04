@@ -10,6 +10,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "switch-to-node": "./scripts/switch-interpreter.sh node && rm -fr node_modules && rm -fr ../../node_modules && yarn install",
+    "switch-to-bare": "./scripts/switch-interpreter.sh bare && rm -fr node_modules && rm -fr ../../node_modules && yarn install",
     "dev-pear": "./scripts/proxy-root-node-modules.sh pear dev .",
     "pear1": "clear; rm -fr data; yarn run build && yarn run dev-pear",
     "pear2": "clear; rm -fr data2; yarn run dev-pear -- -s 2 -b ",
@@ -20,7 +21,6 @@
     "build": "rimraf dist && tsc --build --verbose && tsc-alias",
     "lint": "TIMING=1 eslint \"**/*.ts*\"",
     "check:types": "tsc --noEmit",
-    "server": "./scripts/proxy-root-node-modules.sh bare server.js",
     "test": "NODE_ENV=test jest",
     "test:jest:strict": "NODE_ENV=test jest --detect-open-handles",
     "test:jest:watch": "NODE_ENV=test jest --watch",
@@ -31,8 +31,6 @@
   },
   "dependencies": {
     "@mneme/domain": "*",
-    "@trpc/client": "next",
-    "@trpc/server": "next",
     "assert": "npm:bare-node-assert@^1.0.0",
     "autobase": "6.0.28",
     "b4a": "^1.6.6",

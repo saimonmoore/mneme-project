@@ -9,7 +9,6 @@ import { MnemeRepl } from "@/MnemeRepl.js";
 import { User } from "@/modules/User/domain/entities/User.js";
 import { Record } from "@/modules/Record/domain/entities/Record.js";
 import { Friend } from "@/modules/Friend/domain/entities/Friend.js";
-// import { MnemeServer } from "@/server";
 import { config, teardown } from "@/pear-compat";
 
 class Cli {
@@ -50,12 +49,7 @@ class Cli {
     this.mneme = new Mneme(bootstrapPrivateCorePublicKey, storage);
     this.mneme.info();
 
-    // const server = MnemeServer();
-
     await this.mneme.start();
-
-    // @ts-ignore
-    // server.start(mneme);
 
     // this.replRepl();
     this.readlineRepl();

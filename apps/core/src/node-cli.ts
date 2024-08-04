@@ -4,7 +4,6 @@ import { Mneme } from "@/Mneme/Mneme.js";
 import { User } from "@/modules/User/domain/entities/User.js";
 import { Record } from "@/modules/Record/domain/entities/Record.js";
 import { Friend } from "@/modules/Friend/domain/entities/Friend.js";
-// import { MnemeServer } from "@/server";
 
 class Cli {
   mneme: Mneme;
@@ -21,12 +20,7 @@ class Cli {
     this.mneme = new Mneme(bootstrapPrivateCorePublicKey, storage);
     this.mneme.info();
 
-    // const server = MnemeServer();
-
     await this.mneme.start();
-
-    // @ts-ignore
-    // server.start(mneme);
   }
 
   // TODO: Implement args for node version
