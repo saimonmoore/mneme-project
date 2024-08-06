@@ -5,7 +5,6 @@
   "scripts": {
     "build:svgs": "svgr -d src/assets/images src/assets/images --ext=tsx --icon --typescript",
     "build": "rimraf dist && yarn run build:svgs && tsc",
-    "postinstall": "yarn build",
     "watch": "tsc --watch"
   },
   "dependencies": {

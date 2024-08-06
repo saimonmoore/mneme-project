@@ -4,14 +4,14 @@
   "version": "0.0.1",
   "type": "module",
   "pear": {
-    "name": "mneme",
+    "name": "@mneme/core",
     "type": "terminal"
   },
   "license": "Apache-2.0",
   "scripts": {
     "switch-to-node": "./scripts/switch-interpreter.sh node && rm -fr node_modules && rm -fr ../../node_modules && yarn install",
     "switch-to-bare": "./scripts/switch-interpreter.sh bare && rm -fr node_modules && rm -fr ../../node_modules && yarn install",
-    "dev-pear": "./scripts/proxy-root-node-modules.sh pear dev .",
+    "dev-pear": "pear dev .",
     "pear1": "clear; rm -fr data; yarn run build && yarn run dev-pear",
     "pear2": "clear; rm -fr data2; yarn run dev-pear -- -s 2 -b ",
     "stage:dev": "pear stage --ignore src,test,.turbo dev",
@@ -30,7 +30,7 @@
     "test:brittle:generate": "brittle -r __tests__/all.brittle.js ./**/*.brittle.test.js"
   },
   "dependencies": {
-    "@mneme/domain": "*",
+    "@mneme/domain": "file:../../packages/domain",
     "assert": "npm:bare-node-assert@^1.0.0",
     "autobase": "6.0.28",
     "b4a": "^1.6.6",
@@ -114,13 +114,22 @@
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
+    "@types/jest": "^29.5.12",
     "@types/minimist": "^1.2.5",
+    "@types/node": "^20.12.7",
     "brittle": "^3.0.0",
-    "eslint-config-custom": "*",
+    "eslint-config-custom": "file:../../packages/eslint-config-custom",
     "jest": "^29.7.0",
     "nodemon": "^3.1.0",
-    "prettier-config": "*",
+    "prettier-config": "file:../../packages/prettier-config",
     "rimraf": "^3.0.2",
-    "tsconfig": "*"
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.8",
+    "tsx": "^4.7.1",
+    "typescript": "^5.4.5"
+  },
+  "resolutions": {
+    "typescript": "5.4.5"
   }
 }

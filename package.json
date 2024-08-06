@@ -5,7 +5,10 @@
   "workspaces": {
     "packages": [
       "packages/*",
-      "apps/*"
+      "apps/desktop",
+      "apps/mobile-proxy",
+      "apps/p2p-proxy",
+      "apps/web"
     ]
   },
   "license": "MIT",
@@ -20,7 +23,8 @@
   },
   "devDependencies": {
     "eslint-config-custom": "*",
-    "prettier-config": "*"
+    "prettier-config": "*",
+    "tsconfig": "*"
   },
   "resolutions": {
     "typescript": "5.4.5"

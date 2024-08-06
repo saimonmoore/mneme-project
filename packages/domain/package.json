@@ -4,7 +4,6 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "rimraf dist && yarn run tsc",
-    "postinstall": "yarn build",
     "watch": "tsc --watch"
   },
   "dependencies": {},
