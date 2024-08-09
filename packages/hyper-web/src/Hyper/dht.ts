@@ -24,14 +24,17 @@ interface DHTProps {
 
 export const DHT = ({ children, url, keyPair, ...options }: DHTProps) => {
   const [dht, setDHT] = useState(null)
+  console.log('[DHT] ====> ', { dht });
 
   useEffect(() => {
+    console.log('[DHT#useEffect] => ')
     const ws = new window.WebSocket(url || DHT_RELAY_ADDRESS)
     const stream = new Stream(true, ws)
 
     keyPair = keyPair || DHTRelay.keyPair(primaryKey)
 
     const relay = new DHTRelay(stream, { keyPair, ...options })
+    console.log('[DHT#useEffect] ====> ', { ws, stream, primaryKey, keyPair, relay });
     setDHT(relay)
 
     return () => {

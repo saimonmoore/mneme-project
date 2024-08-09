@@ -12,6 +12,7 @@
     "random-access-memory": "^6.2.1",
     "random-access-web": "^2.0.3",
     "safety-catch": "^1.0.2",
+    "sodium-javascript": "^0.8.0",
     "sodium-universal": "^4.0.1"
   },
   "devDependencies": {
