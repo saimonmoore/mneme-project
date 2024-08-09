@@ -19,7 +19,7 @@ export class Logger {
 
   public static getInstance(): Logger {
     if (!Logger.instance) {
-      Logger.instance = new Logger(env().NODE_ENV === 'test' ? 'error' : 'debug');
+      Logger.instance = new Logger(env('APP_ENV') === 'test' ? 'error' : 'debug');
     }
     return Logger.instance;
   }
