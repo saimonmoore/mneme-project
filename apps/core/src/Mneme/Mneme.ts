@@ -16,6 +16,11 @@ import { FriendInputDto } from "@/modules/Friend/domain/dtos";
 
 import type { Hash } from "@mneme/domain";
 
+type MnemeListener = {
+  event: string;
+  callback: (...args: any[]) => void;
+};
+
 export class Mneme {
   static OUT_OF_BAND_SYNC_KEY_DELIMITER = ":";
   static EVENTS = {
@@ -37,7 +42,8 @@ export class Mneme {
     bootstrapCorePublicKeys?: Hash,
     storage?: string | any,
     testingDHT?: any,
-    dht?: any
+    dht?: any,
+    listeners: MnemeListener[] = []
   ) {
     const [bootstrapPrivateCorePublicKey, bootstrapPublicCorePublicKey] =
       (bootstrapCorePublicKeys &&
@@ -238,7 +244,7 @@ export class Mneme {
     yield* this.privateRecordManager.myData();
   }
 
-  setupEventBus() {
+  setupEventBus(listeners = []) {
     this.eventBus.on(Mneme.EVENTS.USER_LOGIN, (user: User) => {
       console.log("info: You are now logged in...", { user: user.email });
       console.log();
@@ -250,6 +256,11 @@ export class Mneme {
 
     this.eventBus.on(Mneme.EVENTS.MNEME_READY, () => {
       console.log("info: Mneme is ready for business!");
+    });
+
+    listeners.forEach((listener: MnemeListener) => {
+      listener && listener.callback && listener.callback.bind(this);
+      this.eventBus.on(listener.event, listener.callback);
     });
   }
 
