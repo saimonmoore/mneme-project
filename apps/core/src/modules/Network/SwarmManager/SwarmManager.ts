@@ -11,6 +11,7 @@ import { UserUseCase } from "@/modules/User/application/usecases/UserUseCase.js"
 
 type Stores = { private: PrivateStore; public: PublicStore; };
 type StoreKey = keyof Stores;
+type SwarmOptions = { dht?: any; };
 
 // TODO: Abstract writer handshake into a separate class (allow for multiple cores)
 //       Should not be coupled to anything else
@@ -33,7 +34,8 @@ export class SwarmManager {
     stores: Stores,
     userManager: UserUseCase,
     eventBus: EventEmitter,
-    testingDHT?: any
+    testingDHT?: any,
+    dht?: any
   ) {
     this.privateStore = stores.private;
     this.publicStore = stores.public;
@@ -41,9 +43,16 @@ export class SwarmManager {
     this.eventBus = eventBus;
 
     this.userManager = userManager;
+
+    const swarmOptions: SwarmOptions = {};
+
+    if (dht) {
+      swarmOptions.dht = dht;
+    }
+
     this.swarm = testingDHT
       ? new Hyperswarm({ bootstrap: testingDHT })
-      : new Hyperswarm();
+      : new Hyperswarm(swarmOptions);
   }
 
   get dhtKeypair() {

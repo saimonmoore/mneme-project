@@ -36,7 +36,8 @@ export class Mneme {
   constructor(
     bootstrapCorePublicKeys?: Hash,
     storage?: string,
-    testingDHT?: any
+    testingDHT?: any,
+    dht?: any
   ) {
     const [bootstrapPrivateCorePublicKey, bootstrapPublicCorePublicKey] =
       (bootstrapCorePublicKeys &&
@@ -81,7 +82,8 @@ export class Mneme {
       { private: this.privateStore, public: this.publicStore },
       this.userManager,
       this.eventBus,
-      testingDHT
+      testingDHT,
+      dht
     );
   }
 
