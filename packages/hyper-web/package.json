@@ -1,0 +1,29 @@
+{
+  "name": "@mneme/hyper-web",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "rimraf dist && yarn run tsc",
+    "watch": "tsc --watch"
+  },
+  "dependencies": {
+    "@hyperswarm/dht-relay": "^0.4.3",
+    "b4a": "^1.6.6",
+    "random-access-memory": "^6.2.1",
+    "random-access-web": "^2.0.3",
+    "safety-catch": "^1.0.2",
+    "sodium-universal": "^4.0.1"
+  },
+  "devDependencies": {
+    "eslint-config-custom": "*",
+    "prettier-config": "*",
+    "rimraf": "^3.0.2",
+    "tsconfig": "*"
+  },
+  "resolutions": {
+    "typescript": "5.4.5"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

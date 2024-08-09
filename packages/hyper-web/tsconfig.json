@@ -1,0 +1,16 @@
+{
+  "extends": "tsconfig/base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "lib": ["ES2015", "DOM", "DOM.Iterable", "ScriptHost"],
+    "module": "ESNext",
+    "target": "es6",
+    "baseUrl": ".",
+    "paths": {
+      "@mneme/hyper-web": ["src"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["dist", "build", "node_modules"]
+}

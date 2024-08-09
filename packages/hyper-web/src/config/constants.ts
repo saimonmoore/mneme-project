@@ -1,0 +1,1 @@
+export const DHT_RELAY_ADDRESS = 'wss://dht1-relay.leet.ar:49443'
