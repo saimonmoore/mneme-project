@@ -35,7 +35,7 @@ export class Mneme {
 
   constructor(
     bootstrapCorePublicKeys?: Hash,
-    storage?: string,
+    storage?: string | any,
     testingDHT?: any,
     dht?: any
   ) {
