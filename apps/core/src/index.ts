@@ -3,32 +3,31 @@ import { User } from "@/modules/User/domain/entities/User.js";
 import { Record } from "@/modules/Record/domain/entities/Record.js";
 import { Friend } from "@/modules/Friend/domain/entities/Friend.js";
 
-async function initBareCLI() {
-    console.log("Initializing bare CLI");
-    const { Cli: MnemeCli } = await import("./bare-cli.js");
-    const cli = new MnemeCli();
-    cli.start();
+// async function initBareCLI() {
+//     console.log("Initializing bare CLI");
+//     const { Cli: MnemeCli } = await import("./bare-cli.js");
+//     const cli = new MnemeCli();
+//     cli.start();
 
-    return cli;
-}
+//     return cli;
+// }
 
-async function initNodeCLI() {
-    console.log("Initializing node CLI");
-    const { Cli: MnemeCli } = await import("./node-cli.js");
-    const cli = new MnemeCli();
-    cli.start();
+// async function initNodeCLI() {
+//     console.log("Initializing node CLI");
+//     const { Cli: MnemeCli } = await import("./node-cli.js");
+//     const cli = new MnemeCli();
+//     cli.start();
 
-    return cli;
-}
+//     return cli;
+// }
 
-let cli;
+// let cli;
 
-// @ts-ignore
-if (global.Pear) {
-    cli = await initBareCLI();
-} else {
-    cli = await initNodeCLI();
-}
+// // @ts-ignore
+// if (global.Pear) {
+//     cli = await initBareCLI();
+// } else {
+//     cli = await initNodeCLI();
+// }
 
 export { Friend, Mneme, Record, User };
-export { cli };
