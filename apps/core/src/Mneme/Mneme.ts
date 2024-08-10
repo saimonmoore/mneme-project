@@ -52,7 +52,7 @@ export class Mneme {
 
     // Setup an internal event emitter
     this.eventBus = new EventEmitter();
-    this.setupEventBus();
+    this.setupEventBus(listeners);
 
     // Persistence
     this.corestore = new Corestore(storage || "./data");
@@ -244,7 +244,7 @@ export class Mneme {
     yield* this.privateRecordManager.myData();
   }
 
-  setupEventBus(listeners = []) {
+  setupEventBus(listeners: MnemeListener[] = []) {
     this.eventBus.on(Mneme.EVENTS.USER_LOGIN, (user: User) => {
       console.log("info: You are now logged in...", { user: user.email });
       console.log();
