@@ -1,5 +1,5 @@
 {
-  "name": "@mneme/hyper-web",
+  "name": "@mneme/core-web",
   "version": "0.0.1",
   "main": "dist/index.js",
   "scripts": {
@@ -7,6 +7,7 @@
     "watch": "tsc --watch"
   },
   "dependencies": {
+    "@mneme/core": "file:../../apps/core",
     "@hyperswarm/dht-relay": "^0.4.3",
     "b4a": "^1.6.6",
     "random-access-memory": "^6.2.1",
@@ -16,10 +17,10 @@
     "sodium-universal": "^4.0.1"
   },
   "devDependencies": {
-    "eslint-config-custom": "*",
-    "prettier-config": "*",
+    "@mneme/eslint-config": "*",
+    "@mneme/prettier-config": "*",
     "rimraf": "^3.0.2",
-    "tsconfig": "*"
+    "@mneme/tsconfig": "*"
   },
   "resolutions": {
     "typescript": "5.4.5"

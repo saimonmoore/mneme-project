@@ -693,6 +693,22 @@
 "@mneme/domain@file:../../packages/domain":
   version "1.0.0"
 
+"@mneme/eslint-config@file:../../packages/eslint-config":
+  version "1.0.0"
+  dependencies:
+    eslint "^7.23.0"
+    eslint-config-next "13.0.0"
+    eslint-config-prettier "^8.3.0"
+    eslint-config-turbo latest
+    eslint-plugin-react "7.31.8"
+    eslint-plugin-react-hooks "^4.6.0"
+    eslint-plugin-react-refresh "^0.4.6"
+
+"@mneme/prettier-config@file:../../packages/prettier-config":
+  version "0.0.0"
+  dependencies:
+    prettier "2.8.8"
+
 "@next/eslint-plugin-next@13.0.0":
   version "13.0.0"
   resolved "https://registry.yarnpkg.com/@next/eslint-plugin-next/-/eslint-plugin-next-13.0.0.tgz#cf3d799b21671554c1f5889c01d2513afb9973cd"
@@ -2030,17 +2046,6 @@ escape-string-regexp@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-4.0.0.tgz#14ba83a5d373e3d311e5afca29cf5bfad965bf34"
   integrity sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==
-
-"eslint-config-custom@file:../../packages/eslint-config-custom":
-  version "1.0.0"
-  dependencies:
-    eslint "^7.23.0"
-    eslint-config-next "13.0.0"
-    eslint-config-prettier "^8.3.0"
-    eslint-config-turbo latest
-    eslint-plugin-react "7.31.8"
-    eslint-plugin-react-hooks "^4.6.0"
-    eslint-plugin-react-refresh "^0.4.6"
 
 eslint-config-next@13.0.0:
   version "13.0.0"
@@ -4066,11 +4071,6 @@ prelude-ls@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.2.1.tgz#debc6489d7a6e6b0e7611888cec880337d316396"
   integrity sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==
-
-"prettier-config@file:../../packages/prettier-config":
-  version "0.0.0"
-  dependencies:
-    prettier "2.8.8"
 
 prettier@2.8.8:
   version "2.8.8"

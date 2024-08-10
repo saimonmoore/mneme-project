@@ -8,9 +8,9 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "eslint-config-custom": "*",
-    "prettier-config": "*",
-    "tsconfig": "*",
+    "@mneme/eslint-config": "*",
+    "@mneme/prettier-config": "*",
+    "@mneme/tsconfig": "*",
     "rimraf": "^3.0.2"
   },
   "resolutions": {

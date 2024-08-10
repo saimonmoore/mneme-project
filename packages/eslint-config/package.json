@@ -1,5 +1,5 @@
 {
-  "name": "eslint-config-custom",
+  "name": "@mneme/eslint-config",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -13,7 +13,7 @@
     "eslint-plugin-react": "7.31.8"
   },
   "devDependencies": {
-    "tsconfig": "*",
+    "@mneme/tsconfig": "*",
     "@next/eslint-plugin-next": "^13.2.4"
   },
   "publishConfig": {

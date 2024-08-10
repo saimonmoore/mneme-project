@@ -22,9 +22,9 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
-    "eslint-config-custom": "*",
-    "prettier-config": "*",
-    "tsconfig": "*"
+    "@mneme/eslint-config": "*",
+    "@mneme/prettier-config": "*",
+    "@mneme/tsconfig": "*"
   },
   "resolutions": {
     "typescript": "5.4.5"

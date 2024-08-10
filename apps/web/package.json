@@ -9,9 +9,9 @@
   },
   "devDependencies": {
     "next-transpile-modules": "latest",
-    "tsconfig": "*",
-    "eslint-config-custom": "*",
-    "prettier-config": "*"
+    "@mneme/tsconfig": "*",
+    "@mneme/eslint-config": "*",
+    "@mneme/prettier-config": "*"
   },
   "dependencies": {
     "@mneme/components": "*",

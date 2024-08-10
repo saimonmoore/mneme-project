@@ -1,5 +1,5 @@
 {
-  "extends": "tsconfig/base.json",
+  "extends": "@mneme/tsconfig/base.json",
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "src",
@@ -8,7 +8,7 @@
     "target": "es6",
     "baseUrl": ".",
     "paths": {
-      "@mneme/hyper-web": ["src"]
+      "@mneme/core-web": ["src"]
     }
   },
   "include": ["src/**/*"],

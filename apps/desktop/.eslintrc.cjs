@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
   extends: [
-    "custom",
+    "@mneme/eslint-config",
     'plugin:react-hooks/recommended',
   ],
   env: { browser: true, es2020: true },
