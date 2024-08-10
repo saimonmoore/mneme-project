@@ -5,10 +5,7 @@
   "workspaces": {
     "packages": [
       "packages/*",
-      "apps/desktop",
-      "apps/mobile-proxy",
-      "apps/p2p-proxy",
-      "apps/web"
+      "apps/desktop"
     ]
   },
   "license": "MIT",

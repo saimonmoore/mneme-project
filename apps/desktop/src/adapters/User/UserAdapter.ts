@@ -1,18 +1,16 @@
 import { User } from "@mneme/desktop/domain/User/User";
 import { useMutation } from "@tanstack/react-query";
+import { Mneme } from "@mneme/core";
+import { useMneme } from "@mneme/core-web";
 
-const signup = async (user: User) => {
+const signup = async (user: User, mneme: Mneme) => {
     try {
-        // Perform some async operation to signup
-        // Sleep for 1 second
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-
-        return new Promise((resolve, reject) => {
-            // Reject 50% of the times
-            if (Math.random() > 0.75) {
-                reject(new Error("userName already exists"));
-            }
-            resolve(user);
+        return await mneme.signup({
+            email: user.email,
+            userName: user.userName,
+            password: user.password,
+            displayName: user.displayName,
+            avatarUrl: user.avatarUrl,
         });
     } catch (error: unknown) {
         throw new Error((error as Error).message);
@@ -20,6 +18,7 @@ const signup = async (user: User) => {
 };
 
 export const SignupAction = () => {
-    // Perform some async operation to signup
-    return useMutation({ mutationFn: async (user: User) => signup(user) });
+    const { mneme } = useMneme();
+
+    return useMutation({ mutationFn: async (user: User) => signup(user, mneme!) });
 };

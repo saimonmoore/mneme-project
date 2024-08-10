@@ -23,9 +23,9 @@
     "experimentalDecorators": true,
     "paths": {
       "@mneme/desktop/*": ["./src/*"],
-      "@mneme/components/*": ["../components/*"],
-      "@mneme/domain/*": ["../domain/*"],
-      "@mneme/core/*": ["../core/*"]
+      "@mneme/components/*": ["../../packages/components/*"],
+      "@mneme/domain/*": ["../../packages/domain/*"],
+      "@mneme/core-web/*": ["../../packages/core-web/*"]
     }
   },
   "include": ["src"],

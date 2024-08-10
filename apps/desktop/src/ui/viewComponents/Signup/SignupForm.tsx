@@ -62,7 +62,6 @@ export const SignupForm = () => {
       user.avatarUrl = avatarUrl;
       user.password = password;
       user.passwordConfirmation = passswordConfirmation;
-      user.encyptedPassword = password;
 
       const errors = await user.validate();
       if (errors) {
@@ -84,16 +83,16 @@ export const SignupForm = () => {
 
   useEffect(() => {
     if (data) {
-      const userInputDto = data as User;
+      const userInputDto = data as unknown as User;
       // TODO: Autocreate zustand selectors
       // TODO: Setup zustand subscriptions
       const newUser = User.create({
         email: userInputDto.email,
-        password: userInputDto.password,
-        passwordConfirmation: userInputDto.passwordConfirmation,
         userName: userInputDto.userName,
         displayName: userInputDto.displayName,
         avatarUrl: userInputDto.avatarUrl,
+        createdAt: userInputDto.createdAt,
+        updatedAt: userInputDto.updatedAt,
       });
 
       setCurrentUser(newUser);

@@ -15,8 +15,8 @@ import { MINIMUM_PASSWORD_LENGTH, MINIMUM_HASH_LENGTH } from "@mneme/domain";
 import type { Hash, UserCommon } from "@mneme/domain";
 
 export type UserInputDto = UserCommon & {
-  password: string;
-  passwordConfirmation: string;
+  password?: string;
+  passwordConfirmation?: string;
 };
 
 export type UserError = {
@@ -31,7 +31,7 @@ export type UserError = {
 export class User {
   [immerable] = true;
 
-  @ValidateIf((u) => !!u.createdAt)
+  @ValidateIf((u: User) => !!u.createdAt)
   @IsNotEmpty()
   @Length(MINIMUM_HASH_LENGTH)
   @Expose()
@@ -46,19 +46,15 @@ export class User {
   @Expose()
   email: string;
 
-  @IsNotEmpty()
+  @ValidateIf((u: User) => !!u.createdAt)
   @Length(MINIMUM_PASSWORD_LENGTH)
   @Expose()
-  encyptedPassword: string;
+  password?: string;
 
-  @Length(MINIMUM_PASSWORD_LENGTH)
-  @Expose()
-  password: string;
-
-  @ValidateIf((u: User) => !!u.password)
+  @ValidateIf((u: User) => !u.createdAt && !!u.password)
   @Match<User>('password')
   @Expose()
-  passwordConfirmation: string;
+  passwordConfirmation?: string;
 
   @IsNotEmpty()
   @Expose()
@@ -79,7 +75,6 @@ export class User {
     // TODO: encrypt password
     return plainToInstance(User, {
       ...userInput,
-      encyptedPassword: userInput.password,
     });
   }
 

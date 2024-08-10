@@ -27,7 +27,7 @@ import {
 
 import { Record } from "@mneme/desktop/domain/Record/Record";
 import {
-  useFindRecordsByTag,
+  useFindMyRecords,
   useAddRecord,
 } from "@mneme/desktop/usecases/Record/RecordUseCase";
 import { RecordLanguage, RecordType, type RecordUrl } from "@mneme/domain";
@@ -43,7 +43,7 @@ export const Dashboard = () => {
   const records = useMnemeStore((state) => state.records);
   const addRecordToStore = useMnemeStore((state) => state.addRecord);
 
-  const { executeQuery, data, loading, error } = useFindRecordsByTag(search);
+  const { executeQuery, data, loading, error } = useFindMyRecords();
 
   const {
     addRecord: addRecordMutation,
@@ -91,7 +91,7 @@ export const Dashboard = () => {
 
   useEffect(() => {
     if (data) {
-      setSearchResults(data as Record[]);
+      setSearchResults(data as unknown as Record[]);
     }
 
     if (error) {

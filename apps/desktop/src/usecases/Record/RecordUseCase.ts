@@ -1,7 +1,18 @@
-import { FindRecordsByTagAction, AddRecordAction } from "@mneme/desktop/adapters/Record/RecordAdapter";
+import { FindRecordsByTagAction, FindMyRecordsAction, AddRecordAction } from "@mneme/desktop/adapters/Record/RecordAdapter";
 
 export const useFindRecordsByTag = (tagLabel: string) => {
     const { data, isLoading: loading, error, refetch } = FindRecordsByTagAction(tagLabel);
+
+    return {
+        executeQuery: refetch,
+        data,
+        loading,
+        error,
+    };
+};
+
+export const useFindMyRecords = () => {
+    const { data, isLoading: loading, error, refetch } = FindMyRecordsAction();
 
     return {
         executeQuery: refetch,

@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useContext, createContext } from 'react'
+import React, { useEffect, useState, useContext, createContext } from 'react';
 //@ts-expect-error
-import safetyCatch from 'safety-catch'
+import safetyCatch from 'safety-catch';
 import { useDHT, RAM } from '@mneme/core-web';
+//@ts-expect-error
 import { Mneme, User } from '@mneme/core';
 
 interface MnemeContext {
@@ -11,20 +12,22 @@ const MnemeContext = createContext<MnemeContext>({});
 
 const listeners = [
   {
-    event: Mneme.EVENTS.USER_LOGIN, callback: (user: User) => {
-      console.log("info: You are now logged in...", { user: user.email });
+    event: Mneme.EVENTS.USER_LOGIN,
+    callback: (user: User) => {
+      console.log('info: You are now logged in...', { user: user.email });
       console.log();
       console.log(
-        "info: Use the following key to synchronise Mneme to your other devices: ",
+        'info: Use the following key to synchronise Mneme to your other devices: ',
         // @ts-expect-error
-        this!.outOfBandSyncKey
+        this!.outOfBandSyncKey,
       );
-    }
+    },
   },
   {
-    event: Mneme.EVENTS.MNEME_READY, callback: () => {
-      console.log("info: Mneme is ready for business!");
-    }
+    event: Mneme.EVENTS.MNEME_READY,
+    callback: () => {
+      console.log('info: Mneme is ready for business!');
+    },
   },
 ];
 
@@ -33,13 +36,13 @@ interface MnemeProps {
 }
 
 export const MnemeProvider = ({ children }: MnemeProps) => {
-  const [mneme, setMneme] = useState<Mneme>()
+  const [mneme, setMneme] = useState<Mneme>();
   const { dht } = useDHT();
 
   console.log('[MnemeProvider] ====> ', { mneme });
 
   useEffect(() => {
-    console.log('[MnemeProvider#useEffect] => ')
+    console.log('[MnemeProvider#useEffect] => ');
     let mneme: Mneme;
 
     if (!dht) return;
@@ -54,32 +57,33 @@ export const MnemeProvider = ({ children }: MnemeProps) => {
 
       await mneme.start();
 
-      console.log('[MnemeProvider#useEffect] =========> Started Mneme: ', { mneme });
+      console.log('[MnemeProvider#useEffect] =========> Started Mneme: ', {
+        mneme,
+      });
     }
 
     startMneme();
 
     return () => {
-      mneme?.destroy().catch(safetyCatch)
-    }
-
+      mneme?.destroy().catch(safetyCatch);
+    };
   }, [dht]);
 
   return React.createElement(
     MnemeContext.Provider,
     {
-      value: { mneme }
+      value: { mneme },
     },
-    children
-  )
-}
+    children,
+  );
+};
 
 export const useMneme = () => {
-  const context = useContext(MnemeContext)
+  const context = useContext(MnemeContext);
 
   if (context === undefined) {
-    throw new Error('useMneme must be used within a MnemeProvider component')
+    throw new Error('useMneme must be used within a MnemeProvider component');
   }
 
-  return context
-}
+  return context;
+};

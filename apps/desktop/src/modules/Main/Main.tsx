@@ -1,12 +1,12 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { DHT, MnemeProvider } from '@mneme/core-web';
-import { useMnemeStore } from "@mneme/desktop/store";
-import { LoggedInLayout } from "@mneme/desktop/ui/viewComponents/layout/LoggedIn/LoggedInLayout";
-import { LoggedOutLayout } from "@mneme/desktop/ui/viewComponents/layout/LoggedOut/LoggedOutLayout";
-import { LoginSignupPage } from "@mneme/desktop/ui/page/LoginSignup/LoginSignupPage";
-import { Page } from "@mneme/desktop/ui/core/Page/Page";
-import { Dashboard } from "@mneme/desktop/ui/page/Dashboard/DashboardPage";
+import { useMnemeStore } from '@mneme/desktop/store';
+import { LoggedInLayout } from '@mneme/desktop/ui/viewComponents/layout/LoggedIn/LoggedInLayout';
+import { LoggedOutLayout } from '@mneme/desktop/ui/viewComponents/layout/LoggedOut/LoggedOutLayout';
+import { LoginSignupPage } from '@mneme/desktop/ui/page/LoginSignup/LoginSignupPage';
+import { Page } from '@mneme/desktop/ui/core/Page/Page';
+import { Dashboard } from '@mneme/desktop/ui/page/Dashboard/DashboardPage';
 
 export const Main = () => {
   const queryClient = new QueryClient();
@@ -16,7 +16,9 @@ export const Main = () => {
       <MnemeProvider>
         <QueryClientProvider client={queryClient}>
           <Page>
-            {!currentUser && <LoggedOutLayout>{<LoginSignupPage />}</LoggedOutLayout>}
+            {!currentUser && (
+              <LoggedOutLayout>{<LoginSignupPage />}</LoggedOutLayout>
+            )}
             {currentUser && (
               <LoggedInLayout>
                 <Dashboard />
@@ -24,7 +26,7 @@ export const Main = () => {
             )}
           </Page>
         </QueryClientProvider>
-        </MnemeProvider>
-        </DHT>
-        );
+      </MnemeProvider>
+    </DHT>
+  );
 };
