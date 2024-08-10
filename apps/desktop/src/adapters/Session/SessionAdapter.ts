@@ -16,3 +16,18 @@ export const LoginAction = () => {
 
     return useMutation({ mutationFn: async (login: Login) => doLogin(login, mneme!) });
 };
+
+const doLogout = async (mneme: Mneme) => {
+    try {
+        await mneme.logout();
+        return true;
+    } catch (error: unknown) {
+        throw new Error((error as Error).message);
+    }
+};
+
+export const LogoutAction = () => {
+    const { mneme } = useMneme();
+
+    return useMutation({ mutationFn: async () => doLogout(mneme!) });
+};

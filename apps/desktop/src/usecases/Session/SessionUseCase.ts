@@ -1,4 +1,4 @@
-import { LoginAction } from "@mneme/desktop/adapters/Session/SessionAdapter";
+import { LoginAction, LogoutAction } from "@mneme/desktop/adapters/Session/SessionAdapter";
 
 export const useLogin = () => {
     const login = LoginAction();
@@ -7,6 +7,20 @@ export const useLogin = () => {
 
     return {
         login: login.mutate,
+
+        data,
+        loading,
+        error,
+    };
+};
+
+export const useLogout = () => {
+    const logout = LogoutAction();
+
+    const { data, isPending: loading, error } = logout;
+
+    return {
+        logout: logout.mutate,
 
         data,
         loading,

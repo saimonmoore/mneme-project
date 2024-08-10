@@ -83,16 +83,15 @@ export const SignupForm = () => {
 
   useEffect(() => {
     if (data) {
-      const userInputDto = data as unknown as User;
       // TODO: Autocreate zustand selectors
       // TODO: Setup zustand subscriptions
       const newUser = User.create({
-        email: userInputDto.email,
-        userName: userInputDto.userName,
-        displayName: userInputDto.displayName,
-        avatarUrl: userInputDto.avatarUrl,
-        createdAt: userInputDto.createdAt,
-        updatedAt: userInputDto.updatedAt,
+        email: data.email,
+        userName: data.userName,
+        displayName: data.displayName,
+        avatarUrl: data.avatarUrl,
+        createdAt: data.createdAt,
+        updatedAt: data.updatedAt,
       });
 
       setCurrentUser(newUser);

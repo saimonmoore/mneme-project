@@ -63,15 +63,14 @@ export const LoginForm = () => {
 
   useEffect(() => {
     if (data) {
-      const loginInputDto = data as Login;
-
       const newUser = User.create({
-        email: loginInputDto.email,
-        password: loginInputDto.password,
-        passwordConfirmation: loginInputDto.password,
-        userName: "excsm",
-        displayName: "Saimon",
-        avatarUrl: "Saimon",
+        hash: data.hash,
+        email: data.email,
+        userName: data.userName,
+        displayName: data.displayName,
+        avatarUrl: data.avatarUrl,
+        createdAt: data.createdAt,
+        updatedAt: data.updatedAt,
       });
 
       setCurrentUser(newUser);

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   Link,
   HStack,
@@ -7,12 +8,45 @@ import {
   ThemeSwitcher,
   HelpCircleIcon,
   Icon,
+  useToast,
 } from "@mneme/components";
 import { useMnemeStore } from "@mneme/desktop/store";
+import { useLogout } from "@mneme/desktop/usecases/Session/SessionUseCase";
 import { Header } from "@mneme/desktop/ui/viewComponents/Header/Header";
+import {
+  Notification,
+  NotificationType,
+} from "@mneme/desktop/ui/viewComponents/Notification/Notification";
 
 export const LoggedInLayout = ({ children }: { children: React.ReactNode }) => {
-  const logout = useMnemeStore((state) => state.logout);
+  const toast = useToast();
+  const logoutLocally = useMnemeStore((state) => state.logout);
+
+  const { logout: doLogout, data: loggedOutRemotely, error } = useLogout();
+
+  const logoutUser = () => {
+    doLogout();
+  };
+
+  useEffect(() => {
+    if (loggedOutRemotely) {
+      logoutLocally();
+    }
+
+    if (error) {
+      toast.show({
+        placement: "top",
+        render: ({ id }: { id: string }) => (
+          <Notification
+            id={id}
+            type={NotificationType.ERROR}
+            title="Logout failed"
+            description={`There was an error logging out! (${error.message})`}
+          />
+        ),
+      });
+    }
+  }, [loggedOutRemotely, error]);
 
   return (
     <VStack space="md">
@@ -25,7 +59,7 @@ export const LoggedInLayout = ({ children }: { children: React.ReactNode }) => {
         </Header.Center>
         <Header.Right>
           <HStack>
-            <Link onPress={() => logout()}>
+            <Link onPress={() => logoutUser()}>
               <LinkText>Logout</LinkText>
             </Link>
             <ThemeSwitcher />

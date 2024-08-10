@@ -46,7 +46,7 @@ export class User {
   @Expose()
   email: string;
 
-  @ValidateIf((u: User) => !!u.createdAt)
+  @ValidateIf((u: User) => !u.createdAt)
   @Length(MINIMUM_PASSWORD_LENGTH)
   @Expose()
   password?: string;
@@ -72,7 +72,6 @@ export class User {
   updatedAt: Date;
 
   static create(userInput: UserInputDto) {
-    // TODO: encrypt password
     return plainToInstance(User, {
       ...userInput,
     });
