@@ -184,8 +184,7 @@ export class RecordUseCase {
     );
 
     if (!result) {
-      logger.info("No records found for tag: " + tag);
-      return;
+      throw new Error(`No records found for tag: "${tag}".`);
     }
 
     yield* this.findRecordsByKey(result.value.records);
@@ -217,8 +216,7 @@ export class RecordUseCase {
     const result = await this.store.get(User.USERS_KEY + record.creatorId);
 
     if (!result) {
-      logger.info("No creator found for record: " + record.creatorId);
-      return;
+      throw new Error(`No creator found for record: "${record.creatorId}".`);
     }
 
     const creator = User.fromProperties(result.value.user);

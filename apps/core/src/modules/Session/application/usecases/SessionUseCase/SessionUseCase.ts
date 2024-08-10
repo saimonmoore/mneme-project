@@ -1,8 +1,8 @@
-import { User } from "@/modules/User/domain/entities/User.js";
-import { PrivateStore } from "@/infrastructure/db/stores/PrivateStore/index.js";
+import { User } from '@/modules/User/domain/entities/User.js';
+import { PrivateStore } from '@/infrastructure/db/stores/PrivateStore/index.js';
 
-import { Logger } from "@/infrastructure/logging/logger.js";
-import { sha256 } from "@/infrastructure/helpers/hash.js";
+import { Logger } from '@/infrastructure/logging/logger.js';
+import { sha256 } from '@/infrastructure/helpers/hash.js';
 
 const logger = Logger.getInstance();
 
@@ -27,8 +27,7 @@ class SessionUseCase {
     const record = await this.privateStore.get(userKey);
 
     if (!record) {
-      logger.info(`Please sign up! No user found for "${userKey}".`);
-      return;
+      throw new Error(`Please sign up! No user found for "${userKey}".`);
     }
 
     const user = record && User.fromProperties(record.value.user);
@@ -41,9 +40,7 @@ class SessionUseCase {
 
   directLogin(user?: User): User | undefined {
     if (!user) {
-      logger.info(`No user to directly login!`);
-
-      return;
+      throw new Error('No user to directly login!');
     }
 
     this.currentUser = user;
@@ -56,23 +53,20 @@ class SessionUseCase {
     logger.info('Logging in as "' + email + '"');
 
     if (this.isLoggedIn()) {
-      logger.info(`Already logged in as ${email}`);
-      return;
+      throw new Error(`Already logged in as ${email}`);
     }
 
     const record = await this.privateStore.get(partialUser.key);
 
     if (!record) {
-      logger.info(`Please sign up! No user found for "${email}".`);
-      return;
+      throw new Error(`Please sign up! No user found for "${email}".`);
     }
 
     const user = User.fromProperties(record.value.user);
     user.writers = record.value.writers;
 
     if (user.encryptedPassword !== sha256(password)) {
-      logger.info(`Incorrect password for "${email}".`);
-      return;
+      throw new Error(`Incorrect password for "${email}".`);
     }
 
     // TODO: Add session token
@@ -85,7 +79,7 @@ class SessionUseCase {
 
   async logout(): Promise<void> {
     this.currentUser = undefined;
-    logger.info("Logged out");
+    logger.info('Logged out');
   }
 }
 
