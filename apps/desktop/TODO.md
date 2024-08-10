@@ -1,0 +1,3 @@
+- [ ] fix listing records
+- [ ] fix/check setting creator when creating records
+- [ ] switch to persistant storage
