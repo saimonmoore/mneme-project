@@ -32,7 +32,6 @@ export const SignupForm = () => {
   const [passswordConfirmation, setPasswordConfirmation] = useState<string>("");
   const [userName, setUserName] = useState<string>("");
   const [displayName, setDisplayName] = useState<string>("");
-  const [avatarUrl, setAvatarUrl] = useState<string>("");
   const [user, setUser] = useState<User | undefined>(
     User.create({
       email: "",
@@ -40,7 +39,6 @@ export const SignupForm = () => {
       displayName: "",
       password: "",
       passwordConfirmation: "",
-      avatarUrl: "",
     })
   );
 
@@ -59,7 +57,6 @@ export const SignupForm = () => {
       user.email = email;
       user.userName = userName;
       user.displayName = displayName;
-      user.avatarUrl = avatarUrl;
       user.password = password;
       user.passwordConfirmation = passswordConfirmation;
 
@@ -78,7 +75,6 @@ export const SignupForm = () => {
     displayName,
     password,
     passswordConfirmation,
-    avatarUrl,
   ]);
 
   useEffect(() => {
@@ -86,10 +82,10 @@ export const SignupForm = () => {
       // TODO: Autocreate zustand selectors
       // TODO: Setup zustand subscriptions
       const newUser = User.create({
+        hash: data.hash,
         email: data.email,
         userName: data.userName,
         displayName: data.displayName,
-        avatarUrl: data.avatarUrl,
         createdAt: data.createdAt,
         updatedAt: data.updatedAt,
       });
@@ -181,19 +177,6 @@ export const SignupForm = () => {
       {!!passswordConfirmation.length && (
         <Errors errors={errors.passwordConfirmation} />
       )}
-
-      {
-        <FieldWrapper>
-          <Input size="md">
-            <InputField
-              placeholder="Upload your avatar..."
-              value={user?.avatarUrl}
-              onChangeText={(newAvatarUrl) => setAvatarUrl(newAvatarUrl)}
-            />
-          </Input>
-        </FieldWrapper>
-      }
-      {!!email.length && <Errors errors={errors.email} />}
 
       {!errors.email?.length && !errors.password?.length && (
         <Button variant="outline" size="md" onPress={() => signupUser()}>
