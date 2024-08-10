@@ -18,7 +18,7 @@ import type { Hash } from "@mneme/domain";
 
 type MnemeListener = {
   event: string;
-  callback: (...args: any[]) => void;
+  callback: (mneme: Mneme) => (...args: any[]) => void;
 };
 
 export class Mneme {
@@ -245,22 +245,8 @@ export class Mneme {
   }
 
   setupEventBus(listeners: MnemeListener[] = []) {
-    this.eventBus.on(Mneme.EVENTS.USER_LOGIN, (user: User) => {
-      console.log("info: You are now logged in...", { user: user.email });
-      console.log();
-      console.log(
-        "info: Use the following key to synchronise Mneme to your other devices: ",
-        this.outOfBandSyncKey
-      );
-    });
-
-    this.eventBus.on(Mneme.EVENTS.MNEME_READY, () => {
-      console.log("info: Mneme is ready for business!");
-    });
-
     listeners.forEach((listener: MnemeListener) => {
-      listener && listener.callback && listener.callback.bind(this);
-      this.eventBus.on(listener.event, listener.callback);
+      this.eventBus.on(listener.event, listener.callback(this));
     });
   }
 
