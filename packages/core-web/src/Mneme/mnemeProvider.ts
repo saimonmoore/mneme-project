@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext, createContext } from 'react';
-//@ts-expect-error
+//@ts-ignore
 import safetyCatch from 'safety-catch';
 import { useDHT, RAM } from '@mneme/core-web';
-//@ts-expect-error
+//@ts-ignore
 import { Mneme, User } from '@mneme/core';
 
 interface MnemeContext {
@@ -13,19 +13,18 @@ const MnemeContext = createContext<MnemeContext>({});
 const listeners = [
   {
     event: Mneme.EVENTS.USER_LOGIN,
-    callback: (user: User) => {
-      console.log('info: You are now logged in...', { user: user.email });
+    callback: (mneme: Mneme) => (user: User) => {
+      console.log('info: You are logged in...', { user: user.email });
       console.log();
       console.log(
         'info: Use the following key to synchronise Mneme to your other devices: ',
-        // @ts-expect-error
-        this!.outOfBandSyncKey,
+        mneme.outOfBandSyncKey,
       );
     },
   },
   {
     event: Mneme.EVENTS.MNEME_READY,
-    callback: () => {
+    callback: (mneme: Mneme) => () => {
       console.log('info: Mneme is ready for business!');
     },
   },
