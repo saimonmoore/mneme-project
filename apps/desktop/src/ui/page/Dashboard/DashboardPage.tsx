@@ -135,6 +135,12 @@ export const Dashboard = () => {
     <Box w="$full" alignItems="center">
       <Heading mb="$8">Dashboard</Heading>
       <HStack w="$80" mb="$8">
+        <Button variant="outline" onPress={() => findAllMyRecords()}>
+          <ButtonText mr="$2">Refresh</ButtonText>
+          <Spinner loading={loading}>
+            <ButtonIcon as={SearchIcon} />
+          </Spinner>
+        </Button>
         {/* @ts-ignore */}
         <Input mr="$4" w="$80">
           <InputField
@@ -161,16 +167,16 @@ export const Dashboard = () => {
         )}
       </HStack>
       <VStack>
-        {searchResults.map((record: Record) => (
-          <RecordCard record={record} key={record.url} />
+        {searchResults.map((record: Record, index: number) => (
+          <RecordCard record={record} key={index} />
         ))}
       </VStack>
       <VStack>
         <Heading mb="$8" italic size="md">
           Latest Bookmarks
         </Heading>
-        {(records ?? []).map((record: Record) => (
-          <RecordCard record={record} key={record.url} />
+        {(records ?? []).map((record: Record, index: number) => (
+          <RecordCard record={record} key={index} />
         ))}
       </VStack>
     </Box>
