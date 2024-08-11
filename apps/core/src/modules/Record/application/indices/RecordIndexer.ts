@@ -59,15 +59,36 @@ export class RecordIndexer implements AutobeeIndexer {
     const user = new User(userData);
 
     const record = new Record(recordData);
-    const result = await this.privateStore.get(Record.RECORD_BY_USER_KEY(user.hash as string, record.hash));
+    record.setCreator(user);
+
+    const recordKey = Record.RECORD_BY_USER_KEY(user.hash as string, record.hash);
+
+    logger.info('[Core][RecordIndexer#indexCreateRecord] Preparing record: ', {
+      key: Record.RECORD_BY_USER_KEY(user.hash as string, record.hash),
+      record,
+      user,
+      recordData,
+      userData
+    });
+
+    const result = await this.privateStore.get(recordKey);
+
+    logger.info('[Core][RecordIndexer#indexCreateRecord] Searched for existing record: ', {
+      result
+    });
 
     if (result && result.value?.user) {
       throw new EntityExistsError(record.constructor.name);
     }
 
+    logger.info('[Core][RecordIndexer#indexCreateRecord] Persisting as: ', {
+      key: recordKey,
+      record: record.toProperties(),
+    });
+
     // index by hashed url: index by value
     // /userHash/records/recordHash
-    await batch.put(Record.RECORD_BY_USER_KEY(user.hash as string, record.hash), {
+    await batch.put(recordKey, {
       record: record.toProperties(),
     });
 

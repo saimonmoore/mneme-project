@@ -1,34 +1,34 @@
 import { camelcase } from '@/infrastructure/helpers/camelcase.js';
 
-import { AutobeeStore } from "@/infrastructure/db/AutobeeStore/index.js";
-import { SessionUseCase } from "@/modules/Session/application/usecases/SessionUseCase/SessionUseCase.js";
-import { sessionRequired } from "@/modules/Session/application/decorators/sessionRequired.js";
-import { Record } from "@/modules/Record/domain/entities/Record.js";
-import { Keyword } from "@/modules/Record/domain/entities/Keyword.js";
-import { Tag } from "@/modules/Record/domain/entities/Tag.js";
-import { User } from "@/modules/User/domain/entities/User.js";
+import { AutobeeStore } from '@/infrastructure/db/AutobeeStore/index.js';
+import { SessionUseCase } from '@/modules/Session/application/usecases/SessionUseCase/SessionUseCase.js';
+import { sessionRequired } from '@/modules/Session/application/decorators/sessionRequired.js';
+import { Record } from '@/modules/Record/domain/entities/Record.js';
+import { Keyword } from '@/modules/Record/domain/entities/Keyword.js';
+import { Tag } from '@/modules/Record/domain/entities/Tag.js';
+import { User } from '@/modules/User/domain/entities/User.js';
 
-import { Logger } from "@/infrastructure/logging/logger.js";
-import { sha256 } from "@/infrastructure/helpers/hash.js";
+import { Logger } from '@/infrastructure/logging/logger.js';
+import { sha256 } from '@/infrastructure/helpers/hash.js';
 
 const logger = Logger.getInstance();
 
-import type { RecordInputDto } from "@/modules/Record/domain/dtos/RecordInputDto.js";
+import type { RecordInputDto } from '@/modules/Record/domain/dtos/RecordInputDto.js';
 
 export interface RecordCreateOperation {
-  type: "createRecord";
+  type: 'createRecord';
   record: RecordInputDto;
   user: User;
 }
 
 export interface RecordUpdateOperation {
-  type: "updateRecord";
+  type: 'updateRecord';
   record: RecordInputDto;
   user: User;
 }
 
 export interface RecordDeleteOperation {
-  type: "deleteRecord";
+  type: 'deleteRecord';
   record: RecordInputDto;
   user: User;
 }
@@ -57,12 +57,20 @@ export class RecordUseCase {
     const currentUser = this.session.loggedInUser();
     const currentUserHash = currentUser?.hash;
 
+    console.log('[Core][RecordUseCase][*myRecords] =======> ', {
+      currentUser,
+      currentUserHash,
+    });
+
     // @ts-ignore
     for await (const data of await this.store.createReadStream({
       gt: Record.RECORDS_BY_USER_KEY(currentUserHash as string),
       lt: `${Record.RECORDS_BY_USER_KEY(currentUserHash as string)}~`,
     })) {
       const record = Record.fromProperties(data.value.record as RecordInputDto);
+      console.log('[Core][RecordUseCase][*myRecords] =======> iterating... ', {
+        record,
+      });
 
       await this.findAndSetCreator(record);
 
@@ -102,7 +110,7 @@ export class RecordUseCase {
       lt:
         Keyword.MY_KEYWORDS_BY_LABEL_KEY(currentUserHash as string) +
         camelcase(text) +
-        "~",
+        '~',
       limit: 10,
     })) {
       const keyword = Keyword.fromProperties({
@@ -121,11 +129,13 @@ export class RecordUseCase {
     const keywordHash = sha256(keyword);
 
     const result = await this.store.get(
-      `${Keyword.KEYWORDS_BY_USER_KEY(currentUserHash as string)}${keywordHash}`
+      `${Keyword.KEYWORDS_BY_USER_KEY(
+        currentUserHash as string,
+      )}${keywordHash}`,
     );
 
     if (!result) {
-      logger.info("No records found for keyword: " + keyword);
+      logger.info('No records found for keyword: ' + keyword);
       return;
     }
 
@@ -163,7 +173,7 @@ export class RecordUseCase {
       lt:
         Tag.MY_TAGS_BY_LABEL_KEY(currentUserHash as string) +
         camelcase(text) +
-        "~",
+        '~',
       limit: 10,
     })) {
       yield Tag.fromProperties({
@@ -180,7 +190,7 @@ export class RecordUseCase {
     const currentUserHash = currentUser?.hash;
 
     const result = await this.store.get(
-      `${Tag.TAGS_BY_USER_KEY(currentUserHash as string)}${tagHash}`
+      `${Tag.TAGS_BY_USER_KEY(currentUserHash as string)}${tagHash}`,
     );
 
     if (!result) {
@@ -201,28 +211,47 @@ export class RecordUseCase {
     const record = new Record(data);
     record.setCreator(currentUser as User);
 
-    logger.info("Created record: ", { data, record, currentUser });
+    logger.info('[Core][RecordUseCase#addRecord] Created record: ', {
+      data,
+      record,
+      currentUser,
+    });
 
-    await this.store.appendOperation(
-      JSON.stringify({
-        type: Record.ACTIONS.CREATE,
-        record: record.toProperties(),
-        user: currentUser,
-      })
-    );
+    const recordToPersist = JSON.stringify({
+      type: Record.ACTIONS.CREATE,
+      record: record.toProperties(),
+      user: currentUser,
+    });
+
+    logger.info('[Core][RecordUseCase#addRecord] Appending record: ', {
+      recordToPersist,
+    });
+
+    await this.store.appendOperation(recordToPersist);
     // TODO: Get the record from the store
 
     return record;
   }
 
   private async findAndSetCreator(record: Record) {
+    console.log('[Core][RecordUseCase][findAndSetCreator] =======> ', {
+      record,
+      key: User.USERS_KEY + record.creatorId,
+    });
     const result = await this.store.get(User.USERS_KEY + record.creatorId);
+    console.log('[Core][RecordUseCase][findAndSetCreator] =======> ', {
+      result,
+    });
 
     if (!result) {
       throw new Error(`No creator found for record: "${record.creatorId}".`);
     }
 
     const creator = User.fromProperties(result.value.user);
+    console.log(
+      '[Core][RecordUseCase][findAndSetCreator] =======> Got creator: ',
+      { creator },
+    );
 
     record.setCreator(creator);
   }
@@ -233,12 +262,12 @@ export class RecordUseCase {
 
     for (const key of records) {
       const entry = await this.store.get(
-        Record.RECORDS_BY_USER_KEY(currentUserHash as string) + key
+        Record.RECORDS_BY_USER_KEY(currentUserHash as string) + key,
       );
 
       if (entry) {
         const record = Record.fromProperties(
-          entry.value.record as RecordInputDto
+          entry.value.record as RecordInputDto,
         );
         await this.findAndSetCreator(record);
 
