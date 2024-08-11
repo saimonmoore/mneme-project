@@ -1,0 +1,47 @@
+{
+  "name": "@mneme/ai",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./src/index.js",
+  "bin": "./bin/test.js",
+  "scripts": {
+    "build": "rimraf dist && yarn run tsc",
+    "watch": "tsc --watch"
+  },
+  "optionalDependencies": {
+    "bare-http1": "^3.7.0",
+    "bare-https": "^1.2.1",
+    "bare-process": "^2.2.0",
+    "bare-url": "^1.2.0"
+  },
+  "devDependencies": {
+    "eslint-config-custom": "*",
+    "prettier-config": "*",
+    "rimraf": "^3.0.2",
+    "tsconfig": "*"
+  },
+  "resolutions": {
+    "typescript": "5.4.5"
+  },
+  "imports": {
+    "http": {
+      "bare": "bare-http1",
+      "default": "http"
+    },
+    "https": {
+      "bare": "bare-https",
+      "default": "https"
+    },
+    "url": {
+      "bare": "bare-url",
+      "default": "url"
+    },
+    "process": {
+      "bare": "bare-process",
+      "default": "process"
+    }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
