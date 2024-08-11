@@ -1,5 +1,5 @@
-import https from 'https';
-import process from 'process';
+import * as https from 'https';
+import * as process from 'process';
 
 const SYSTEM_PROMPT = (n = 3) => `Extract top ${n} most relevant keywords from text. Return as a JSON array format.`;
 const API_KEY = process.env.OPENAI_API_KEY;
@@ -7,6 +7,18 @@ const API_KEY = process.env.OPENAI_API_KEY;
 if (!API_KEY) {
   throw new Error('OPENAI_API_KEY environment variable is not set');
 }
+
+type KeywordExtractionResponse = {
+  keywords: string[];
+}
+
+type OpenAIAPIResponse = {
+  choices: {
+    message: {
+      content: string;
+    }
+  }[];
+};
 
 /**
  * Wrapper function for OpenAI API chat completions with a fixed system prompt
@@ -17,11 +29,11 @@ if (!API_KEY) {
  * @throws Error if the API call fails
  */
 async function callOpenAiAPI(
-  text,
+  text = '',
   numKeywords = 3,
   model = 'gpt-4o-mini',
   options = {}
-) {
+): Promise<OpenAIAPIResponse> {
   if (!text) {
     throw new Error('text is required');
   }
@@ -81,10 +93,11 @@ async function callOpenAiAPI(
 
 export class KeywordExtraction {
   keywords = [];
-  response = null;
+  response: OpenAIAPIResponse;
   numKeywords = 3;
+  text: string;
 
-  constructor(text, numKeywords = 3) {
+  constructor(text: string, numKeywords = 3) {
     this.text = text;
     this.numKeywords = numKeywords;
   }
@@ -92,7 +105,9 @@ export class KeywordExtraction {
   async extractKeywords() {
     this.response = await callOpenAiAPI(this.text, this.numKeywords);
     const completion = this.response.choices[0].message.content;
-    this.keywords = JSON.parse(completion);
+    const parsedData = JSON.parse(completion);
+
+    this.keywords = parsedData.keywords;
 
     return this;
   }
