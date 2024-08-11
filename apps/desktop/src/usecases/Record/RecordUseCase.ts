@@ -13,6 +13,7 @@ export const useFindRecordsByTag = (tagLabel: string) => {
 
 export const useFindMyRecords = () => {
     const { data, isLoading: loading, error, refetch } = FindMyRecordsAction();
+    console.log('[useFindMyRecords] ===============> ', { data, loading, error });
 
     return {
         executeQuery: refetch,

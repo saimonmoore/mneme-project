@@ -43,7 +43,7 @@ export const Dashboard = () => {
   const records = useMnemeStore((state) => state.records);
   const addRecordToStore = useMnemeStore((state) => state.addRecord);
 
-  const { executeQuery, data, loading, error } = useFindMyRecords();
+  const { executeQuery: findAllMyRecords, data, loading, error } = useFindMyRecords();
 
   const {
     addRecord: addRecordMutation,
@@ -84,10 +84,12 @@ export const Dashboard = () => {
   }
 
   useEffect(() => {
-    if (!newUrl && search && search.length > 2 && !loading) {
-      executeQuery();
-    }
-  }, [search]);
+    // TODO: Use this when searching by tag
+    // if (!newUrl && search && search.length > 2 && !loading) {
+    //   findAllMyRecords();
+    // }
+    findAllMyRecords();
+  }, []);
 
   useEffect(() => {
     if (data) {
