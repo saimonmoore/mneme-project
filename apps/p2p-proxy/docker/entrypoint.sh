@@ -1,7 +1,15 @@
-#!/bin/bash
+#!/bin/sh
 
-usage () {
+PORT=${PORT:-49443}
+HOST=${HOST:-'0.0.0.0'}
+
+usage() {
   echo "Usage: $0 {web|job|shell <args>}"
+  echo
+  echo "web: Start dht-relay server"
+  echo "job: run any command"
+  echo "shell: exec into container...run with -it"
+  
   exit 1
 }
 
@@ -13,20 +21,21 @@ COMMAND=$1 || 'web'
 shift
 
 case "$COMMAND" in
-  web)
-    exec node ./dist/src/main
-    ;;
-  job)
+web)
+  echo "Starting dht-relay on $HOST:$PORT ..."
+  exec dht-relay --port $PORT --host $HOST --cert "$CERT_PATH" --key "$KEY_PATH"
+  ;;
+job)
+  exec $@
+  ;;
+shell)
+  if [ -z $1 ]; then
+    exec sh
+  else
     exec $@
-    ;;
-  shell)
-    if [ -z $1 ] ; then
-      exec bash
-    else
-      exec $@
-    fi
-    ;;
-  *)
-    usage
-    ;;
+  fi
+  ;;
+*)
+  usage
+  ;;
 esac

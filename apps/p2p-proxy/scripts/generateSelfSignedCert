@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# Set variables
+CERT_DIR="./certs/dev"
+DAYS_VALID=365
+SUBJECT="/C=ES/ST=CA/L=Barcelona/O=Moore/OU=Saimon/CN=MnemeRelay"
+
+# Create directory if it doesn't exist
+mkdir -p "$CERT_DIR"
+
+if [ ! -d "$CERT_DIR" ]; then
+    echo "Error: Failed to create directory $CERT_DIR"
+    exit 1
+fi
+
+# Generate private key
+openssl genrsa -out "$CERT_DIR/privkey.pem" 2048
+
+# Check if private key was generated successfully
+if [ ! -f "$CERT_DIR/privkey.pem" ]; then
+    echo "Error: Failed to generate private key"
+    exit 1
+fi
+
+# Generate CSR (Certificate Signing Request)
+openssl req -new -key "$CERT_DIR/privkey.pem" -out "$CERT_DIR/csr.pem" -subj "$SUBJECT"
+
+# Check if CSR was generated successfully
+if [ ! -f "$CERT_DIR/csr.pem" ]; then
+    echo "Error: Failed to generate CSR"
+    exit 1
+fi
+
+# Generate self-signed certificate
+openssl x509 -req -days $DAYS_VALID -in "$CERT_DIR/csr.pem" -signkey "$CERT_DIR/privkey.pem" -out "$CERT_DIR/fullchain.pem"
+
+# Check if certificate was generated successfully
+if [ ! -f "$CERT_DIR/fullchain.pem" ]; then
+    echo "Error: Failed to generate self-signed certificate"
+    exit 1
+fi
+
+# Remove CSR as it's no longer needed
+rm "$CERT_DIR/csr.pem"
+
+echo "Self-signed SSL certificate and key have been generated in $CERT_DIR"
+echo "  - Private key: $CERT_DIR/privkey.pem"
+echo "  - Certificate: $CERT_DIR/fullchain.pem"
+
+# List contents of the certificate directory
+echo "Contents of $CERT_DIR:"
+ls -l "$CERT_DIR"
+
+# Display certificate information
+echo -e "\nCertificate Information:"
+openssl x509 -in "$CERT_DIR/fullchain.pem" -text -noout
