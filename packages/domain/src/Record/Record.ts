@@ -1,4 +1,5 @@
 import { KeywordCommon, TagCommon, UserCommon } from "@mneme/domain"
+import type { Hash } from "@mneme/domain"
 
 export type RecordUrl = `http(s?)://${string}`;
 export enum RecordLanguage {
@@ -24,4 +25,5 @@ export interface RecordCommon {
   updatedAt?: Date;
   language?: RecordLanguage;
   creator?: Partial<UserCommon>;
+  creatorId?: Hash;
 };
