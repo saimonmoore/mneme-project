@@ -201,15 +201,18 @@ export class RecordUseCase {
     const record = new Record(data);
     record.setCreator(currentUser as User);
 
-    logger.info("Created record: ", { data, record });
+    logger.info("Created record: ", { data, record, currentUser });
 
-    return await this.store.appendOperation(
+    await this.store.appendOperation(
       JSON.stringify({
         type: Record.ACTIONS.CREATE,
         record: record.toProperties(),
         user: currentUser,
       })
     );
+    // TODO: Get the record from the store
+
+    return record;
   }
 
   private async findAndSetCreator(record: Record) {

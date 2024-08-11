@@ -36,8 +36,8 @@ export class Record {
   _tags: Set<Keyword>;
   createdAt: Date;
   updatedAt: Date;
-  creatorId: Hash;
-  creator: User | undefined;
+  creatorId?: Hash;
+  creator?: User;
 
   constructor({
     url,
@@ -123,6 +123,7 @@ export class Record {
       keywords: this.keywords,
       tags: this.tags,
       creator: this.creator,
+      creatorId: this.creator?.hash,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };

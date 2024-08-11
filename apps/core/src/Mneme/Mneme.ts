@@ -166,15 +166,15 @@ export class Mneme {
   }
 
   async addFriend(friend: FriendInputDto) {
-    await this.friendManager.addFriend(friend);
+    return await this.friendManager.addFriend(friend);
   }
 
   async addPrivateRecord(record: RecordInputDto) {
-    await this.privateRecordManager.addRecord(record);
+    return await this.privateRecordManager.addRecord(record);
   }
 
   async addPublicRecord(record: RecordInputDto) {
-    await this.publicRecordManager.addRecord(record);
+    return await this.publicRecordManager.addRecord(record);
   }
 
   async destroy() {

@@ -6,5 +6,4 @@ import type { Hash, RecordCommon } from '@mneme/domain';
 export type RecordInputDto = RecordCommon & {
   keywords?: KeywordInputDto[];
   tags?: TagInputDto[];
-  creatorId: Hash;
 };
