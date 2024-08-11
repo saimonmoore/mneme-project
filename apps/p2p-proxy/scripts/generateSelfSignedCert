@@ -3,7 +3,7 @@
 # Set variables
 CERT_DIR="./certs/dev"
 DAYS_VALID=365
-SUBJECT="/C=ES/ST=CA/L=Barcelona/O=Moore/OU=Saimon/CN=MnemeRelay"
+SUBJECT="/C=ES/ST=CA/L=Barcelona/O=Moore/OU=Saimon/CN=localhost"
 
 # Create directory if it doesn't exist
 mkdir -p "$CERT_DIR"

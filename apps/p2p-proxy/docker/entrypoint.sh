@@ -9,7 +9,7 @@ usage() {
   echo "web: Start dht-relay server"
   echo "job: run any command"
   echo "shell: exec into container...run with -it"
-  
+
   exit 1
 }
 
@@ -22,8 +22,14 @@ shift
 
 case "$COMMAND" in
 web)
-  echo "Starting dht-relay on $HOST:$PORT ..."
-  exec dht-relay --port $PORT --host $HOST --cert "$CERT_PATH" --key "$KEY_PATH"
+  if [ "$NODE_ENV" = "development" ]; then
+    echo "info: In development mode, dht-relay server will be insecure"
+    echo "Starting dht-relay on $HOST:$PORT ..."
+    exec dht-relay --port $PORT --host $HOST
+  else
+    echo "Starting dht-relay on $HOST:$PORT ..."
+    exec dht-relay --port $PORT --host $HOST --cert "$CERT_PATH" --key "$KEY_PATH"
+  fi
   ;;
 job)
   exec $@
