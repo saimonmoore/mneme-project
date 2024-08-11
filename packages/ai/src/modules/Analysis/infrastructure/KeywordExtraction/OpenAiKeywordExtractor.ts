@@ -1,24 +1,33 @@
 import * as https from 'https';
 import * as process from 'process';
 
-const SYSTEM_PROMPT = (n = 3) => `Extract top ${n} most relevant keywords from text. Return as a JSON array format.`;
+const SYSTEM_PROMPT = (n = 3) =>
+  `Extract top ${n} most relevant keywords from text. Return as a JSON array format.`;
 const API_KEY = process.env.OPENAI_API_KEY;
 
 if (!API_KEY) {
   throw new Error('OPENAI_API_KEY environment variable is not set');
 }
 
-type KeywordExtractionResponse = {
+export type KeywordExtractionResponse = {
   keywords: string[];
-}
+};
 
-type OpenAIAPIResponse = {
+export type OpenAIAPIResponse = {
   choices: {
     message: {
       content: string;
-    }
+    };
   }[];
 };
+
+export async function extractKeywords(text = '', numKeywords = 3) {
+  const openAIResponse = await callOpenAiAPI(text, numKeywords);
+  const completion = openAIResponse.choices[0].message.content;
+  const parsedData = JSON.parse(completion);
+
+  return parsedData.keywords;
+}
 
 /**
  * Wrapper function for OpenAI API chat completions with a fixed system prompt
@@ -32,7 +41,7 @@ async function callOpenAiAPI(
   text = '',
   numKeywords = 3,
   model = 'gpt-4o-mini',
-  options = {}
+  options = {},
 ): Promise<OpenAIAPIResponse> {
   if (!text) {
     throw new Error('text is required');
@@ -40,13 +49,13 @@ async function callOpenAiAPI(
 
   const messages = [
     { role: 'system', content: SYSTEM_PROMPT(numKeywords) },
-    { role: 'user', content: text }
+    { role: 'user', content: text },
   ];
 
   const requestBody = {
     model,
     messages,
-    response_format: { "type": "json_object" },
+    response_format: { type: 'json_object' },
     ...options,
   };
 
@@ -57,9 +66,9 @@ async function callOpenAiAPI(
     path: '/v1/chat/completions',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${API_KEY}`,
-      'Content-Length': Buffer.byteLength(JSON.stringify(requestBody))
-    }
+      Authorization: `Bearer ${API_KEY}`,
+      'Content-Length': Buffer.byteLength(JSON.stringify(requestBody)),
+    },
   };
 
   return new Promise((resolve, reject) => {
@@ -70,7 +79,11 @@ async function callOpenAiAPI(
       });
       res.on('end', () => {
         if (res.statusCode !== 200) {
-          reject(new Error(`API request failed with status ${res.statusCode}: ${data}`));
+          reject(
+            new Error(
+              `API request failed with status ${res.statusCode}: ${data}`,
+            ),
+          );
         } else {
           try {
             const parsedData = JSON.parse(data);
@@ -89,26 +102,4 @@ async function callOpenAiAPI(
     req.write(JSON.stringify(requestBody));
     req.end();
   });
-}
-
-export class KeywordExtraction {
-  keywords = [];
-  response: OpenAIAPIResponse;
-  numKeywords = 3;
-  text: string;
-
-  constructor(text: string, numKeywords = 3) {
-    this.text = text;
-    this.numKeywords = numKeywords;
-  }
-
-  async extractKeywords() {
-    this.response = await callOpenAiAPI(this.text, this.numKeywords);
-    const completion = this.response.choices[0].message.content;
-    const parsedData = JSON.parse(completion);
-
-    this.keywords = parsedData.keywords;
-
-    return this;
-  }
 }

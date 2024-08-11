@@ -8,6 +8,13 @@
     "build": "rimraf dist && yarn run tsc",
     "watch": "tsc --watch"
   },
+  "dependencies": {
+    "@microlink/mql": "^0.10.32",
+    "@types/axios": "^0.14.0",
+    "@types/cheerio": "^0.22.35",
+    "axios": "^1.7.3",
+    "cheerio": "^1.0.0"
+  },
   "optionalDependencies": {
     "bare-http1": "^3.7.0",
     "bare-https": "^1.2.1",
