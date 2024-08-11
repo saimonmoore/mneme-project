@@ -1,3 +1,4 @@
-- [ ] fix listing records
-- [ ] fix/check setting creator when creating records
+- [X] fix listing records
+- [X] fix/check setting creator when creating records
+- [ ] fix double listing records
 - [ ] switch to persistant storage
