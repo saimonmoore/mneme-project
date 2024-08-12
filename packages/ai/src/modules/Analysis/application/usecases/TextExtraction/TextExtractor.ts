@@ -25,7 +25,7 @@ export class TextExtractor {
     let contentType;
     let bodyText;
 
-    response = await agnosticFetch(this.url);
+    response = await agnosticFetch.get(this.url);
     bodyText = await response.text();
     contentType = response.headers['content-type'];
     this.extraction.type = contentType ? contentType.split(';')[0] : 'unknown';

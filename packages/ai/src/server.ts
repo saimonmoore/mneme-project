@@ -4,7 +4,6 @@ import { UrlAnalyzer } from './index.js';
 
 // Create the HTTP server
 const server = http.createServer((req, res) => {
-  console.log("[ai > server] =============> ", { url: req.url, method: req.method });
 
   if (req.method === 'OPTIONS') {
     console.log("[ai > server] =============> OPTIONS request: Setting CORS headers...");
@@ -26,7 +25,14 @@ const server = http.createServer((req, res) => {
     res.writeHead(200);
     res.end(JSON.stringify({ status: 'ok' }));
   } else if (req.url === '/ai/analyze' && req.method === 'POST') {
+    console.log("[ai > server] =============> POST: ", { url: req.url, method: req.method });
     res.setHeader('Content-Type', 'application/json');
+
+    // Set CORS headers
+    res.setHeader('Access-Control-Allow-Origin', '*'); // Allow all origins
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE'); // Allowed methods
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allowed headers
+    res.setHeader('Access-Control-Max-Age', '86400'); // Cache preflight response for 24 hours
 
     let body = '';
     req.on('data', (chunk) => {

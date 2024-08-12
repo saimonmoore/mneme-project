@@ -3,7 +3,7 @@ import axios from 'axios';
 type FetchOptions = {
   method?: string;
   body?: any;
-  headers?: Record<string, string>;
+  headers?: Record<string, any>;
   responseType?: string;
   credentials?: string;
 };
@@ -20,15 +20,28 @@ type FetchResponse = {
 
 type AxiosConfig = {
   headers?: Record<string, string>;
+  body?: any;
   withCredentials?: boolean;
 };
 
-export const agnosticFetch = async (
+export const agnosticFetch = {
+  get: async (url: string, options: FetchOptions = {}): Promise<FetchResponse> => {
+    const response = await fetchAPIAxiosWrapper(url, 'get', options);
+    return response;
+  },
+  post: async (url: string, options: FetchOptions = {}): Promise<FetchResponse> => {
+    const response = await fetchAPIAxiosWrapper(url, 'post', options);
+    return response;
+  },
+};
+
+const fetchAPIAxiosWrapper = async (
   url: string,
+  method = 'get',
   options: FetchOptions = {},
 ): Promise<FetchResponse> => {
-  // Convert the 'fetch' options to 'axios' options
-  const axiosConfig: AxiosConfig = {
+
+  let axiosConfig: AxiosConfig = {
     headers: options.headers,
   };
 
@@ -38,7 +51,8 @@ export const agnosticFetch = async (
   }
 
   try {
-    const response = await axios.get(url, axiosConfig);
+    // @ts-ignore
+    const response = await callAxios(url, method, options.body, axiosConfig);
 
     // Mimic the fetch API Response object
     const fetchResponse = {
@@ -47,9 +61,10 @@ export const agnosticFetch = async (
       statusText: response.statusText,
       headers: response.headers as Record<string, string>,
       url,
-      text: () => Promise.resolve(response.data),
-      json: () => Promise.resolve(JSON.stringify(response.data)),
+      text: async () => response.data,
+      json: async () => response.data,
     };
+
     return fetchResponse;
   } catch (error: any) {
     // Mimic the fetch API behavior on error
@@ -65,4 +80,15 @@ export const agnosticFetch = async (
       return Promise.reject(error.message);
     }
   }
+};
+
+const callAxios = async (url: string, method = 'get', body: any, options: AxiosConfig = {}): Promise<any> => {
+    switch (method) {
+        case 'get':
+            return axios.get(url, options);
+        case 'post':
+            return axios.post(url, body, options);
+        default:
+            throw new Error(`Unsupported method: ${method}`);
+        }
 };
