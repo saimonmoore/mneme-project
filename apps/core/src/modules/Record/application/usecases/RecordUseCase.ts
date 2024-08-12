@@ -14,6 +14,7 @@ import { sha256 } from '@/infrastructure/helpers/hash.js';
 const logger = Logger.getInstance();
 
 import type { RecordInputDto } from '@/modules/Record/domain/dtos/RecordInputDto.js';
+import type { AddRecordDto } from '@/modules/Record/domain/dtos/AddRecordDto.js';
 
 export interface RecordCreateOperation {
   type: 'createRecord';
@@ -146,9 +147,10 @@ export class RecordUseCase {
   // /userHash/keywords/keywordHash
 
   @sessionRequired
-  async addRecord(data: RecordInputDto) {
+  async addRecord(data: AddRecordDto) {
     const currentUser = this.session.loggedInUser();
 
+    // @ts-expect-error
     const record = new Record(data);
     record.setCreator(currentUser as User);
 

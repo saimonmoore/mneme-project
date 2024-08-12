@@ -10,7 +10,7 @@ import { UserUseCase } from "@/modules/User/application/usecases/UserUseCase.js"
 import { FriendUseCase } from "@/modules/Friend/application/usecases/FriendUseCase.js";
 import { RecordUseCase } from "@/modules/Record/application/usecases/RecordUseCase.js";
 import { UserInputDto } from "@/modules/User/domain/dtos/UserInputDto.js";
-import { RecordInputDto } from "@/modules/Record/domain/dtos/RecordInputDto.js";
+import { AddRecordDto } from "@/modules/Record/domain/dtos/AddRecordDto.js";
 import { SessionUseCase } from "@/modules/Session/application/usecases/SessionUseCase/index.js";
 import { FriendInputDto } from "@/modules/Friend/domain/dtos";
 
@@ -169,11 +169,11 @@ export class Mneme {
     return await this.friendManager.addFriend(friend);
   }
 
-  async addPrivateRecord(record: RecordInputDto) {
+  async addPrivateRecord(record: AddRecordDto) {
     return await this.privateRecordManager.addRecord(record);
   }
 
-  async addPublicRecord(record: RecordInputDto) {
+  async addPublicRecord(record: AddRecordDto) {
     return await this.publicRecordManager.addRecord(record);
   }
 
