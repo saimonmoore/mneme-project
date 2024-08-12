@@ -1,5 +1,9 @@
 # dht-relay
 
+## TODO
+
+- [ ] Expose AI package via simple express server
+
 ## Building
 
 For development:

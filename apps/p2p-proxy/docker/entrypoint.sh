@@ -1,12 +1,13 @@
 #!/bin/sh
 
-PORT=${PORT:-49443}
+RELAY_PORT=${RELAY_PORT:-49443}
+HTTP_PORT=${HTTP_PORT:-443}
 HOST=${HOST:-'0.0.0.0'}
 
 usage() {
-  echo "Usage: $0 {web|job|shell <args>}"
+  echo "Usage: $0 {supervisor|job|shell <args>}"
   echo
-  echo "web: Start dht-relay server"
+  echo "supervisor: Start supervisord"
   echo "job: run any command"
   echo "shell: exec into container...run with -it"
 
@@ -21,15 +22,9 @@ COMMAND=$1 || 'web'
 shift
 
 case "$COMMAND" in
-web)
-  if [ "$NODE_ENV" = "development" ]; then
-    echo "info: In development mode, dht-relay server will be insecure"
-    echo "Starting dht-relay on $HOST:$PORT ..."
-    exec dht-relay --port $PORT --host $HOST
-  else
-    echo "Starting dht-relay on $HOST:$PORT ..."
-    exec dht-relay --port $PORT --host $HOST --cert "$CERT_PATH" --key "$KEY_PATH"
-  fi
+supervisor)
+  echo "Starting supervisord..."
+  exec /usr/bin/supervisord -c /etc/supervisord.conf
   ;;
 job)
   exec $@
