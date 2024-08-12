@@ -63,5 +63,5 @@ export const request = async <T>(
     return { error: 'Invalid request', cause: response.status };
   }
 
-  return { data: response.json() as T };
+  return { data: await response.json() as T };
 };

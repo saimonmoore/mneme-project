@@ -207,30 +207,6 @@ export class Mneme {
     yield* this.publicRecordManager.myRecordsForKeyword(keyword);
   }
 
-  async *myTags() {
-    yield* this.privateRecordManager.myTags();
-  }
-
-  async *myPublicTags() {
-    yield* this.publicRecordManager.myTags();
-  }
-
-  async *myTagsByLabel(text: string) {
-    yield* this.privateRecordManager.myTagsByLabel(text);
-  }
-
-  async *myPublicTagsByLabel(text: string) {
-    yield* this.publicRecordManager.myTagsByLabel(text);
-  }
-
-  async *myRecordsForTag(tag: string) {
-    yield* this.privateRecordManager.myRecordsForTag(tag);
-  }
-
-  async *myPublicRecordsForTag(tag: string) {
-    yield* this.publicRecordManager.myRecordsForTag(tag);
-  }
-
   async *myRecords() {
     yield* this.privateRecordManager.myRecords();
   }

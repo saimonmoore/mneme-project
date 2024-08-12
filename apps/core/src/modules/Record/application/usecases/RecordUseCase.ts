@@ -2,10 +2,10 @@ import { camelcase } from '@/infrastructure/helpers/camelcase.js';
 
 import { AutobeeStore } from '@/infrastructure/db/AutobeeStore/index.js';
 import { SessionUseCase } from '@/modules/Session/application/usecases/SessionUseCase/SessionUseCase.js';
+import { AnalysisUseCase } from '@/modules/AI/application/usecases/AnalysisUseCase.js';
 import { sessionRequired } from '@/modules/Session/application/decorators/sessionRequired.js';
 import { Record } from '@/modules/Record/domain/entities/Record.js';
 import { Keyword } from '@/modules/Record/domain/entities/Keyword.js';
-import { Tag } from '@/modules/Record/domain/entities/Tag.js';
 import { User } from '@/modules/User/domain/entities/User.js';
 
 import { Logger } from '@/infrastructure/logging/logger.js';
@@ -142,66 +142,7 @@ export class RecordUseCase {
     yield* this.findRecordsByKey(result.value.records);
   }
 
-  @sessionRequired
-  async *myTags() {
-    const currentUser = this.session.loggedInUser();
-    const currentUserHash = currentUser?.hash;
-
-    // @ts-ignore
-    for await (const data of await this.store.createReadStream({
-      gt: Tag.TAGS_BY_USER_KEY(currentUserHash as string),
-      lt: `${Tag.TAGS_BY_USER_KEY(currentUserHash as string)}~`,
-    })) {
-      const tag = Tag.fromProperties({
-        ...data.value.tag,
-      });
-
-      tag.records = data.value.records;
-      yield tag;
-    }
-  }
-
-  @sessionRequired
-  async *myTagsByLabel(text: string) {
-    const currentUser = this.session.loggedInUser();
-    const currentUserHash = currentUser?.hash;
-
-    // @ts-ignore
-    for await (const data of await this.store.createReadStream({
-      gte:
-        Tag.MY_TAGS_BY_LABEL_KEY(currentUserHash as string) + camelcase(text),
-      lt:
-        Tag.MY_TAGS_BY_LABEL_KEY(currentUserHash as string) +
-        camelcase(text) +
-        '~',
-      limit: 10,
-    })) {
-      yield Tag.fromProperties({
-        ...data.value.tag,
-        records: data.value.records,
-      });
-    }
-  }
-
-  @sessionRequired
-  async *myRecordsForTag(tag: string) {
-    const tagHash = sha256(tag);
-    const currentUser = this.session.loggedInUser();
-    const currentUserHash = currentUser?.hash;
-
-    const result = await this.store.get(
-      `${Tag.TAGS_BY_USER_KEY(currentUserHash as string)}${tagHash}`,
-    );
-
-    if (!result) {
-      throw new Error(`No records found for tag: "${tag}".`);
-    }
-
-    yield* this.findRecordsByKey(result.value.records);
-  }
-
   // /userHash/records/recordHash
-  // /userHash/tags/tagHash
   // /userHash/keywords/keywordHash
 
   @sessionRequired
@@ -210,6 +151,38 @@ export class RecordUseCase {
 
     const record = new Record(data);
     record.setCreator(currentUser as User);
+
+    const analysis = await AnalysisUseCase.analyse(data.url);
+
+    if (analysis?.keywords?.length) {
+      record.keywords = analysis.keywords;
+    }
+
+    if (analysis?.categorization?.title) {
+      record.title = analysis?.categorization?.title;
+    }
+
+    if (analysis?.categorization?.description) {
+      record.description = analysis?.categorization?.description;
+    }
+
+    if (analysis?.categorization?.image) {
+      record.image = analysis?.categorization?.image;
+    }
+
+    if (analysis?.categorization?.logo) {
+      record.logo = analysis?.categorization?.logo;
+    }
+
+    if (analysis?.categorization?.publisher) {
+      record.publisher = analysis?.categorization?.publisher;
+    }
+
+    if (analysis?.categorization?.language) {
+      record.language = analysis?.categorization?.language || 'en';
+    }
+
+    // TODO: Get the text from the analysis for full-text search indexing
 
     logger.info('[Core][RecordUseCase#addRecord] Created record: ', {
       data,

@@ -1,7 +1,7 @@
 import { Record } from "@/modules/Record/domain/entities/Record.js";
 import { KeywordDto } from "@/modules/Record/domain/dtos/KeywordDto.js";
 import { KeywordInputDto } from "@/modules/Record/domain/dtos/KeywordInputDto.js";
-import { TagSchema } from "@/modules/Record/domain/entities/TagSchema.js";
+import { KeywordSchema } from "@/modules/Record/domain/entities/KeywordSchema.js";
 import { sha256 } from "@/infrastructure/helpers/hash.js";
 import { User } from "@/modules/User/domain/entities/User.js";
 
@@ -46,7 +46,7 @@ export class Keyword {
   }
 
   validate() {
-    return TagSchema.parse(this.toProperties());
+    return KeywordSchema.parse(this.toProperties());
   }
 
   toProperties(): KeywordDto {

@@ -4,7 +4,6 @@ import { AutobeeIndexer } from "@/infrastructure/db/AutobeeStore/index.js";
 import { PrivateStore } from "@/infrastructure/db/stores/PrivateStore/index.js";
 import { Record } from "@/modules/Record/domain/entities/Record.js";
 import { User } from "@/modules/User/domain/entities/User.js";
-import { Tag } from "@/modules/Record/domain/entities/Tag.js";
 import { Keyword } from "@/modules/Record/domain/entities/Keyword.js";
 import { RecordInputDto } from "@/modules/Record/domain/dtos/RecordInputDto.js";
 
@@ -92,50 +91,7 @@ export class RecordIndexer implements AutobeeIndexer {
       record: record.toProperties(),
     });
 
-    await this.indexCreateTagsForRecord(batch, operation);
     await this.indexCreateKeywordsForRecord(batch, operation);
-  }
-
-  async indexCreateTagsForRecord(batch: HyperbeeBatch, operation: RecordOperations) {
-    const { record: recordData, user: userData } = operation;
-
-    if (!userData) {
-      logger.error('user is undefined');
-      return;
-    }
-
-    const user = new User(userData);
-    const record = new Record(recordData);
-
-    const tags = Array.from(record.tags || new Set([]));
-
-    await Promise.all(
-      tags.map(async (tag) => {
-        const tagsKey = Tag.TAGS_BY_USER_KEY(user.hash as string) + tag.hash;
-        const myTagsByLabelKey =
-          Tag.MY_TAGS_BY_LABEL_KEY(user.hash as string) + camelcase(tag.label);
-
-        const value = await this.privateStore.get(tagsKey);
-
-        let records = value?.value?.records;
-
-        if (records) {
-          records.push(record.hash);
-        } else {
-          records = [record.hash];
-        }
-
-        await batch.put(tagsKey, {
-          tag,
-          records,
-        });
-
-        await batch.put(myTagsByLabelKey, {
-          tag,
-          records,
-        });
-      })
-    );
   }
 
   async indexCreateKeywordsForRecord(batch: HyperbeeBatch, operation: RecordOperations) {
@@ -151,10 +107,10 @@ export class RecordIndexer implements AutobeeIndexer {
     const keywords = Array.from(record.keywords || new Set([]));
 
     await Promise.all(
-      keywords.map(async (tag) => {
-        const keywordsKey = Keyword.KEYWORDS_BY_USER_KEY(user.hash as string) + tag.hash;
+      keywords.map(async (keyword) => {
+        const keywordsKey = Keyword.KEYWORDS_BY_USER_KEY(user.hash as string) + keyword.hash;
         const myKeywordsByLabelKey =
-          Keyword.MY_KEYWORDS_BY_LABEL_KEY(user.hash as string) + camelcase(tag.label);
+          Keyword.MY_KEYWORDS_BY_LABEL_KEY(user.hash as string) + camelcase(keyword.label);
 
         const value = await this.privateStore.get(keywordsKey);
 
@@ -167,12 +123,12 @@ export class RecordIndexer implements AutobeeIndexer {
         }
 
         await batch.put(keywordsKey, {
-          tag,
+          keyword,
           records,
         });
 
         await batch.put(myKeywordsByLabelKey, {
-          tag,
+          keyword,
           records,
         });
       })

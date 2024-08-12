@@ -28,7 +28,6 @@
   },
   "dependencies": {
     "@mneme/domain": "file:../../packages/domain",
-    "@mneme/ai": "file:../../packages/ai",
     "autobase": "6.0.28",
     "b4a": "^1.6.6",
     "camelcase": "^7.0.1",
