@@ -61,10 +61,6 @@ export const RecordList = () => {
 
     const record = Record.create({
       url: newUrl,
-      language: RecordLanguage.ENGLISH,
-      type: RecordType.HTML,
-      tags: [{ label: "tag" }],
-      keywords: [{ label: "keyword" }],
     });
 
     console.log("Adding record...", { record });

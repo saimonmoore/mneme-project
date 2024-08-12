@@ -4,18 +4,16 @@ import { IsDate, IsEnum, IsNotEmpty, IsUrl, Length, validate, ValidateIf, Valida
 
 import { MINIMUM_HASH_LENGTH } from "@mneme/domain";
 import { User } from "@mneme/desktop/domain/User/User";
-import { Tag } from "@mneme/desktop/domain/Tag/Tag";
 import { Keyword } from "@mneme/desktop/domain/Keyword/Keyword";
 
 import { RecordType, RecordLanguage } from "@mneme/domain";
 import type { Hash, RecordCommon, RecordUrl } from "@mneme/domain";
 
-export type RecordInputDto = RecordCommon & {};
+export type RecordInputDto = { url: RecordUrl };
 
 export type RecordError = {
   url?: string[];
   type?: string[];
-  tags?: string[];
   keywords?: string[];
   language?: string[];
   creatorHash?: string[];
@@ -40,14 +38,25 @@ export class Record {
   @Expose()
   hash: Hash;
 
+  @Expose()
+  title: string;
+
+  @Expose()
+  description: string;
+
+  @Expose()
+  image: string;
+
+  @Expose()
+  logo: string;
+
+  @Expose()
+  publisher: string;
+
   @IsNotEmpty()
   @IsEnum(RecordLanguage)
   @Expose()
   language: RecordLanguage;
-
-  @ValidateNested()
-  @Expose()
-  tags: Set<Tag>;
 
   @ValidateNested()
   @Expose()
