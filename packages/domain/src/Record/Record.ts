@@ -1,4 +1,4 @@
-import { KeywordCommon, TagCommon, UserCommon } from "@mneme/domain"
+import { KeywordCommon, UserCommon } from "@mneme/domain"
 import type { Hash } from "@mneme/domain"
 
 export type RecordUrl = `http(s?)://${string}`;
@@ -6,21 +6,30 @@ export enum RecordLanguage {
   ENGLISH = "en",
   GREEK = "el",
   CATALAN = "ca",
-  SPANISH = "es"
+  SPANISH = "es",
+  FRENCH = "fr",
+  GERMAN = "de"
 }
 
 export enum RecordType {
   TWITTER = "twitter",
+  BLUESKY = "bsky",
   YOUTUBE = "youtube",
+  GITHUB = "github",
   HTML = "html",
   PDF = "pdf",
+  UNKNOWN = "unknown",
 }
 
 export interface RecordCommon {
   url: RecordUrl;
   type: RecordType;
+  title: string;
+  image?: string;
+  logo?: string;
+  description?: string;
+  publisher?: string;
   keywords: Partial<KeywordCommon>[];
-  tags: Partial<TagCommon>[];
   createdAt?: Date;
   updatedAt?: Date;
   language?: RecordLanguage;
