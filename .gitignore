@@ -39,3 +39,5 @@ mnemeData*
 *bak
 node_modules_local
 core_node_modules_local
+
+apps/p2p-proxy/vendor/

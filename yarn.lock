@@ -1763,24 +1763,10 @@
     url-http "~1.1.0"
     whoops "~4.1.1"
 
-"@mneme/ai@file:packages/ai":
-  version "0.0.1"
-  dependencies:
-    "@microlink/mql" "^0.10.32"
-    "@types/axios" "^0.14.0"
-    "@types/cheerio" "^0.22.35"
-    axios "^1.7.3"
-  optionalDependencies:
-    bare-http1 "^3.7.0"
-    bare-https "^1.2.1"
-    bare-process "^2.2.0"
-    bare-url "^1.2.0"
-
 "@mneme/core@file:apps/core":
   version "0.0.1"
   dependencies:
-    "@mneme/ai" "file:../../../../Library/Caches/Yarn/v6/npm-@mneme-core-0.0.1-f9392ae0-80f4-4fcb-9608-68a17423f0b9-1723394770748/node_modules/packages/ai"
-    "@mneme/domain" "file:../../../../Library/Caches/Yarn/v6/npm-@mneme-core-0.0.1-f9392ae0-80f4-4fcb-9608-68a17423f0b9-1723394770748/node_modules/packages/domain"
+    "@mneme/domain" "file:../../../../Library/Caches/Yarn/v6/npm-@mneme-core-0.0.1-7a8b5a08-631e-44c9-8cdb-68f35449ffaa-1723481465378/node_modules/packages/domain"
     autobase "6.0.28"
     b4a "^1.6.6"
     camelcase "^7.0.1"
