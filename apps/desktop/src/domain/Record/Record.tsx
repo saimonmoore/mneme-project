@@ -7,7 +7,7 @@ import { User } from "@mneme/desktop/domain/User/User";
 import { Keyword } from "@mneme/desktop/domain/Keyword/Keyword";
 
 import { RecordType, RecordLanguage } from "@mneme/domain";
-import type { Hash, RecordCommon, RecordUrl } from "@mneme/domain";
+import type { Hash, RecordUrl } from "@mneme/domain";
 
 export type RecordInputDto = { url: RecordUrl };
 
@@ -27,14 +27,13 @@ export class Record {
   @Expose()
   url: RecordUrl;
 
-  @IsNotEmpty()
-  @IsEnum(RecordType)
+  // @IsNotEmpty()
+  // @IsEnum(RecordType)
   @Expose()
   type: RecordType;
 
-  @ValidateIf(r => !!r.createdAt)
-  @IsNotEmpty()
-  @Length(MINIMUM_HASH_LENGTH)
+  // @IsNotEmpty()
+  // @Length(MINIMUM_HASH_LENGTH)
   @Expose()
   hash: Hash;
 
@@ -53,29 +52,30 @@ export class Record {
   @Expose()
   publisher: string;
 
-  @IsNotEmpty()
-  @IsEnum(RecordLanguage)
+  // @IsNotEmpty()
+  // @IsEnum(RecordLanguage)
   @Expose()
   language: RecordLanguage;
 
-  @ValidateNested()
+  // @ValidateNested()
   @Expose()
   keywords: Set<Keyword>;
 
-  @IsNotEmpty()
-  @Length(MINIMUM_HASH_LENGTH)
+  // @IsNotEmpty()
+  // @Length(MINIMUM_HASH_LENGTH)
   @Expose()
   creatorHash: Hash;
 
-  @ValidateIf(r => !!r.creatorHash)
-  @ValidateNested()
+  // @ValidateNested()
   @Expose()
   creator: User;
 
+  @ValidateIf(r => !!r.createdAt)
   @IsDate()
   @Expose()
   createdAt: Date;
 
+  @ValidateIf(r => !!r.updatedAt)
   @IsDate()
   @Expose()
   updatedAt: Date;
@@ -86,6 +86,7 @@ export class Record {
 
   async validate() {
     const errors = await validate(this, { validationError: { target: false } });
+    console.log("Record validation errors: =======+++>  ", errors);
     return errors.reduce((obj, error) => {
       obj[error.property as keyof RecordError] = Object.values(
         error.constraints ?? {}

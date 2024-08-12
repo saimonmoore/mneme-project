@@ -104,6 +104,8 @@ export const RecordList = () => {
           />
         ),
       });
+
+      console.error("Error listing records: ", addRecordError);
     }
   }, [data, error]);
 
@@ -125,6 +127,8 @@ export const RecordList = () => {
           />
         ),
       });
+
+      console.error("Error adding record: ", addRecordError);
     }
   }, [newRecord, addRecordError]);
 
