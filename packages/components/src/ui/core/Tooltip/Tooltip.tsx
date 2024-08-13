@@ -1,7 +1,10 @@
-import { Tooltip as GluestackTooltip } from "@gluestack-ui/themed";
+import { 
+  Tooltip as GluestackTooltip,
+  TooltipContent as GluestackTooltipContent,
+  TooltipText as GluestackTooltipText,
+ } from "@gluestack-ui/themed";
 import { styled } from "@gluestack-style/react";
 
-export const Tooltip = styled(GluestackTooltip, {
-  // bg: "$primary600",
-  // pt: "$6",
-});
+export const Tooltip = styled(GluestackTooltip);
+export const TooltipContent = styled(GluestackTooltipContent);
+export const TooltipText = styled(GluestackTooltipText);

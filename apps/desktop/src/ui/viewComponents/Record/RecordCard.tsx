@@ -4,8 +4,6 @@ import { Record } from '@mneme/desktop/domain/Record/Record';
 import {
   Avatar,
   AvatarImage,
-  Badge,
-  BadgeText,
   Box,
   EditIcon,
   CheckIcon,
@@ -20,6 +18,9 @@ import {
   YoutubeBadge,
   Pressable,
   useBreakpointValue,
+  Tooltip,
+  TooltipContent,
+  TooltipText,
 } from '@mneme/components';
 
 import { RecordType } from '@mneme/domain';
@@ -74,7 +75,9 @@ export const RecordCard = ({ record }: { record: Record }) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedKeyword, setSelectedKeyword] = useState('');
   const [editingKeywordIndex, setEditingKeywordIndex] = useState(-1);
-  const [updatedKeywords, setUpdatedKeywords] = useState(Array.from(keywords) || []);
+  const [updatedKeywords, setUpdatedKeywords] = useState(
+    Array.from(keywords) || [],
+  );
 
   const cardWidth = useBreakpointValue({
     base: '100%',
@@ -105,7 +108,9 @@ export const RecordCard = ({ record }: { record: Record }) => {
 
   const handleSaveKeyword = () => {
     const newKeywords = [...updatedKeywords];
-    newKeywords[editingKeywordIndex] = { label: selectedKeyword } as unknown as Keyword;
+    newKeywords[editingKeywordIndex] = {
+      label: selectedKeyword,
+    } as unknown as Keyword;
     setUpdatedKeywords(newKeywords);
     handleCloseModal();
   };
@@ -128,11 +133,22 @@ export const RecordCard = ({ record }: { record: Record }) => {
         </Box>
         <VStack alignItems="stretch" gap="$2" flex={1}>
           <HStack justifyContent="space-between" alignItems="center">
-            <Link href={url} isExternal>
-              <LinkText>
-                {title || url} ({publisher})
-              </LinkText>
-            </Link>
+            <Tooltip
+              placement="top"
+              trigger={(triggerProps) => (
+                <Link href={url} isExternal maxWidth={cardWidth} {...triggerProps}>
+                  <LinkText isTruncated>
+                    {title || url} ({publisher})
+                  </LinkText>
+                </Link>
+              )}
+            >
+              <TooltipContent>
+                <TooltipText>
+                  {`${title || url}\n${description || ''}`}
+                </TooltipText>
+              </TooltipContent>
+            </Tooltip>
             <Pressable onPress={toggleEdit}>
               {isEditing ? <CheckIcon size="sm" /> : <EditIcon size="sm" />}
             </Pressable>
