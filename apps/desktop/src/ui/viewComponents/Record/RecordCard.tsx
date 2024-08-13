@@ -1,9 +1,14 @@
 import { Record } from "@mneme/desktop/domain/Record/Record";
 
 import {
+  Avatar,
+  AvatarImage,
   Badge,
+  BadgeIcon,
   BadgeText,
   Box,
+  EditIcon,
+  Icon,
   Image,
   Link,
   LinkText,
@@ -31,14 +36,25 @@ const iconForType = (type: RecordType) => {
       return <YoutubeBadge width="24" height="24" />;
     default:
       return <HTMLBadge width="24" height="24" />;
-    }
   }
+}
+
+const ImageWithIcon = ({ source, alt }: { source: string; alt: string }) => {
+  return (
+    <VStack>
+      <Avatar>
+      <AvatarImage source={source} alt={alt} />
+      </Avatar>
+      <Icon as={EditIcon} />
+    </VStack>
+  );
+}
 
 const Logo = ({ src, type, publisher }: { src: string; type: RecordType, publisher: string }) => {
   return (
     <Box>
-      { src && <Image source={src} alt={publisher || type} /> }
-      { !src && iconForType(type) }
+      {src && <ImageWithIcon source={src} alt={publisher || type} />}
+      {!src && iconForType(type)}
     </Box>
   );
 }
@@ -53,7 +69,7 @@ export const RecordCard = ({ record }: { record: Record }) => {
         <Link href={url} isExternal>
           <LinkText>{title || url} ({publisher})</LinkText>
         </Link>
-        <Box>{ description && <Text italic isTruncated size="sm">{description}</Text>}</Box>
+        <Box>{description && <Text italic isTruncated size="sm">{description}</Text>}</Box>
         <HStack justifyContent="flex-end" gap="$2">
           {Array.from(keywords || []).map((keyword) => (
             <Pressable key={keyword.label}>
