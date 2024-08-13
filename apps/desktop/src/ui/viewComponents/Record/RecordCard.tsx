@@ -7,6 +7,7 @@ import {
   BadgeText,
   Box,
   EditIcon,
+  CheckIcon,
   Link,
   LinkText,
   Text,
@@ -21,6 +22,7 @@ import {
 } from '@mneme/components';
 
 import { RecordType } from '@mneme/domain';
+import { useState } from 'react';
 
 const iconForType = (type: RecordType) => {
   switch (type) {
@@ -66,6 +68,7 @@ const Logo = ({
 
 export const RecordCard = ({ record }: { record: Record }) => {
   const { description, logo, url, title, keywords, type, publisher } = record;
+  const [isEditing, setIsEditing] = useState(false);
 
   const cardWidth = useBreakpointValue({
     base: '100%',
@@ -74,6 +77,10 @@ export const RecordCard = ({ record }: { record: Record }) => {
     lg: '90%',
     xl: '90%',
   });
+
+  const toggleEdit = () => {
+    setIsEditing(!isEditing);
+  };
 
   return (
     <HStack
@@ -97,8 +104,8 @@ export const RecordCard = ({ record }: { record: Record }) => {
               {title || url} ({publisher})
             </LinkText>
           </Link>
-          <Pressable>
-            <EditIcon size="sm" />
+          <Pressable onPress={toggleEdit}>
+            {isEditing ? <CheckIcon size="sm" /> : <EditIcon size="sm" />}
           </Pressable>
         </HStack>
         <Box>
@@ -115,7 +122,7 @@ export const RecordCard = ({ record }: { record: Record }) => {
                 size="sm"
                 action="success"
                 borderRadius="$full"
-                variant="outline"
+                variant={isEditing ? "outline" : "solid"}
                 key={keyword.label}
               >
                 <BadgeText>{keyword.label}</BadgeText>
