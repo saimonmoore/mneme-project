@@ -18,6 +18,6 @@ export const RecordSchema = z.object({
   publisher: z.string().nullish(),
   language: z.string().nullish(),
   creatorId: z.string().nullish(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  createdAt: z.date().nullish(),
+  updatedAt: z.date().nullish(),
 });

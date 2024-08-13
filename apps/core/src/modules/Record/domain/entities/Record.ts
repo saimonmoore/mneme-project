@@ -68,8 +68,6 @@ export class Record {
 
     this.createdAt = new Date();
     this.updatedAt = new Date();
-
-    this.validate();
   }
 
   setCreator(user: User) {

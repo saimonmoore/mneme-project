@@ -184,6 +184,8 @@ export class RecordUseCase {
       record.language = analysis?.categorization?.language || 'en';
     }
 
+    record.validate();
+
     // TODO: Get the text from the analysis for full-text search indexing
 
     logger.info('[Core][RecordUseCase#addRecord] Created record: ', {
