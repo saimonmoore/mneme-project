@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 import {
   AddIcon,
@@ -6,7 +6,6 @@ import {
   Button,
   ButtonText,
   ButtonIcon,
-  Heading,
   HStack,
   Icon,
   Input,
@@ -17,33 +16,39 @@ import {
   Spinner,
   useToast,
   VStack,
-} from "@mneme/components";
+  useBreakpointValue,
+} from '@mneme/components';
 
-import { RecordCard } from "@mneme/desktop/ui/viewComponents/Record/RecordCard";
+import { RecordCard } from '@mneme/desktop/ui/viewComponents/Record/RecordCard';
 import {
   Notification,
   NotificationType,
-} from "@mneme/desktop/ui/viewComponents/Notification/Notification";
+} from '@mneme/desktop/ui/viewComponents/Notification/Notification';
 
-import { Record } from "@mneme/desktop/domain/Record/Record";
+import { Record } from '@mneme/desktop/domain/Record/Record';
 import {
   useFindMyRecords,
   useAddRecord,
-} from "@mneme/desktop/usecases/Record/RecordUseCase";
-import { RecordLanguage, RecordType, type RecordUrl } from "@mneme/domain";
+} from '@mneme/desktop/usecases/Record/RecordUseCase';
+import { type RecordUrl } from '@mneme/domain';
 
-import { useMnemeStore } from "@mneme/desktop/store";
+// import { useMnemeStore } from '@mneme/desktop/store';
 
 export const RecordList = () => {
   const toast = useToast();
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [newUrl, setNewUrl] = useState<RecordUrl | undefined>(undefined);
   const [searchResults, setSearchResults] = useState<Record[]>([]);
 
-  const records = useMnemeStore((state) => state.records);
-  const addRecordToStore = useMnemeStore((state) => state.addRecord);
+  // const records = useMnemeStore((state) => state.records);
+  // const addRecordToStore = useMnemeStore((state) => state.addRecord);
 
-  const { executeQuery: findAllMyRecords, data, loading, error } = useFindMyRecords();
+  const {
+    executeQuery: findAllMyRecords,
+    data,
+    loading,
+    error,
+  } = useFindMyRecords();
 
   const {
     addRecord: addRecordMutation,
@@ -51,6 +56,14 @@ export const RecordList = () => {
     loading: addRecordLoading,
     error: addRecordError,
   } = useAddRecord();
+
+  const containerWidth = useBreakpointValue({
+    base: '$full',
+    sm: '$full',
+    md: '$3/4',
+    lg: '$2/3',
+    xl: '$1/2',
+  });
 
   function handleKeyPress() {
     addRecord();
@@ -63,10 +76,10 @@ export const RecordList = () => {
       url: newUrl,
     });
 
-    console.log("Adding record...", { record });
+    console.log('Adding record...', { record });
     addRecordMutation(record);
     setNewUrl(undefined);
-    setSearch("");
+    setSearch('');
   }
 
   function handleSearch(termOrUrl: string) {
@@ -80,10 +93,6 @@ export const RecordList = () => {
   }
 
   useEffect(() => {
-    // TODO: Use this when searching by tag
-    // if (!newUrl && search && search.length > 2 && !loading) {
-    //   findAllMyRecords();
-    // }
     findAllMyRecords();
   }, []);
 
@@ -94,7 +103,7 @@ export const RecordList = () => {
 
     if (error) {
       toast.show({
-        placement: "top",
+        placement: 'top',
         render: ({ id }: { id: string }) => (
           <Notification
             id={id}
@@ -105,19 +114,18 @@ export const RecordList = () => {
         ),
       });
 
-      console.error("Error listing records: ", addRecordError);
+      console.error('Error listing records: ', addRecordError);
     }
   }, [data, error]);
 
   useEffect(() => {
     if (newRecord) {
-      // addRecordToStore(newRecord as Record);
       findAllMyRecords();
     }
 
     if (addRecordError) {
       toast.show({
-        placement: "top",
+        placement: 'top',
         render: ({ id }: { id: string }) => (
           <Notification
             id={id}
@@ -128,57 +136,50 @@ export const RecordList = () => {
         ),
       });
 
-      console.error("Error adding record: ", addRecordError);
+      console.error('Error adding record: ', addRecordError);
     }
   }, [newRecord, addRecordError]);
 
   return (
     <Box w="$full" alignItems="center">
-      <HStack w="$80" mb="$8">
-        <Button variant="outline" onPress={() => findAllMyRecords()}>
-          <ButtonText mr="$2">Refresh</ButtonText>
-          <Spinner loading={loading}>
-            <ButtonIcon as={SearchIcon} />
-          </Spinner>
-        </Button>
-        {/* @ts-ignore */}
-        <Input mr="$4" w="$80">
-          <InputField
-            placeholder="Paste url or search term..."
-            value={search}
-            onChangeText={(term: string) => handleSearch(term)}
-            onSubmitEditing={handleKeyPress}
-          />
-          <InputSlot pr="$2">
+      <VStack w={containerWidth} space="md" px="$4">
+        <HStack mb="$8" flexWrap="wrap" justifyContent="center">
+          <Button variant="outline" onPress={() => findAllMyRecords()} mb="$2">
+            <ButtonText mr="$2">Refresh</ButtonText>
             <Spinner loading={loading}>
-              <InputIcon>
-                {!newUrl && <Icon as={SearchIcon} m="$2" w="$4" h="$4" />}
-              </InputIcon>
-            </Spinner>
-          </InputSlot>
-        </Input>
-        {(newUrl || addRecordLoading) && (
-          <Button variant="outline" onPress={() => addRecord()}>
-            <ButtonText mr="$2">Add</ButtonText>
-            <Spinner loading={addRecordLoading}>
-              <ButtonIcon as={AddIcon} />
+              <ButtonIcon as={SearchIcon} />
             </Spinner>
           </Button>
-        )}
-      </HStack>
-      <VStack>
-        {searchResults.map((record: Record, index: number) => (
-          <RecordCard record={record} key={index} />
-        ))}
+          <Input flex={1} minWidth="$64" mb="$2">
+            <InputField
+              placeholder="Paste url or search term..."
+              value={search}
+              onChangeText={(term: string) => handleSearch(term)}
+              onSubmitEditing={handleKeyPress}
+            />
+            <InputSlot pr="$2">
+              <Spinner loading={loading}>
+                <InputIcon>
+                  {!newUrl && <Icon as={SearchIcon} m="$2" w="$4" h="$4" />}
+                </InputIcon>
+              </Spinner>
+            </InputSlot>
+          </Input>
+          {(newUrl || addRecordLoading) && (
+            <Button variant="outline" onPress={() => addRecord()} mb="$2">
+              <ButtonText mr="$2">Add</ButtonText>
+              <Spinner loading={addRecordLoading}>
+                <ButtonIcon as={AddIcon} />
+              </Spinner>
+            </Button>
+          )}
+        </HStack>
+        <VStack w="$full" space="md">
+          {searchResults.map((record: Record, index: number) => (
+            <RecordCard record={record} key={index} />
+          ))}
+        </VStack>
       </VStack>
-      {/* <VStack>
-        <Heading mb="$8" italic size="md">
-          Latest Bookmarks
-        </Heading>
-        {(records ?? []).map((record: Record, index: number) => (
-          <RecordCard record={record} key={index} />
-        ))}
-      </VStack> */}
     </Box>
   );
 };

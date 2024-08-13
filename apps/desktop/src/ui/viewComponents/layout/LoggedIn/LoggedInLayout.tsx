@@ -9,6 +9,7 @@ import {
   HelpCircleIcon,
   Icon,
   useToast,
+  Box,
 } from "@mneme/components";
 import { useMnemeStore } from "@mneme/desktop/store";
 import { useLogout } from "@mneme/desktop/usecases/Session/SessionUseCase";
@@ -49,7 +50,7 @@ export const LoggedInLayout = ({ children }: { children: React.ReactNode }) => {
   }, [loggedOutRemotely, error]);
 
   return (
-    <VStack space="md">
+    <VStack space="md" bg="$backgroundLight50" height="100vh">
       <Header>
         <Header.Left>
           <Icon as={HelpCircleIcon} m="$2" w="$4" h="$4" />
