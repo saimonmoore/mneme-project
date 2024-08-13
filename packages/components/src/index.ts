@@ -1,5 +1,8 @@
 // CORE components
 
+// Hooks
+export * from './ui/hooks';
+
 // UI wrapper components
 export * from './ui/core/AlertDialog';
 export * from './ui/core/Avatar';
