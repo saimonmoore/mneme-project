@@ -1,6 +1,8 @@
 // CORE components
 
 // UI wrapper components
+export * from './ui/core/AlertDialog';
+export * from './ui/core/Avatar';
 export * from './ui/core/Badge';
 export * from './ui/core/BadgeText';
 export * from './ui/core/BadgeIcon';
@@ -17,6 +19,7 @@ export * from './ui/core/Icon';
 export * from './ui/core/Icons';
 export * from './ui/core/Image';
 export * from './ui/core/InputField';
+export * from './ui/core/Modal';
 export * from './ui/core/Link';
 export * from './ui/core/LinkText';
 export * from './ui/core/Pressable';
