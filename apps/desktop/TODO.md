@@ -1,4 +1,9 @@
 - [X] fix listing records
 - [X] fix/check setting creator when creating records
-- [ ] fix double listing records
+- [X] fix double listing records
+- [ ] core: allow updating keywords in record
+- [ ] desktop: update keyword in core after editing
+- [ ] desktop: create list by keyword page (router)
+- [ ] desktop: click keyword to visit list by keyword page
+- [ ] desktop: search by keyword shows dropdown of matching keywords
 - [ ] switch to persistant storage
