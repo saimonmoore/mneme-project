@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Record } from '@mneme/desktop/domain/Record/Record';
 
 import {
@@ -19,20 +20,11 @@ import {
   YoutubeBadge,
   Pressable,
   useBreakpointValue,
-  Modal,
-  ModalBackdrop,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  Button,
-  Input,
-  InputField,
 } from '@mneme/components';
 
-import { RecordType, type Keyword } from '@mneme/domain';
-import { useState } from 'react';
+import { RecordType } from '@mneme/domain';
+import { EditKeywordModal } from './EditKeywordModal';
+import { KeywordList } from './KeywordList';
 
 const iconForType = (type: RecordType) => {
   switch (type) {
@@ -152,57 +144,21 @@ export const RecordCard = ({ record }: { record: Record }) => {
               </Text>
             )}
           </Box>
-          <HStack justifyContent="flex-end" gap="$2">
-            {updatedKeywords.map((keyword, index) => (
-              <Pressable
-                key={index}
-                onPress={() => handleBadgeClick(keyword.label, index)}
-              >
-                <Badge
-                  size="sm"
-                  action="success"
-                  borderRadius="$full"
-                  variant={isEditing ? 'outline' : 'solid'}
-                >
-                  <BadgeText>{keyword.label}</BadgeText>
-                </Badge>
-              </Pressable>
-            ))}
-          </HStack>
+          <KeywordList
+            keywords={updatedKeywords}
+            isEditing={isEditing}
+            onKeywordClick={handleBadgeClick}
+          />
         </VStack>
       </HStack>
 
-      <Modal isOpen={showModal} onClose={handleCloseModal}>
-        <ModalBackdrop />
-        <ModalContent>
-          <ModalHeader>
-            <Text>Edit Keyword</Text>
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Input>
-              <InputField
-                value={selectedKeyword}
-                onChangeText={setSelectedKeyword}
-                placeholder="Enter keyword"
-              />
-            </Input>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              variant="outline"
-              action="secondary"
-              mr="$3"
-              onPress={handleCloseModal}
-            >
-              <Text>Cancel</Text>
-            </Button>
-            <Button action="primary" onPress={handleSaveKeyword}>
-              <Text>OK</Text>
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <EditKeywordModal
+        isOpen={showModal}
+        onClose={handleCloseModal}
+        selectedKeyword={selectedKeyword}
+        setSelectedKeyword={setSelectedKeyword}
+        onSave={handleSaveKeyword}
+      />
     </>
   );
 };
