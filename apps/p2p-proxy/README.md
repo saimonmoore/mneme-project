@@ -16,7 +16,7 @@ For development:
 
 For development:
 
-`docker run -e NODE_ENV=development -e PORT=49443 -p 49443:49443 org.saimonmoore/mneme/dht-relay:dev web`
+`docker run -e OPENAI_API_KEY=secret -e NODE_ENV=development -e HTTP_PORT=3000 -e RELAY_PORT=49443 -p 80:80 org.saimonmoore/mneme/p2p-proxy:dev supervisor`
 
 (for production, set NODE_ENV=production as env argument)
 
