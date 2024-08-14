@@ -1,5 +1,10 @@
 import { useState } from 'react';
 import { Record } from '@mneme/desktop/domain/Record/Record';
+import { Keyword } from '@mneme/desktop/domain/Keyword/Keyword';
+import { useUpdateRecord } from '@mneme/desktop/usecases/Record/RecordUseCase';
+import { KeywordInputDto } from '@mneme/core/src/modules/Record/domain/dtos/KeywordInputDto';
+import { useToast } from '@mneme/components';
+import { Notification, NotificationType } from '@mneme/desktop/ui/viewComponents/Notification/Notification';
 
 import {
   Avatar,
@@ -75,9 +80,12 @@ export const RecordCard = ({ record }: { record: Record }) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedKeyword, setSelectedKeyword] = useState('');
   const [editingKeywordIndex, setEditingKeywordIndex] = useState(-1);
-  const [updatedKeywords, setUpdatedKeywords] = useState(
+  const [updatedKeywords, setUpdatedKeywords] = useState<KeywordInputDto[]>(
     Array.from(keywords) || [],
   );
+
+  const { updateRecord, isUpdating } = useUpdateRecord();
+  const toast = useToast();
 
   const cardWidth = useBreakpointValue({
     base: '100%',
@@ -106,13 +114,30 @@ export const RecordCard = ({ record }: { record: Record }) => {
     toggleEdit();
   };
 
-  const handleSaveKeyword = () => {
+  const handleSaveKeyword = async () => {
     const newKeywords = [...updatedKeywords];
     newKeywords[editingKeywordIndex] = {
       label: selectedKeyword,
-    } as unknown as Keyword;
+    };
     setUpdatedKeywords(newKeywords);
-    handleCloseModal();
+
+    try {
+      await updateRecord(record.id, newKeywords);
+      handleCloseModal();
+    } catch (error) {
+      console.error('Error updating record:', error);
+      toast.show({
+        placement: 'top',
+        render: ({ id }: { id: string }) => (
+          <Notification
+            id={id}
+            type={NotificationType.ERROR}
+            title="Error updating record"
+            description={`There was an error updating your record! (${(error as Error).message})`}
+          />
+        ),
+      });
+    }
   };
 
   return (
@@ -161,7 +186,7 @@ export const RecordCard = ({ record }: { record: Record }) => {
             )}
           </Box>
           <KeywordList
-            keywords={updatedKeywords}
+            keywords={updatedKeywords as Keyword[]}
             isEditing={isEditing}
             onKeywordClick={handleBadgeClick}
           />
@@ -174,6 +199,7 @@ export const RecordCard = ({ record }: { record: Record }) => {
         selectedKeyword={selectedKeyword}
         setSelectedKeyword={setSelectedKeyword}
         onSave={handleSaveKeyword}
+        isUpdating={isUpdating}
       />
     </>
   );

@@ -3,8 +3,7 @@ import { Record } from '@mneme/desktop/domain/Record/Record';
 import { Mneme } from '@mneme/core';
 import { useMneme } from '@mneme/core-web';
 import type { RecordUrl } from '@mneme/domain';
-
-// import { mockRecords } from "@mneme/desktop/__mocks__/records";
+import { KeywordInputDto } from '@mneme/core/src/modules/Record/domain/dtos/KeywordInputDto';
 
 // Find records by keyword
 const findRecordsByKeyword = async (keywordLabel: string, mneme: Mneme) => {
@@ -50,7 +49,7 @@ const addRecord = async (record: Record, mneme: Mneme) => {
       url: record.url,
     });
   } catch (error: unknown) {
-    console.error('Error adding record BOOOOM', error);
+    console.error('Error adding record', error);
     throw new Error((error as Error).message);
   }
 };
@@ -60,5 +59,25 @@ export const AddRecordAction = () => {
 
   return useMutation({
     mutationFn: async (record: Record) => addRecord(record, mneme!),
+  });
+};
+
+// New function to update a record
+const updateRecord = async (key: string, updatedKeywords: KeywordInputDto | KeywordInputDto[], mneme: Mneme) => {
+  try {
+    return await mneme.updatePrivateRecord(key, updatedKeywords);
+  } catch (error: unknown) {
+    console.error('Error updating record', error);
+    throw new Error((error as Error).message);
+  }
+};
+
+// New action for updating a record
+export const UpdateRecordAction = () => {
+  const { mneme } = useMneme();
+
+  return useMutation({
+    mutationFn: async ({ key, updatedKeywords }: { key: string; updatedKeywords: KeywordInputDto | KeywordInputDto[] }) => 
+      updateRecord(key, updatedKeywords, mneme!),
   });
 };

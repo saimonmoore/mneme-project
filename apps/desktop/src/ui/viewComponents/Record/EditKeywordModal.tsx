@@ -18,6 +18,7 @@ interface EditKeywordModalProps {
   selectedKeyword: string;
   setSelectedKeyword: (keyword: string) => void;
   onSave: () => void;
+  isUpdating: boolean;
 }
 
 export function EditKeywordModal({
@@ -26,6 +27,7 @@ export function EditKeywordModal({
   selectedKeyword,
   setSelectedKeyword,
   onSave,
+  isUpdating,
 }: EditKeywordModalProps) {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -53,8 +55,8 @@ export function EditKeywordModal({
           >
             <Text>Cancel</Text>
           </Button>
-          <Button action="primary" onPress={onSave}>
-            <Text>OK</Text>
+          <Button action="primary" onPress={onSave} isDisabled={isUpdating}>
+            <Text>{isUpdating ? 'Updating...' : 'Save'}</Text>
           </Button>
         </ModalFooter>
       </ModalContent>
