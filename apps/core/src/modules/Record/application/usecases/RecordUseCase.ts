@@ -7,6 +7,7 @@ import { sessionRequired } from '@/modules/Session/application/decorators/sessio
 import { Record } from '@/modules/Record/domain/entities/Record.js';
 import { Keyword } from '@/modules/Record/domain/entities/Keyword.js';
 import { User } from '@/modules/User/domain/entities/User.js';
+import { KeywordInputDto } from '@/modules/Record/domain/dtos/KeywordInputDto.js';
 
 import { Logger } from '@/infrastructure/logging/logger.js';
 import { sha256 } from '@/infrastructure/helpers/hash.js';
@@ -206,6 +207,55 @@ export class RecordUseCase {
 
     await this.store.appendOperation(recordToPersist);
     // TODO: Get the record from the store
+
+    return record;
+  }
+
+  @sessionRequired
+  async updatePrivateRecord(key: string, updatedKeywords: KeywordInputDto | KeywordInputDto[]): Promise<void> {
+    const currentUser = this.session.loggedInUser();
+    if (!currentUser) {
+      throw new Error("User not logged in");
+    }
+
+    const record = await this.findRecordByKey(key);
+    if (!record) {
+      throw new Error("Record not found");
+    }
+
+    if (record.creatorId !== currentUser.hash) {
+      throw new Error("Unauthorized to update this record");
+    }
+
+    record.keywords = updatedKeywords;
+
+    const updateOperation = JSON.stringify({
+      type: Record.ACTIONS.UPDATE,
+      record: record.toProperties(),
+      user: currentUser,
+    });
+
+    await this.store.appendOperation(updateOperation);
+  }
+
+  private async findRecordByKey(key: string): Promise<Record | null> {
+    const currentUser = this.session.loggedInUser();
+    const currentUserHash = currentUser?.hash;
+
+    if (!currentUserHash) {
+      throw new Error("User not logged in");
+    }
+
+    const result = await this.store.get(
+      Record.RECORD_BY_USER_KEY(currentUserHash, key)
+    );
+
+    if (!result) {
+      throw new Error(`[Core][RecordUseCase#findRecordByKey] No record found for key: "${key}".`);
+    }
+
+    const record = Record.fromProperties(result.value.record as RecordInputDto);
+    await this.findAndSetCreator(record);
 
     return record;
   }

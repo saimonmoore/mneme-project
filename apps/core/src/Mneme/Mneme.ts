@@ -13,6 +13,7 @@ import { UserInputDto } from "@/modules/User/domain/dtos/UserInputDto.js";
 import { AddRecordDto } from "@/modules/Record/domain/dtos/AddRecordDto.js";
 import { SessionUseCase } from "@/modules/Session/application/usecases/SessionUseCase/index.js";
 import { FriendInputDto } from "@/modules/Friend/domain/dtos";
+import { KeywordInputDto } from "@/modules/Record/domain/dtos/KeywordInputDto.js";
 
 import type { Hash } from "@mneme/domain";
 
@@ -171,6 +172,10 @@ export class Mneme {
 
   async addPrivateRecord(record: AddRecordDto) {
     return await this.privateRecordManager.addRecord(record);
+  }
+
+  async updatePrivateRecord(hash: string, updatedKeywords: KeywordInputDto | KeywordInputDto[]) {
+    return await this.privateRecordManager.updatePrivateRecord(hash, updatedKeywords);
   }
 
   async addPublicRecord(record: AddRecordDto) {
