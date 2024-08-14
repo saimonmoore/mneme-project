@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Record } from '@mneme/desktop/domain/Record/Record';
 import { Keyword } from '@mneme/desktop/domain/Keyword/Keyword';
 import { useUpdateRecord } from '@mneme/desktop/usecases/Record/RecordUseCase';
@@ -84,7 +84,7 @@ export const RecordCard = ({ record }: { record: Record }) => {
     Array.from(keywords) || [],
   );
 
-  const { updateRecord, isUpdating } = useUpdateRecord();
+  const { updateRecord, loading: isUpdating, error: updateRecordError } = useUpdateRecord();
   const toast = useToast();
 
   const cardWidth = useBreakpointValue({
@@ -121,11 +121,12 @@ export const RecordCard = ({ record }: { record: Record }) => {
     };
     setUpdatedKeywords(newKeywords);
 
-    try {
-      await updateRecord(record.id, newKeywords);
-      handleCloseModal();
-    } catch (error) {
-      console.error('Error updating record:', error);
+    await updateRecord(record.hash, newKeywords as KeywordInputDto[]);
+    handleCloseModal();
+  };
+
+  useEffect(() => {
+    if (updateRecordError) {
       toast.show({
         placement: 'top',
         render: ({ id }: { id: string }) => (
@@ -133,12 +134,12 @@ export const RecordCard = ({ record }: { record: Record }) => {
             id={id}
             type={NotificationType.ERROR}
             title="Error updating record"
-            description={`There was an error updating your record! (${(error as Error).message})`}
+            description={`There was an error updating your record! (${(updateRecordError as Error).message})`}
           />
         ),
       });
     }
-  };
+  }, [updateRecordError]);
 
   return (
     <>
