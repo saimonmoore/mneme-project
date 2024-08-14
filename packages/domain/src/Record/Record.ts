@@ -23,6 +23,7 @@ export enum RecordType {
 
 export interface RecordCommon {
   url: RecordUrl;
+  hash?: Hash;
   type: RecordType;
   title: string;
   image?: string;

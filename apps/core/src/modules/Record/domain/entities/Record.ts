@@ -27,6 +27,7 @@ export class Record {
     DELETE: 'deleteRecord',
   };
 
+  _hash?: Hash;
   url: RecordUrl;
   title: string;
   description?: string;
@@ -42,6 +43,7 @@ export class Record {
   creator?: User;
 
   constructor({
+    hash,
     url,
     type,
     language,
@@ -53,6 +55,7 @@ export class Record {
     logo,
     publisher,
   }: RecordInputDto) {
+    this._hash = hash;
     this.url = url;
     this.type = type;
     this.creatorId = creatorId;
@@ -87,8 +90,8 @@ export class Record {
     return new Record(properties);
   }
 
-  get hash(): string {
-    return sha256(this.url);
+  get hash(): Hash {
+    return this._hash || sha256(this.url);
   }
 
   get key() {
@@ -114,6 +117,7 @@ export class Record {
   toProperties(): RecordDto {
     return {
       url: this.url,
+      hash: this.hash,
       title: this.title,
       description: this.description,
       image: this.image,

@@ -76,7 +76,7 @@ export class RecordUseCase {
 
       await this.findAndSetCreator(record);
 
-      yield record;
+      yield record.toProperties();
     }
   }
 
@@ -95,7 +95,7 @@ export class RecordUseCase {
       });
 
       keyword.records = data.value.records;
-      yield keyword;
+      yield keyword.toProperties();
     }
   }
 
@@ -120,7 +120,7 @@ export class RecordUseCase {
       });
 
       keyword.records = data.value.records;
-      yield keyword;
+      yield keyword.toProperties();
     }
   }
 
