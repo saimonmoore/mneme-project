@@ -1,9 +1,17 @@
 const jestConfig = {
-  preset: "ts-jest",
+  preset: 'ts-jest',
+  extensionsToTreatAsEsm: ['.ts'],
+  transform: {
+    '\\.[jt]sx?$': 'ts-jest',
+  },
   modulePathIgnorePatterns: ['<rootDir>/dist/'],
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1',
+    '^@/(.*)\\.js$': '<rootDir>/src/$1',
+    '^@/(.*)$': '<rootDir>/src/$1'
   },
-}
+  transformIgnorePatterns: [
+    '/node_modules/(?!@mneme)',
+  ],
+};
 
-export default jestConfig
+export default jestConfig;
