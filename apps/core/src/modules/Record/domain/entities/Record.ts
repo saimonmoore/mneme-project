@@ -8,6 +8,7 @@ import { Keyword } from '@/modules/Record/domain/entities/Keyword.js';
 
 import { RecordType, RecordLanguage } from '@mneme/domain';
 import type { Hash, RecordCommon, RecordUrl } from '@mneme/domain';
+import { ObjectSet } from '@/infrastructure/core/ObjectSet/ObjectSet';
 
 export type MnemeRecord = RecordCommon & {
   creatorHash: Hash;
@@ -16,9 +17,9 @@ export type MnemeRecord = RecordCommon & {
 
 export class Record {
   static RECORDS_KEY = 'org.mneme.records!';
-  static RECORDS_BY_USER_KEY = (userKey: string) =>
+  static RECORDS_BY_USER_KEY = (userKey: Hash) =>
     `${User.USERS_KEY}${userKey}!${Record.RECORDS_KEY}`;
-  static RECORD_BY_USER_KEY = (userKey: string, recordHash: string) =>
+  static RECORD_BY_USER_KEY = (userKey: Hash, recordHash: Hash) =>
     `${User.USERS_KEY}${userKey}!${Record.RECORDS_KEY}${recordHash}`;
 
   static ACTIONS = {
@@ -29,14 +30,14 @@ export class Record {
 
   _hash?: Hash;
   url: RecordUrl;
-  title: string;
+  title?: string;
   description?: string;
   image?: string;
   logo?: string;
   publisher?: string;
   language: RecordLanguage | undefined;
   type: RecordType;
-  _keywords: Set<Keyword>;
+  _keywords: ObjectSet<Keyword>;
   createdAt: Date;
   updatedAt: Date;
   creatorId?: Hash;
@@ -60,6 +61,7 @@ export class Record {
     this.type = type;
     this.creatorId = creatorId;
 
+    this._keywords = new ObjectSet('label');
     this.addKeywords(keywords);
 
     this.title = title;
@@ -99,11 +101,7 @@ export class Record {
   }
 
   set keywords(keywords: KeywordInputDto | KeywordInputDto[]) {
-    Array(keywords || [])
-      .flat()
-      .forEach((keyword) =>
-        this._keywords.add(Keyword.fromProperties(keyword)),
-      );
+    this.addKeywords(keywords);
   }
 
   get keywords(): Keyword[] {
@@ -133,13 +131,14 @@ export class Record {
     };
   }
 
-  private addKeywords(keywords?: KeywordInputDto[]) {
-    this._keywords = keywords
-      ? new Set(
-          keywords
-            .filter(Boolean)
-            .map((keyword) => Keyword.fromProperties(keyword)),
-        )
-      : new Set();
+  addKeywords(keywords?: KeywordInputDto | KeywordInputDto[]) {
+    if (!keywords) return;
+
+    const keywordArray = Array.isArray(keywords) ? keywords : [keywords];
+    keywordArray
+      .filter(Boolean)
+      .forEach((keyword) =>
+        this._keywords.add(Keyword.fromProperties(keyword))
+      );
   }
 }

@@ -60,10 +60,10 @@ export class RecordIndexer implements AutobeeIndexer {
     const record = new Record(recordData);
     record.setCreator(user);
 
-    const recordKey = Record.RECORD_BY_USER_KEY(user.hash as string, record.hash);
+    const recordKey = Record.RECORD_BY_USER_KEY(user.hash, record.hash);
 
     logger.info('[Core][RecordIndexer#indexCreateRecord] Preparing record: ', {
-      key: Record.RECORD_BY_USER_KEY(user.hash as string, record.hash),
+      recordKey,
       record,
       user,
       recordData,
@@ -106,49 +106,121 @@ export class RecordIndexer implements AutobeeIndexer {
 
     const keywords = Array.from(record.keywords || new Set([]));
 
+    logger.info('[Core][RecordIndexer#indexCreateKeywordsForRecord] keywords: ', {
+      keywords,
+    });
+
     await Promise.all(
       keywords.map(async (keyword) => {
-        const keywordsKey = Keyword.KEYWORDS_BY_USER_KEY(user.hash as string) + keyword.hash;
+        const keywordsKey = Keyword.KEYWORDS_BY_USER_KEY(user.hash) + keyword.hash;
         const myKeywordsByLabelKey =
-          Keyword.MY_KEYWORDS_BY_LABEL_KEY(user.hash as string) + camelcase(keyword.label);
+          Keyword.MY_KEYWORDS_BY_LABEL_KEY(user.hash) + camelcase(keyword.label);
+
+        logger.info('[Core][RecordIndexer#indexCreateKeywordsForRecord] keywordsKey: ', {
+          keywordsKey,
+          keyword,
+        });
 
         const value = await this.privateStore.get(keywordsKey);
 
+        logger.info('[Core][RecordIndexer#indexCreateKeywordsForRecord] value: ', {
+          value,
+        });
+
         let records = value?.value?.records;
 
+        logger.info('[Core][RecordIndexer#indexCreateKeywordsForRecord] existing records: ', {
+          keyword,
+          records,
+        });
+
         if (records) {
+          logger.info('[Core][RecordIndexer#indexCreateKeywordsForRecord] adding record to existing records: ', {
+            keyword,
+            hash: record.hash,
+            records,
+          });
           records.push(record.hash);
         } else {
+          logger.info('[Core][RecordIndexer#indexCreateKeywordsForRecord] creating new records: ', {
+            keyword,
+            hash: record.hash,
+            records,
+          });
           records = [record.hash];
         }
+
+        logger.info('[Core][RecordIndexer#indexCreateKeywordsForRecord] records: ', {
+          keyword,
+          records,
+        });
 
         await batch.put(keywordsKey, {
           keyword,
           records,
         });
 
+        logger.info('[Core][RecordIndexer#indexCreateKeywordsForRecord] keywordsKey: ', {
+          keyword,
+          keywordsKey,
+        });
+
         await batch.put(myKeywordsByLabelKey, {
           keyword,
           records,
+        });
+
+        logger.info('[Core][RecordIndexer#indexCreateKeywordsForRecord] myKeywordsByLabelKey: ', {
+          keyword,
+          myKeywordsByLabelKey,
         });
       })
     );
   }
 
   async indexUpdateRecord(batch: HyperbeeBatch, operation: RecordOperations) {
-    const { record: recordData } = operation;
+    const { record: recordData, user: userData } = operation;
+
+    if (!userData) {
+      logger.error('user is undefined');
+      return;
+    }
+
+    const user = new User(userData);
 
     const record = new Record(recordData);
+    record.setCreator(user);
+
+    logger.info('[Core][RecordIndexer#indexUpdateRecord] Updating record: ', {
+      recordData, operation, record, user
+    });
+
+    const recordKey = Record.RECORD_BY_USER_KEY(user.hash, record.hash);
+
+    logger.info('[Core][RecordIndexer#indexUpdateRecord] instantiated Record: ', {
+      record,
+      key: recordKey,
+      hash: record.hash,
+    });
+
     const result: RecordOperationResult = await this.privateStore.get(
-      record.key
+      recordKey
     );
+
+    logger.info('[Core][RecordIndexer#indexUpdateRecord] found record: ', {
+      result
+    });
 
     if (!result || !result.value?.record) {
       throw new EntityNotFoundError(record.constructor.name);
     }
 
+    logger.info('[Core][RecordIndexer#indexUpdateRecord] Updating record: ', {
+      record: record.toProperties(),
+    });
+
     // index by userName: index by value
-    await batch.put(record.key, {
+    await batch.put(recordKey, {
       record: record.toProperties(),
     });
   }

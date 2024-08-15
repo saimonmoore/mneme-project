@@ -174,7 +174,7 @@ export class Mneme {
     return await this.privateRecordManager.addRecord(record);
   }
 
-  async updatePrivateRecord(hash: string, updatedKeywords: KeywordInputDto | KeywordInputDto[]) {
+  async updatePrivateRecord(hash: Hash, updatedKeywords: KeywordInputDto | KeywordInputDto[]) {
     return await this.privateRecordManager.updatePrivateRecord(hash, updatedKeywords);
   }
 

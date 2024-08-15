@@ -1,3 +1,4 @@
+import type { Hash } from '@mneme/domain';
 import { camelcase } from '@/infrastructure/helpers/camelcase.js';
 
 import { AutobeeStore } from '@/infrastructure/db/AutobeeStore/index.js';
@@ -56,21 +57,19 @@ export class RecordUseCase {
 
   @sessionRequired
   async *myRecords() {
-    const currentUser = this.session.loggedInUser();
-    const currentUserHash = currentUser?.hash;
+    const currentUserHash = this.getCurrentUserHash();
 
-    console.log('[Core][RecordUseCase][*myRecords] =======> ', {
-      currentUser,
+    logger.info('[Core][RecordUseCase][*myRecords] =======> ', {
       currentUserHash,
     });
 
     // @ts-ignore
     for await (const data of await this.store.createReadStream({
-      gt: Record.RECORDS_BY_USER_KEY(currentUserHash as string),
-      lt: `${Record.RECORDS_BY_USER_KEY(currentUserHash as string)}~`,
+      gt: Record.RECORDS_BY_USER_KEY(currentUserHash),
+      lt: `${Record.RECORDS_BY_USER_KEY(currentUserHash)}~`,
     })) {
       const record = Record.fromProperties(data.value.record as RecordInputDto);
-      console.log('[Core][RecordUseCase][*myRecords] =======> iterating... ', {
+      logger.info('[Core][RecordUseCase][*myRecords] =======> iterating... ', {
         record,
       });
 
@@ -82,13 +81,12 @@ export class RecordUseCase {
 
   @sessionRequired
   async *myKeywords() {
-    const currentUser = this.session.loggedInUser();
-    const currentUserHash = currentUser?.hash;
+    const currentUserHash = this.getCurrentUserHash();
 
     // @ts-ignore
     for await (const data of await this.store.createReadStream({
-      gt: Keyword.KEYWORDS_BY_USER_KEY(currentUserHash as string),
-      lt: `${Keyword.KEYWORDS_BY_USER_KEY(currentUserHash as string)}~`,
+      gt: Keyword.KEYWORDS_BY_USER_KEY(currentUserHash),
+      lt: `${Keyword.KEYWORDS_BY_USER_KEY(currentUserHash)}~`,
     })) {
       const keyword = Keyword.fromProperties({
         ...data.value.keyword,
@@ -101,16 +99,13 @@ export class RecordUseCase {
 
   @sessionRequired
   async *myKeywordsByLabel(text: string) {
-    const currentUser = this.session.loggedInUser();
-    const currentUserHash = currentUser?.hash;
+    const currentUserHash = this.getCurrentUserHash();
 
     // @ts-ignore
     for await (const data of await this.store.createReadStream({
-      gte:
-        Keyword.MY_KEYWORDS_BY_LABEL_KEY(currentUserHash as string) +
-        camelcase(text),
+      gte: Keyword.MY_KEYWORDS_BY_LABEL_KEY(currentUserHash) + camelcase(text),
       lt:
-        Keyword.MY_KEYWORDS_BY_LABEL_KEY(currentUserHash as string) +
+        Keyword.MY_KEYWORDS_BY_LABEL_KEY(currentUserHash) +
         camelcase(text) +
         '~',
       limit: 10,
@@ -126,14 +121,11 @@ export class RecordUseCase {
 
   @sessionRequired
   async *myRecordsForKeyword(keyword: string) {
-    const currentUser = this.session.loggedInUser();
-    const currentUserHash = currentUser?.hash;
+    const currentUserHash = this.getCurrentUserHash();
     const keywordHash = sha256(keyword);
 
     const result = await this.store.get(
-      `${Keyword.KEYWORDS_BY_USER_KEY(
-        currentUserHash as string,
-      )}${keywordHash}`,
+      `${Keyword.KEYWORDS_BY_USER_KEY(currentUserHash)}${keywordHash}`,
     );
 
     if (!result) {
@@ -212,22 +204,46 @@ export class RecordUseCase {
   }
 
   @sessionRequired
-  async updatePrivateRecord(key: string, updatedKeywords: KeywordInputDto | KeywordInputDto[]): Promise<void> {
+  async updatePrivateRecord(
+    hash: Hash,
+    updatedKeywords: KeywordInputDto | KeywordInputDto[],
+  ): Promise<void> {
+    logger.info('[Core][RecordUseCase#updatePrivateRecord] Updating record: ', {
+      hash,
+      updatedKeywords,
+    });
     const currentUser = this.session.loggedInUser();
     if (!currentUser) {
-      throw new Error("User not logged in");
+      throw new Error('User not logged in');
     }
 
-    const record = await this.findRecordByKey(key);
+    const record = await this.findRecordByHash(hash);
+    logger.info(
+      '[Core][RecordUseCase#updatePrivateRecord] findRecordByHash result: ',
+      { record, hash },
+    );
     if (!record) {
-      throw new Error("Record not found");
+      throw new Error('Record not found');
     }
+
+    logger.info('[Core][RecordUseCase#updatePrivateRecord] Found record: ', {
+      record,
+      hash,
+    });
 
     if (record.creatorId !== currentUser.hash) {
-      throw new Error("Unauthorized to update this record");
+      throw new Error('Unauthorized to update this record');
     }
 
+    logger.info('[Core][RecordUseCase#updatePrivateRecord] Updating keywords: ', {
+      record,
+      updatedKeywords,
+    });
     record.keywords = updatedKeywords;
+
+    logger.info('[Core][RecordUseCase#updatePrivateRecord] Updated keywords: ', {
+      record,
+    });
 
     const updateOperation = JSON.stringify({
       type: Record.ACTIONS.UPDATE,
@@ -235,38 +251,54 @@ export class RecordUseCase {
       user: currentUser,
     });
 
+    logger.info(
+      '[Core][RecordUseCase#updatePrivateRecord] Appending updateOperation: ',
+      { updateOperation },
+    );
+
     await this.store.appendOperation(updateOperation);
   }
 
-  private async findRecordByKey(key: string): Promise<Record | null> {
-    const currentUser = this.session.loggedInUser();
-    const currentUserHash = currentUser?.hash;
+  private async findRecordByHash(hash: Hash): Promise<Record | null> {
+    const currentUserHash = this.getCurrentUserHash();
 
-    if (!currentUserHash) {
-      throw new Error("User not logged in");
-    }
+    logger.info('[Core][RecordUseCase#findRecordByHash] Finding record: ', {
+      hash,
+      key: Record.RECORD_BY_USER_KEY(currentUserHash, hash),
+    });
 
     const result = await this.store.get(
-      Record.RECORD_BY_USER_KEY(currentUserHash, key)
+      Record.RECORD_BY_USER_KEY(currentUserHash, hash),
     );
 
+    logger.info('[Core][RecordUseCase#findRecordByHash] Found record: ', {
+      result,
+    });
+
     if (!result) {
-      throw new Error(`[Core][RecordUseCase#findRecordByKey] No record found for key: "${key}".`);
+      throw new Error(
+        `[Core][RecordUseCase#findRecordByHash] No record found for hash: "${hash}".`,
+      );
     }
 
     const record = Record.fromProperties(result.value.record as RecordInputDto);
     await this.findAndSetCreator(record);
 
+    logger.info('[Core][RecordUseCase#findRecordByHash] Found record: ', {
+      record,
+      hash,
+    });
+
     return record;
   }
 
   private async findAndSetCreator(record: Record) {
-    console.log('[Core][RecordUseCase][findAndSetCreator] =======> ', {
+    logger.info('[Core][RecordUseCase][findAndSetCreator] =======> ', {
       record,
       key: User.USERS_KEY + record.creatorId,
     });
     const result = await this.store.get(User.USERS_KEY + record.creatorId);
-    console.log('[Core][RecordUseCase][findAndSetCreator] =======> ', {
+    logger.info('[Core][RecordUseCase][findAndSetCreator] =======> ', {
       result,
     });
 
@@ -275,7 +307,7 @@ export class RecordUseCase {
     }
 
     const creator = User.fromProperties(result.value.user);
-    console.log(
+    logger.info(
       '[Core][RecordUseCase][findAndSetCreator] =======> Got creator: ',
       { creator },
     );
@@ -284,12 +316,11 @@ export class RecordUseCase {
   }
 
   private async *findRecordsByKey(records: string[]) {
-    const currentUser = this.session.loggedInUser();
-    const currentUserHash = currentUser?.hash;
+    const currentUserHash = this.getCurrentUserHash();
 
     for (const key of records) {
       const entry = await this.store.get(
-        Record.RECORDS_BY_USER_KEY(currentUserHash as string) + key,
+        Record.RECORDS_BY_USER_KEY(currentUserHash) + key,
       );
 
       if (entry) {
@@ -301,5 +332,21 @@ export class RecordUseCase {
         yield record;
       }
     }
+  }
+
+  private getCurrentUserHash(): Hash {
+    const currentUser = this.session.loggedInUser();
+
+    if (!currentUser) {
+      throw new Error('User not logged in');
+    }
+
+    const currentUserHash = currentUser.hash;
+
+    if (!currentUserHash) {
+      throw new Error('Logged in User has no hash');
+    }
+
+    return currentUserHash;
   }
 }
