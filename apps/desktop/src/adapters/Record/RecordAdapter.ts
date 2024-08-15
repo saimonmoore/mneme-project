@@ -1,8 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Record } from '@mneme/desktop/domain/Record/Record';
 import { Mneme } from '@mneme/core';
+import { type Hash } from '@mneme/domain';
 import { useMneme } from '@mneme/core-web';
-import { KeywordInputDto } from '@mneme/core/src/modules/Record/domain/dtos/KeywordInputDto';
+import type { KeywordInputDto } from '@mneme/desktop/domain/Keyword/Keyword';
 
 // Find records by keyword
 const findRecordsByKeyword = async (keywordLabel: string, mneme: Mneme) => {
@@ -70,9 +71,10 @@ export const AddRecordAction = () => {
 };
 
 // New function to update a record
-const updateRecord = async (key: string, updatedKeywords: KeywordInputDto | KeywordInputDto[], mneme: Mneme) => {
+const updateRecord = async (hash: Hash, updatedKeywords: KeywordInputDto | KeywordInputDto[], mneme: Mneme) => {
   try {
-    return await mneme.updatePrivateRecord(key, updatedKeywords);
+    console.log('[Desktop:RecordAdapter#updateRecord] Updating record with keywords:', { hash, updatedKeywords });
+    return await mneme.updatePrivateRecord(hash, updatedKeywords);
   } catch (error: unknown) {
     console.error('Error updating record', error);
     throw new Error((error as Error).message);
@@ -85,8 +87,8 @@ export const UpdateRecordAction = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async ({ key, updatedKeywords }: { key: string; updatedKeywords: KeywordInputDto | KeywordInputDto[] }) => 
-      updateRecord(key, updatedKeywords, mneme!),
+    mutationFn: async ({hash, updatedKeywords}: { hash: Hash, updatedKeywords: KeywordInputDto | KeywordInputDto[] }) => 
+      updateRecord(hash, updatedKeywords, mneme!),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['myRecords'] })
       queryClient.invalidateQueries({ queryKey: ['recordsByKeyword'] })

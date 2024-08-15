@@ -4,7 +4,10 @@ import { Keyword } from '@mneme/desktop/domain/Keyword/Keyword';
 import { useUpdateRecord } from '@mneme/desktop/usecases/Record/RecordUseCase';
 import { KeywordInputDto } from '@mneme/core/src/modules/Record/domain/dtos/KeywordInputDto';
 import { useToast } from '@mneme/components';
-import { Notification, NotificationType } from '@mneme/desktop/ui/viewComponents/Notification/Notification';
+import {
+  Notification,
+  NotificationType,
+} from '@mneme/desktop/ui/viewComponents/Notification/Notification';
 
 import {
   Avatar,
@@ -75,6 +78,7 @@ const Logo = ({
 };
 
 export const RecordCard = ({ record }: { record: Record }) => {
+  const toast = useToast();
   const { description, logo, url, title, keywords, type, publisher } = record;
   const [isEditing, setIsEditing] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -84,8 +88,12 @@ export const RecordCard = ({ record }: { record: Record }) => {
     Array.from(keywords) || [],
   );
 
-  const { updateRecord, loading: isUpdating, error: updateRecordError } = useUpdateRecord();
-  const toast = useToast();
+  const {
+    updateRecord: updateRecordMutation,
+    data: updatedRecord,
+    loading: isUpdating,
+    error: updateRecordError,
+  } = useUpdateRecord();
 
   const cardWidth = useBreakpointValue({
     base: '100%',
@@ -121,11 +129,19 @@ export const RecordCard = ({ record }: { record: Record }) => {
     };
     setUpdatedKeywords(newKeywords);
 
-    await updateRecord(record.hash, newKeywords as KeywordInputDto[]);
+    console.log(
+      '[Desktop:RecordCard#handleSaveKeyword] Updating record with keywords:',
+      { hash: record.hash, record, newKeywords },
+    );
+    updateRecordMutation({ hash: record.hash, updatedKeywords: newKeywords });
     handleCloseModal();
   };
 
   useEffect(() => {
+    if (updatedRecord) {
+      console.log('[Desktop:RecordCard#useEffect] =============> ', { updatedRecord });
+    }
+
     if (updateRecordError) {
       toast.show({
         placement: 'top',
@@ -134,11 +150,15 @@ export const RecordCard = ({ record }: { record: Record }) => {
             id={id}
             type={NotificationType.ERROR}
             title="Error updating record"
-            description={`There was an error updating your record! (${(updateRecordError as Error).message})`}
+            description={`There was an error updating your record! (${(updateRecordError as Error).message
+              })`}
           />
         ),
       });
+
+      console.error('[Desktop:RecordCard] Error updating record... ', { updateRecordError });
     }
+
   }, [updateRecordError]);
 
   return (
@@ -162,7 +182,12 @@ export const RecordCard = ({ record }: { record: Record }) => {
             <Tooltip
               placement="top"
               trigger={(triggerProps) => (
-                <Link href={url} isExternal maxWidth={cardWidth} {...triggerProps}>
+                <Link
+                  href={url}
+                  isExternal
+                  maxWidth={cardWidth}
+                  {...triggerProps}
+                >
                   <LinkText isTruncated>
                     {title || url} ({publisher})
                   </LinkText>
