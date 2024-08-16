@@ -4,7 +4,6 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
-  IsUrl,
   Length,
   validate,
 } from 'class-validator';
@@ -16,7 +15,6 @@ export type KeywordInputDto = KeywordCommon & {};
 
 export type KeywordError = {
   label?: string[];
-  wikiLink?: string[];
 };
 
 export class Keyword {
@@ -28,11 +26,6 @@ export class Keyword {
   label: string;
 
   @IsOptional()
-  @IsUrl()
-  @Expose()
-  wikiLink: string;
-
-  @IsNotEmpty()
   @Length(MINIMUM_HASH_LENGTH)
   @Expose()
   hash: Hash;
