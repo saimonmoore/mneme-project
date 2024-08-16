@@ -1,17 +1,5 @@
-import {
-  Modal,
-  ModalBackdrop,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  Button,
-  Input,
-  InputField,
-  Text,
-} from '@mneme/components';
 import { Keyword } from '@mneme/desktop/domain/Keyword/Keyword';
+import { KeywordModal } from './KeywordModal';
 
 interface EditKeywordModalProps {
   isOpen: boolean;
@@ -31,36 +19,15 @@ export function EditKeywordModal({
   isUpdating,
 }: EditKeywordModalProps) {
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalBackdrop />
-      <ModalContent>
-        <ModalHeader>
-          <Text>Edit Keyword</Text>
-        </ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <Input>
-            <InputField
-              value={selectedKeyword?.label}
-              onChangeText={(text) => setSelectedKeyword(Keyword.create({ hash: selectedKeyword?.hash, label: text }))}
-              placeholder="Enter keyword"
-            />
-          </Input>
-        </ModalBody>
-        <ModalFooter>
-          <Button
-            variant="outline"
-            action="secondary"
-            mr="$3"
-            onPress={onClose}
-          >
-            <Text>Cancel</Text>
-          </Button>
-          <Button action="primary" onPress={onSave} isDisabled={isUpdating}>
-            <Text>{isUpdating ? 'Updating...' : 'Save'}</Text>
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+    <KeywordModal
+      isOpen={isOpen}
+      onClose={onClose}
+      keyword={selectedKeyword}
+      setKeyword={setSelectedKeyword}
+      onSave={onSave}
+      isUpdating={isUpdating}
+      title="Edit Keyword"
+      saveButtonText="Save"
+    />
   );
 }

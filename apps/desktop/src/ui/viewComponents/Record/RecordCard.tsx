@@ -34,6 +34,7 @@ import {
 import { RecordType } from '@mneme/domain';
 import { EditKeywordModal } from './EditKeywordModal';
 import { KeywordList } from './KeywordList';
+import { AddKeywordModal } from './AddKeywordModal';
 
 const iconForType = (type: RecordType) => {
   switch (type) {
@@ -87,6 +88,8 @@ export const RecordCard = ({ record }: { record: Record }) => {
   const [updatedKeywords, setUpdatedKeywords] = useState<KeywordInputDto[]>(
     Array.from(keywords) || [],
   );
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newKeyword, setNewKeyword] = useState<Keyword | undefined>(undefined);
 
   const {
     updateRecord: updateRecordMutation,
@@ -117,7 +120,7 @@ export const RecordCard = ({ record }: { record: Record }) => {
 
   const handleCloseModal = () => {
     setShowModal(false);
-    setSelectedKeyword('');
+    setSelectedKeyword(undefined);
     setEditingKeywordIndex(-1);
     toggleEdit();
   };
@@ -135,6 +138,32 @@ export const RecordCard = ({ record }: { record: Record }) => {
     );
     updateRecordMutation({ hash: record.hash, updatedKeywords: newKeywords });
     handleCloseModal();
+  };
+
+  const handleAddKeyword = () => {
+    setShowAddModal(true);
+  };
+
+  const handleCloseAddModal = () => {
+    setShowAddModal(false);
+    setSelectedKeyword(undefined);
+    setNewKeyword(undefined);
+    setEditingKeywordIndex(-1);
+    toggleEdit();
+  };
+
+  const handleSaveNewKeyword = () => {
+    if (newKeyword && newKeyword.label.length >= 2) {
+      const newKeywords = [...updatedKeywords, newKeyword];
+      setUpdatedKeywords(newKeywords);
+
+      console.log(
+        '[Desktop:RecordCard#handleSaveNewKeyword] Adding new keyword:',
+        { hash: record.hash, record, newKeywords },
+      );
+      updateRecordMutation({ hash: record.hash, updatedKeywords: newKeywords });
+      handleCloseAddModal();
+    }
   };
 
   useEffect(() => {
@@ -215,6 +244,7 @@ export const RecordCard = ({ record }: { record: Record }) => {
             keywords={updatedKeywords as Keyword[]}
             isEditing={isEditing}
             onKeywordClick={handleBadgeClick}
+            onAddKeyword={handleAddKeyword}
           />
         </VStack>
       </HStack>
@@ -226,6 +256,14 @@ export const RecordCard = ({ record }: { record: Record }) => {
         setSelectedKeyword={setSelectedKeyword}
         onSave={handleSaveKeyword}
         isUpdating={isUpdating}
+      />
+
+      <AddKeywordModal
+        isOpen={showAddModal}
+        onClose={handleCloseAddModal}
+        setNewKeyword={setNewKeyword}
+        onSave={handleSaveNewKeyword}
+        isAdding={isUpdating}
       />
     </>
   );
