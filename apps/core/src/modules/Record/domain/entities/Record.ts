@@ -61,7 +61,7 @@ export class Record {
     this.type = type;
     this.creatorId = creatorId;
 
-    this._keywords = new ObjectSet('label');
+    this._keywords = new ObjectSet(['hash', 'label']);
     this.addKeywords(keywords);
 
     this.title = title;
@@ -94,6 +94,10 @@ export class Record {
 
   get hash(): Hash {
     return this._hash || sha256(this.url);
+  }
+
+  set hash(hash: Hash) {
+    this._hash = hash;
   }
 
   get key() {

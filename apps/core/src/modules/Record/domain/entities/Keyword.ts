@@ -1,8 +1,7 @@
-import { Record } from '@/modules/Record/domain/entities/Record.js';
 import { KeywordDto } from '@/modules/Record/domain/dtos/KeywordDto.js';
 import { KeywordInputDto } from '@/modules/Record/domain/dtos/KeywordInputDto.js';
 import { KeywordSchema } from '@/modules/Record/domain/entities/KeywordSchema.js';
-import { sha256 } from '@/infrastructure/helpers/hash.js';
+import { uuid } from '@/infrastructure/helpers/uuid.js';
 import { User } from '@/modules/User/domain/entities/User.js';
 import type { Hash } from '@mneme/domain';
 
@@ -15,23 +14,19 @@ export class Keyword {
   static MY_KEYWORDS_BY_LABEL_KEY = (userKey: Hash) =>
     `${User.USERS_KEY}${userKey}!${Keyword.KEYWORDS_BY_LABEL_KEY}!`;
 
+  hash: Hash;
   label: string;
-  wikiLink?: string;
   _records: Set<Hash>;
 
-  constructor({ label, wikiLink }: KeywordInputDto) {
-    this.label = label;
-    this.wikiLink = wikiLink;
+  constructor({ label, hash }: KeywordInputDto) {
+    this.label = label.toLowerCase();
+    this.hash = hash || uuid();
 
     this._records = new Set<Hash>();
   }
 
   static fromProperties(properties: KeywordInputDto) {
     return new Keyword(properties);
-  }
-
-  get hash(): string {
-    return sha256(this.label);
   }
 
   set records(records: Hash | Hash[]) {
@@ -47,7 +42,6 @@ export class Keyword {
   validate() {
     return KeywordSchema.parse({
       label: this.label,
-      wikiLink: this.wikiLink,
     });
   }
 
@@ -55,7 +49,6 @@ export class Keyword {
     return {
       hash: this.hash,
       label: this.label,
-      wikiLink: this.wikiLink,
     };
   }
 

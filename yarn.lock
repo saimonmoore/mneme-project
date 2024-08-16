@@ -1766,7 +1766,8 @@
 "@mneme/core@file:apps/core":
   version "0.0.1"
   dependencies:
-    "@mneme/domain" "file:../../../../Library/Caches/Yarn/v6/npm-@mneme-core-0.0.1-6d88f2cb-4755-4d9b-bd62-c08a8a407d7f-1723755994983/node_modules/packages/domain"
+    "@mneme/domain" "file:../../../../Library/Caches/Yarn/v6/npm-@mneme-core-0.0.1-fc3193d6-81b2-4a4f-9de0-6bf1818ea184-1723788245149/node_modules/packages/domain"
+    "@types/uuid" "^10.0.0"
     autobase "6.0.28"
     b4a "^1.6.6"
     camelcase "^7.0.1"
@@ -1783,6 +1784,7 @@
     random-access-memory "^6.2.1"
     reflect-metadata "^0.1.13"
     sodium-universal "^4.0.1"
+    uuid "^10.0.0"
     zod "^3.22.5"
 
 "@mneme/domain@file:packages/domain":
@@ -4071,6 +4073,11 @@
   version "4.2.5"
   resolved "https://registry.yarnpkg.com/@types/stylis/-/stylis-4.2.5.tgz#1daa6456f40959d06157698a653a9ab0a70281df"
   integrity sha512-1Xve+NMN7FWjY14vLoY5tL3BVEQ/n42YLwaqJIPYhotZ9uBHt87VceMwWQpzmdEt2TNXIorIFG+YeCUUW7RInw==
+
+"@types/uuid@^10.0.0":
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-10.0.0.tgz#e9c07fe50da0f53dc24970cca94d619ff03f6f6d"
+  integrity sha512-7gqG38EyHgyP1S+7+xomFtL+ZNHcKv6DwNaCZmJmo1vgMugyF3TCnXVg4t1uk89mLNwnLtnY3TpOpCOyp1/xHQ==
 
 "@types/validator@^13.11.8":
   version "13.11.9"
@@ -11439,6 +11446,11 @@ utils-merge@1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/utils-merge/-/utils-merge-1.0.1.tgz"
   integrity sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==
+
+uuid@^10.0.0:
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-10.0.0.tgz#5a95aa454e6e002725c79055fd42aaba30ca6294"
+  integrity sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==
 
 v8-compile-cache-lib@^3.0.1:
   version "3.0.1"

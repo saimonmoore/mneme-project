@@ -2,19 +2,29 @@ import { Keyword } from '../Keyword';
 import { KeywordInputDto } from '../../dtos/KeywordInputDto';
 
 describe('Keyword', () => {
+  const validKeywordInputWithoutHash: KeywordInputDto = {
+    label: 'Test Keyword',
+  };
+
   const validKeywordInput: KeywordInputDto = {
     label: 'Test Keyword',
-    wikiLink: 'https://en.wikipedia.org/wiki/Test',
     hash: '9936777a0bf346b4e5b19dd4cd8e67849f016683448b5316eaeafc6c8d609ca3',
   };
 
   describe('fromProperties', () => {
-    it('should create a Keyword instance from valid input', () => {
+    it('should create a Keyword instance from valid input with hash', () => {
       const keyword = Keyword.fromProperties(validKeywordInput);
       expect(keyword).toBeInstanceOf(Keyword);
       expect(keyword.label).toBe(validKeywordInput.label);
-      expect(keyword.wikiLink).toBe(validKeywordInput.wikiLink);
       expect(keyword.hash).toBe(validKeywordInput.hash);
+    });
+
+    it('should create a Keyword instance from valid input without hash', () => {
+      const keyword = Keyword.fromProperties(validKeywordInputWithoutHash);
+      expect(keyword).toBeInstanceOf(Keyword);
+      expect(keyword.label).toBe(validKeywordInputWithoutHash.label);
+      expect(keyword.hash).toBeDefined();
+      expect(keyword.hash.length).toBe(64);
     });
   });
 
@@ -30,7 +40,6 @@ describe('Keyword', () => {
       const invalidKeyword = Keyword.fromProperties({
         ...validKeywordInput,
         label: null!,
-        wikiLink: 'invalid-url',
       });
 
       try {

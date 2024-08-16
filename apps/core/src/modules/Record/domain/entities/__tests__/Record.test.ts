@@ -14,10 +14,20 @@ describe('Record', () => {
       });
     });
 
-    it('should add a single keyword', () => {
+    it('should add a single keyword without a hash', () => {
       record.keywords = { label: 'JavaScript' };
       expect(record.keywords).toHaveLength(1);
-      expect(record.keywords[0].label).toBe('JavaScript');
+      expect(record.keywords[0].label).toBe('javascript');
+      expect(record.keywords[0].hash).toBeDefined();
+      expect(record.keywords[0].hash.length).toBe(64);
+    });
+
+    it('should add a single keyword with a hash', () => {
+      const hash = '9936777a0bf346b4e5b19dd4cd8e67849f016683448b5316eaeafc6c8d609ca3';
+      record.keywords = { label: 'JavaScript', hash };
+      expect(record.keywords).toHaveLength(1);
+      expect(record.keywords[0].label).toBe('javascript');
+      expect(record.keywords[0].hash).toBe(hash);
     });
 
     it('should add multiple keywords', () => {
@@ -27,7 +37,7 @@ describe('Record', () => {
         { label: 'React' },
       ];
       expect(record.keywords).toHaveLength(3);
-      expect(record.keywords.map(k => k.label)).toEqual(['JavaScript', 'TypeScript', 'React']);
+      expect(record.keywords.map(k => k.label)).toEqual(['javascript', 'typescript', 'react']);
     });
 
     it('should not add duplicate keywords (case-insensitive)', () => {
@@ -37,7 +47,7 @@ describe('Record', () => {
         { label: 'TypeScript' },
       ];
       expect(record.keywords).toHaveLength(2);
-      expect(record.keywords.map(k => k.label)).toEqual(['JavaScript', 'TypeScript']);
+      expect(record.keywords.map(k => k.label)).toEqual(['javascript', 'typescript']);
     });
 
     it('should handle empty input', () => {
@@ -51,7 +61,7 @@ describe('Record', () => {
       record.keywords = { label: 'TypeScript' };
       record.keywords = [{ label: 'React' }, { label: 'Vue' }];
       expect(record.keywords).toHaveLength(4);
-      expect(record.keywords.map(k => k.label)).toEqual(['JavaScript', 'TypeScript', 'React', 'Vue']);
+      expect(record.keywords.map(k => k.label)).toEqual(['javascript', 'typescript', 'react', 'vue']);
     });
 
     it('should not add duplicate keywords when adding incrementally', () => {
@@ -59,20 +69,7 @@ describe('Record', () => {
       record.keywords = { label: 'TypeScript' };
       record.keywords = [{ label: 'javascript' }, { label: 'React' }];
       expect(record.keywords).toHaveLength(3);
-      expect(record.keywords.map(k => k.label)).toEqual(['JavaScript', 'TypeScript', 'React']);
-    });
-
-    it('should handle keywords with additional properties', () => {
-      const keywordsWithWikiLink: KeywordInputDto[] = [
-        { label: 'JavaScript', wikiLink: 'https://en.wikipedia.org/wiki/JavaScript' },
-        { label: 'TypeScript', wikiLink: 'https://en.wikipedia.org/wiki/TypeScript' },
-      ];
-      record.keywords = keywordsWithWikiLink;
-      expect(record.keywords).toHaveLength(2);
-      expect(record.keywords[0].label).toBe('JavaScript');
-      expect(record.keywords[0].wikiLink).toBe('https://en.wikipedia.org/wiki/JavaScript');
-      expect(record.keywords[1].label).toBe('TypeScript');
-      expect(record.keywords[1].wikiLink).toBe('https://en.wikipedia.org/wiki/TypeScript');
+      expect(record.keywords.map(k => k.label)).toEqual(['javascript', 'typescript', 'react']);
     });
   });
 });
