@@ -144,12 +144,12 @@ export const RecordList = () => {
     <Box w="$full" alignItems="center">
       <VStack w={containerWidth} space="md" px="$4">
         <HStack mb="$8" flexWrap="wrap" justifyContent="center">
-          {/* <Button variant="outline" onPress={() => findAllMyRecords()} mb="$2">
+          <Button variant="outline" onPress={() => findAllMyRecords()} mb="$2">
             <ButtonText mr="$2">Refresh</ButtonText>
             <Spinner loading={loading}>
               <ButtonIcon as={SearchIcon} />
             </Spinner>
-          </Button> */}
+          </Button>
           <Input flex={1} minWidth="$64" mb="$2">
             <InputField
               placeholder="Paste url or search term..."
