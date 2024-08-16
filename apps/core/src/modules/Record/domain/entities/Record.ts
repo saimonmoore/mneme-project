@@ -61,10 +61,7 @@ export class Record {
     this.type = type;
     this.creatorId = creatorId;
 
-    this._keywords = new UniquePairSet<Keyword>({
-      id: 'hash',
-      label: 'label',
-    });
+    this._keywords = new UniquePairSet<Keyword>(Keyword.uniqueFields);
     this.addKeywords(keywords);
 
     this.title = title;

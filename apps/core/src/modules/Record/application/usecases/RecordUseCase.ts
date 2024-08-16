@@ -8,7 +8,7 @@ import { sessionRequired } from '@/modules/Session/application/decorators/sessio
 import { Record } from '@/modules/Record/domain/entities/Record.js';
 import { Keyword } from '@/modules/Record/domain/entities/Keyword.js';
 import { User } from '@/modules/User/domain/entities/User.js';
-import { KeywordInputDto } from '@/modules/Record/domain/dtos/KeywordInputDto.js';
+import type { KeywordInputDto } from '@/modules/Record/domain/dtos/KeywordInputDto.js';
 
 import { Logger } from '@/infrastructure/logging/logger.js';
 import { sha256 } from '@/infrastructure/helpers/hash.js';

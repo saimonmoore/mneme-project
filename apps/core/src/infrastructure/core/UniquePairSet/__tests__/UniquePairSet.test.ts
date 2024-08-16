@@ -161,3 +161,119 @@ describe('UniquePairSet', () => {
     expect(set.get('test-id')).toEqual(updatedItem);
   });
 });
+
+describe('UniquePairSet difference', () => {
+  interface TestItem {
+    id: string;
+    keyword: string;
+    additionalProp?: string;
+  }
+
+  const uniqueFields: UniqueFields<TestItem> = {
+    id: 'id',
+    label: 'keyword',
+  };
+
+  test('instance method: difference should return items not present in other set', () => {
+    const set1 = new UniquePairSet<TestItem>(uniqueFields);
+    const set2 = new UniquePairSet<TestItem>(uniqueFields);
+
+    set1.add({ id: '1', keyword: 'apple' });
+    set1.add({ id: '2', keyword: 'banana' });
+    set1.add({ id: '3', keyword: 'cherry' });
+
+    set2.add({ id: '2', keyword: 'banana' });
+    set2.add({ id: '4', keyword: 'date' });
+
+    const result = set1.difference(set2);
+
+    expect(result).toHaveLength(2);
+    expect(result).toStrictEqual([
+      { id: '1', keyword: 'apple' },
+      { id: '3', keyword: 'cherry' },
+    ]);
+  });
+
+  test('instance method: difference should be case-insensitive for labels', () => {
+    const set1 = new UniquePairSet<TestItem>(uniqueFields);
+    const set2 = new UniquePairSet<TestItem>(uniqueFields);
+
+    set1.add({ id: '1', keyword: 'Apple' });
+    set1.add({ id: '2', keyword: 'Banana' });
+
+    set2.add({ id: '3', keyword: 'apple' });
+    set2.add({ id: '4', keyword: 'Cherry' });
+
+    const result = set1.difference(set2);
+
+    expect(result).toHaveLength(1);
+    expect(result).toStrictEqual([{ id: '2', keyword: 'banana' }]);
+  });
+
+  test('static method: difference should return items from first array not present in second array', () => {
+    const array1: TestItem[] = [
+      { id: '1', keyword: 'apple' },
+      { id: '2', keyword: 'banana' },
+      { id: '3', keyword: 'cherry' },
+    ];
+    const array2: TestItem[] = [
+      { id: '2', keyword: 'banana' },
+      { id: '4', keyword: 'date' },
+    ];
+
+    const result = UniquePairSet.difference(array1, array2, uniqueFields);
+
+    expect(result).toHaveLength(2);
+    expect(result).toStrictEqual([
+      { id: '1', keyword: 'apple' },
+      { id: '3', keyword: 'cherry' },
+    ]);
+  });
+
+  test('static method: difference should be case-insensitive for labels', () => {
+    const array1: TestItem[] = [
+      { id: '1', keyword: 'Apple' },
+      { id: '2', keyword: 'Banana' },
+    ];
+    const array2: TestItem[] = [
+      { id: '3', keyword: 'apple' },
+      { id: '4', keyword: 'Cherry' },
+    ];
+
+    const result = UniquePairSet.difference(array1, array2, uniqueFields);
+
+    expect(result).toHaveLength(1);
+    expect(result).toStrictEqual([{ id: '2', keyword: 'banana' }]);
+  });
+
+  test('static method: difference should handle empty arrays', () => {
+    const array: TestItem[] = [
+      { id: '1', keyword: 'apple' },
+      { id: '2', keyword: 'banana' },
+    ];
+
+    expect(UniquePairSet.difference(array, [], uniqueFields)).toEqual(array);
+    expect(UniquePairSet.difference([], array, uniqueFields)).toEqual([]);
+  });
+
+  test('static method: difference should preserve additional properties', () => {
+    const array1: TestItem[] = [
+      { id: '1', keyword: 'apple', additionalProp: 'red' },
+      { id: '2', keyword: 'banana', additionalProp: 'yellow' },
+    ];
+    const array2: TestItem[] = [
+      { id: '2', keyword: 'banana', additionalProp: 'green' },
+    ];
+
+    const result = UniquePairSet.difference(array1, array2, uniqueFields);
+
+    expect(result).toHaveLength(1);
+    expect(result).toStrictEqual([
+      {
+        id: '1',
+        keyword: 'apple',
+        additionalProp: 'red',
+      },
+    ]);
+  });
+});

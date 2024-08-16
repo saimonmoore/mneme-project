@@ -4,6 +4,7 @@ import { KeywordSchema } from '@/modules/Record/domain/entities/KeywordSchema.js
 import { uuid } from '@/infrastructure/helpers/uuid.js';
 import { User } from '@/modules/User/domain/entities/User.js';
 import type { Hash } from '@mneme/domain';
+import { UniqueFields } from '@/infrastructure/core/UniquePairSet/UniquePairSet';
 
 export class Keyword {
   static KEYWORDS_KEY = 'org.mneme.keywords';
@@ -17,6 +18,11 @@ export class Keyword {
   hash: Hash;
   label: string;
   _records: Set<Hash>;
+
+  static uniqueFields: UniqueFields<Keyword> = {
+    id: 'hash',
+    label: 'label',
+  };
 
   constructor({ label, hash }: KeywordInputDto) {
     this.label = label.toLowerCase();

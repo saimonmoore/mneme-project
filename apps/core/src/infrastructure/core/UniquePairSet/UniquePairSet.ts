@@ -113,4 +113,24 @@ export class UniquePairSet<T extends object> {
   *[Symbol.iterator](): IterableIterator<T> {
     yield* this.items.values();
   }
+
+  difference(other: UniquePairSet<T>): T[] {
+    return Array.from(this.items.values()).filter(
+      item => !other.hasLabel(String(item[this.uniqueFields.label]))
+    );
+  }
+
+  static difference<U extends object>(
+    array1: U[],
+    array2: U[],
+    uniqueFields: UniqueFields<U>
+  ): U[] {
+    const set1 = new UniquePairSet<U>(uniqueFields);
+    const set2 = new UniquePairSet<U>(uniqueFields);
+
+    array1.forEach(item => set1.add(item));
+    array2.forEach(item => set2.add(item));
+
+    return set1.difference(set2);
+  }
 }
