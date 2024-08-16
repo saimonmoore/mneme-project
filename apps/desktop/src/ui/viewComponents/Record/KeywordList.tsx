@@ -5,7 +5,7 @@ import { Keyword } from '@mneme/desktop/domain/Keyword/Keyword';
 interface KeywordListProps {
   keywords: Keyword[];
   isEditing: boolean;
-  onKeywordClick: (keyword: string, index: number) => void;
+  onKeywordClick: (keyword: Keyword, index: number) => void;
 }
 
 export function KeywordList({ keywords, isEditing, onKeywordClick }: KeywordListProps) {
@@ -16,7 +16,7 @@ export function KeywordList({ keywords, isEditing, onKeywordClick }: KeywordList
           key={index}
           label={keyword.label}
           isEditing={isEditing}
-          onPress={() => onKeywordClick(keyword.label, index)}
+          onPress={() => onKeywordClick(keyword, index)}
         />
       ))}
     </HStack>

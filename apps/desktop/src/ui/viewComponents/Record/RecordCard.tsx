@@ -82,7 +82,7 @@ export const RecordCard = ({ record }: { record: Record }) => {
   const { description, logo, url, title, keywords, type, publisher } = record;
   const [isEditing, setIsEditing] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [selectedKeyword, setSelectedKeyword] = useState('');
+  const [selectedKeyword, setSelectedKeyword] = useState<Keyword | undefined>(undefined);
   const [editingKeywordIndex, setEditingKeywordIndex] = useState(-1);
   const [updatedKeywords, setUpdatedKeywords] = useState<KeywordInputDto[]>(
     Array.from(keywords) || [],
@@ -107,7 +107,7 @@ export const RecordCard = ({ record }: { record: Record }) => {
     setIsEditing(!isEditing);
   };
 
-  const handleBadgeClick = (keyword: string, index: number) => {
+  const handleBadgeClick = (keyword: Keyword, index: number) => {
     if (isEditing) {
       setSelectedKeyword(keyword);
       setEditingKeywordIndex(index);
@@ -124,9 +124,9 @@ export const RecordCard = ({ record }: { record: Record }) => {
 
   const handleSaveKeyword = async () => {
     const newKeywords = [...updatedKeywords];
-    newKeywords[editingKeywordIndex] = {
-      label: selectedKeyword,
-    };
+    if (selectedKeyword) {
+      newKeywords[editingKeywordIndex] = selectedKeyword;
+    }
     setUpdatedKeywords(newKeywords);
 
     console.log(

@@ -1766,7 +1766,7 @@
 "@mneme/core@file:apps/core":
   version "0.0.1"
   dependencies:
-    "@mneme/domain" "file:../../../../Library/Caches/Yarn/v6/npm-@mneme-core-0.0.1-fc3193d6-81b2-4a4f-9de0-6bf1818ea184-1723788245149/node_modules/packages/domain"
+    "@mneme/domain" "file:../../../../Library/Caches/Yarn/v6/npm-@mneme-core-0.0.1-89f98b7a-0976-4381-ba1f-19c6a553afda-1723797423169/node_modules/packages/domain"
     "@types/uuid" "^10.0.0"
     autobase "6.0.28"
     b4a "^1.6.6"

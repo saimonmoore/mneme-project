@@ -11,12 +11,13 @@ import {
   InputField,
   Text,
 } from '@mneme/components';
+import { Keyword } from '@mneme/desktop/domain/Keyword/Keyword';
 
 interface EditKeywordModalProps {
   isOpen: boolean;
   onClose: () => void;
-  selectedKeyword: string;
-  setSelectedKeyword: (keyword: string) => void;
+  selectedKeyword: Keyword | undefined;
+  setSelectedKeyword: (keyword: Keyword) => void;
   onSave: () => void;
   isUpdating: boolean;
 }
@@ -40,8 +41,8 @@ export function EditKeywordModal({
         <ModalBody>
           <Input>
             <InputField
-              value={selectedKeyword}
-              onChangeText={setSelectedKeyword}
+              value={selectedKeyword?.label}
+              onChangeText={(text) => setSelectedKeyword(Keyword.create({ hash: selectedKeyword?.hash, label: text }))}
               placeholder="Enter keyword"
             />
           </Input>
