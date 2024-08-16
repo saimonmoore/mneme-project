@@ -41,12 +41,20 @@ describe('Record', () => {
     });
 
     it('should not add duplicate keywords (case-insensitive)', () => {
+
       record.keywords = [
         { label: 'JavaScript' },
-        { label: 'javascript' },
         { label: 'TypeScript' },
       ];
+
       expect(record.keywords).toHaveLength(2);
+
+      expect(() => {
+        record.keywords = [
+          { label: 'javascript' },
+        ];
+      }).toThrow(/already exists/);
+
       expect(record.keywords.map(k => k.label)).toEqual(['javascript', 'typescript']);
     });
 
@@ -64,12 +72,29 @@ describe('Record', () => {
       expect(record.keywords.map(k => k.label)).toEqual(['javascript', 'typescript', 'react', 'vue']);
     });
 
-    it('should not add duplicate keywords when adding incrementally', () => {
+    it('should update keywords', () => {
       record.keywords = { label: 'JavaScript' };
       record.keywords = { label: 'TypeScript' };
-      record.keywords = [{ label: 'javascript' }, { label: 'React' }];
-      expect(record.keywords).toHaveLength(3);
-      expect(record.keywords.map(k => k.label)).toEqual(['javascript', 'typescript', 'react']);
+      record.keywords = [{ label: 'React' }, { label: 'Vue' }];
+      expect(record.keywords).toHaveLength(4);
+      expect(record.keywords.map(k => k.label)).toEqual(['javascript', 'typescript', 'react', 'vue']);
+
+      const typescript = record.getKeywordByLabel('typescript');
+      const typescriptHash = typescript?.hash;
+      expect(typescript).toBeDefined();
+      expect(typescript?.label).toBe('typescript');
+      expect(typescriptHash).toBeDefined();
+      expect(typescriptHash?.length).toBe(64);
+
+      record.updateKeywords({...typescript, label: 'TS' });
+
+      expect(record.keywords).toHaveLength(4);
+      expect(record.keywords.map(k => k.label)).toEqual(['javascript', 'ts', 'react', 'vue']);
+
+      const ts = record.getKeywordByLabel('ts');
+      expect(ts).toBeDefined();
+      expect(ts?.label).toBe('ts');
+      expect(ts?.hash).toBe(typescriptHash);
     });
   });
 });

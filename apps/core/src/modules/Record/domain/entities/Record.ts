@@ -8,7 +8,7 @@ import { Keyword } from '@/modules/Record/domain/entities/Keyword.js';
 
 import { RecordType, RecordLanguage } from '@mneme/domain';
 import type { Hash, RecordCommon, RecordUrl } from '@mneme/domain';
-import { ObjectSet } from '@/infrastructure/core/ObjectSet/ObjectSet';
+import { UniquePairSet } from '@/infrastructure/core/UniquePairSet/UniquePairSet.js';
 
 export type MnemeRecord = RecordCommon & {
   creatorHash: Hash;
@@ -37,7 +37,7 @@ export class Record {
   publisher?: string;
   language: RecordLanguage | undefined;
   type: RecordType;
-  _keywords: ObjectSet<Keyword>;
+  _keywords: UniquePairSet<Keyword>;
   createdAt: Date;
   updatedAt: Date;
   creatorId?: Hash;
@@ -61,7 +61,10 @@ export class Record {
     this.type = type;
     this.creatorId = creatorId;
 
-    this._keywords = new ObjectSet(['hash', 'label']);
+    this._keywords = new UniquePairSet<Keyword>({
+      id: 'hash',
+      label: 'label',
+    });
     this.addKeywords(keywords);
 
     this.title = title;
@@ -112,6 +115,14 @@ export class Record {
     return Array.from(this._keywords);
   }
 
+  getKeywordByLabel(label: string): Keyword | undefined {
+    return this._keywords.getByLabel(label);
+  }
+
+  getKeywordByHash(hash: Hash): Keyword | undefined {
+    return this._keywords.get(hash);
+  }
+
   validate() {
     return RecordSchema.parse(this.toProperties());
   }
@@ -144,5 +155,14 @@ export class Record {
       .forEach((keyword) =>
         this._keywords.add(Keyword.fromProperties(keyword))
       );
+  }
+
+  updateKeywords(keywords?: KeywordInputDto | KeywordInputDto[]) {
+    if (!keywords) return;
+
+    const keywordArray = Array.isArray(keywords) ? keywords : [keywords];
+    keywordArray.forEach((keyword) =>
+      this._keywords.update(Keyword.fromProperties(keyword))
+    );
   }
 }

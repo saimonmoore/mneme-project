@@ -11,6 +11,7 @@ export class ObjectSet<T extends { [key: string]: any }> {
 
   add(element: T): this {
     const normalizedElement = this.normalizeElement(element);
+    // If the element has a matching equality key, don't add it
     if (this.hasMatchingEqualityKeys(normalizedElement)) {
       return this; // Element with matching equality keys already exists, don't add
     }

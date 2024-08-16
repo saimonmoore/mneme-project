@@ -239,7 +239,7 @@ export class RecordUseCase {
       record,
       updatedKeywords,
     });
-    record.keywords = updatedKeywords;
+    record.updateKeywords(updatedKeywords);
 
     logger.info('[Core][RecordUseCase#updatePrivateRecord] Updated keywords: ', {
       record,
