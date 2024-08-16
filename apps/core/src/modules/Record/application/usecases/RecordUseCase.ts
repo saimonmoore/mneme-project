@@ -235,11 +235,24 @@ export class RecordUseCase {
       throw new Error('Unauthorized to update this record');
     }
 
-    logger.info('[Core][RecordUseCase#updatePrivateRecord] Updating keywords: ', {
-      record,
-      updatedKeywords,
+    const keywordsToAdd = [updatedKeywords].flat().filter(
+      (keyword) => !keyword.hash
+    );
+
+    logger.info('[Core][RecordUseCase#updatePrivateRecord] Adding keywords: ', {
+      keywordsToAdd,
     });
-    record.updateKeywords(updatedKeywords);
+
+    record.addKeywords(keywordsToAdd);
+
+    const keywordsToUpdate = [updatedKeywords].flat().filter(
+      (keyword) => keyword.hash,
+    );
+
+    logger.info('[Core][RecordUseCase#updatePrivateRecord] Updating keywords: ', {
+      keywordsToUpdate,
+    });
+    record.updateKeywords(keywordsToUpdate);
 
     logger.info('[Core][RecordUseCase#updatePrivateRecord] Updated keywords: ', {
       record,
