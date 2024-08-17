@@ -8,6 +8,7 @@ import {
 } from '@mneme/components';
 import { KeywordBadge } from './KeywordBadge';
 import { Keyword } from '@mneme/desktop/domain/Keyword/Keyword';
+import { useLinkTo } from '@react-navigation/native';
 
 interface KeywordListProps {
   keywords: Keyword[];
@@ -26,14 +27,14 @@ const EditingKeywordList = ({
   <Box>
     <VStack>
       <Box flexDirection="row" flexWrap="wrap" gap="$2">
-      {keywords.map((keyword, index) => (
-        <Box key={index} width="$32" marginBottom="$2">
-          <KeywordBadge
-            label={keyword.label}
-            isEditing
-            onPressEdit={() => onKeywordClick(keyword, index)}
-            onPressDelete={() => onDeleteKeyword(keyword, index)}
-          />
+        {keywords.map((keyword, index) => (
+          <Box key={index} width="$32" marginBottom="$2">
+            <KeywordBadge
+              label={keyword.label}
+              isEditing
+              onPressEdit={() => onKeywordClick(keyword, index)}
+              onPressDelete={() => onDeleteKeyword(keyword, index)}
+            />
           </Box>
         ))}
       </Box>
@@ -54,18 +55,21 @@ const EditingKeywordList = ({
 
 const ViewingKeywordList = ({
   keywords,
-}: Pick<KeywordListProps, 'keywords'>) => (
-  <HStack justifyContent="flex-end" gap="$2" alignItems="center">
-    {keywords.map((keyword, index) => (
-      <KeywordBadge
-        key={index}
-        label={keyword.label}
-        isEditing={false}
-        onPressView={() => console.log('view', { keyword, index })}
-      />
-    ))}
-  </HStack>
-);
+}: Pick<KeywordListProps, 'keywords'>) => {
+  const linkTo = useLinkTo();
+  return (
+    <HStack justifyContent="flex-end" gap="$2" alignItems="center">
+      {keywords.map((keyword, index) => (
+        <KeywordBadge
+          key={index}
+          label={keyword.label}
+          isEditing={false}
+          onPressView={() => linkTo('/keywords/' + keyword.label)}
+        />
+      ))}
+    </HStack>
+  );
+};
 
 export function KeywordList({
   keywords,
