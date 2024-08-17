@@ -162,4 +162,11 @@ export class Record {
       this._keywords.update(Keyword.fromProperties(keyword))
     );
   }
+
+  deleteKeywords(keywords?: KeywordInputDto | KeywordInputDto[]) {
+    if (!keywords) return;
+
+    const keywordArray = Array.isArray(keywords) ? keywords : [keywords];
+    keywordArray.forEach((keyword) => this._keywords.delete(keyword.hash));
+  }
 }

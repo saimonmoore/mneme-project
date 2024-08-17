@@ -231,19 +231,19 @@ export class RecordIndexer implements AutobeeIndexer {
     const user = new User(userData);
     const record = new Record(recordData);
 
-    const newKeywords = Array.from(record.keywords || new Set([]));
+    const incomingKeywords = Array.from(record.keywords || new Set([]));
 
     logger.info(
       '[Core][RecordIndexer#indexUpdateKeywordsForRecord] keywords: ',
       {
         existingKeywords,
-        newKeywords,
+        incomingKeywords,
       },
     );
 
     const keywordsToRemove = UniquePairSet.difference(
       existingKeywords,
-      newKeywords,
+      incomingKeywords,
       Keyword.uniqueFields,
     );
 
@@ -254,7 +254,7 @@ export class RecordIndexer implements AutobeeIndexer {
       },
     );
 
-    // Remove the existing keywords from the index
+    // Remove from the index those keywords that existed in the old record but don't exist in the new record
     await Promise.all(
       keywordsToRemove.map(async (keyword) => {
         const keywordsKey =
@@ -288,7 +288,7 @@ export class RecordIndexer implements AutobeeIndexer {
 
     // Add the new keywords to the index
     await Promise.all(
-      newKeywords.map(async (keyword) => {
+      incomingKeywords.map(async (keyword) => {
         const keywordsKey =
           Keyword.KEYWORDS_BY_USER_KEY(user.hash) + keyword.hash;
         const myKeywordsByLabelKey =

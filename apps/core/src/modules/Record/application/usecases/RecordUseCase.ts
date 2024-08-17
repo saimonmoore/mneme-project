@@ -239,23 +239,41 @@ export class RecordUseCase {
       (keyword) => !keyword.hash
     );
 
-    logger.info('[Core][RecordUseCase#updatePrivateRecord] Adding keywords: ', {
-      keywordsToAdd,
-    });
-
-    record.addKeywords(keywordsToAdd);
+    const keywordsToDelete = record.keywords.filter(
+      (keyword) =>
+        ![updatedKeywords].flat().map((k) => k.hash).includes(keyword.hash),
+    );
 
     const keywordsToUpdate = [updatedKeywords].flat().filter(
       (keyword) => keyword.hash,
     );
 
-    logger.info('[Core][RecordUseCase#updatePrivateRecord] Updating keywords: ', {
+    logger.info('[Core][RecordUseCase#updatePrivateRecord] filtered keywords: ', {
+      keywordsToAdd,
+      keywordsToDelete,
       keywordsToUpdate,
     });
+
+
+    record.addKeywords(keywordsToAdd);
+
+    logger.info('[Core][RecordUseCase#updatePrivateRecord] Added keywords: ', {
+      keywordsToAdd,
+      record
+    });
+
+    record.deleteKeywords(keywordsToDelete);
+
+    logger.info('[Core][RecordUseCase#updatePrivateRecord] Deleted keywords: ', {
+      keywordsToDelete,
+      record
+    });
+
     record.updateKeywords(keywordsToUpdate);
 
     logger.info('[Core][RecordUseCase#updatePrivateRecord] Updated keywords: ', {
-      record,
+      keywordsToUpdate,
+      record
     });
 
     const updateOperation = JSON.stringify({
