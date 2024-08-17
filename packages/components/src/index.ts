@@ -13,6 +13,7 @@ export * from './ui/core/Box';
 export * from './ui/core/Button';
 export * from './ui/core/ButtonText';
 export * from './ui/core/ButtonIcon';
+export * from './ui/core/ButtonGroup';
 export * from './ui/core/Card';
 export * from './ui/core/Center';
 export * from './ui/core/FlatList';
@@ -36,6 +37,8 @@ export * from './ui/core/VirtualizedList';
 export * from './ui/core/VStack';
 
 // VIEW components
+export * from './ui/viewComponents/BadgeWithAction/BadgeWithAction';
+export * from './ui/viewComponents/ButtonWithAction/ButtonWithAction';
 export * from './ui/viewComponents/Theme/theme';
 export * from './ui/viewComponents/Theme/ThemeProvider';
 export * from './ui/viewComponents/Theme/ThemeSwitcher';

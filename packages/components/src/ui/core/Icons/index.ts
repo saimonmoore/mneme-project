@@ -2,6 +2,7 @@ export * from './AddIcon';
 export * from './ArrowRightIcon';
 export * from './ArrowLeftIcon';
 export * from './CheckIcon';
+export * from './CloseIcon';
 export * from './EditIcon';
 export * from './HelpCircleIcon';
 export * from './MoonIcon';
