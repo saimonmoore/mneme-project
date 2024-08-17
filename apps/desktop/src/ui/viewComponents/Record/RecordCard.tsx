@@ -125,7 +125,7 @@ export const RecordCard = ({ record }: { record: Record }) => {
     toggleEdit();
   };
 
-  const handleSaveKeyword = async () => {
+  const handleSaveKeyword = () => {
     const newKeywords = [...updatedKeywords];
     if (selectedKeyword) {
       newKeywords[editingKeywordIndex] = selectedKeyword;
@@ -138,6 +138,21 @@ export const RecordCard = ({ record }: { record: Record }) => {
     );
     updateRecordMutation({ hash: record.hash, updatedKeywords: newKeywords });
     handleCloseModal();
+  };
+
+  const handleDeleteKeyword = (keyword: Keyword, index: number) => {
+    const newKeywords = [...updatedKeywords];
+    if (keyword) {
+      newKeywords.splice(index, 1);
+    }
+    setUpdatedKeywords(newKeywords);
+
+    console.log(
+      '[Desktop:RecordCard#handleSaveKeyword] Deleting keyword from record:',
+      { hash: record.hash, record, newKeywords, keyword, index },
+    );
+    updateRecordMutation({ hash: record.hash, updatedKeywords: newKeywords });
+    toggleEdit();
   };
 
   const handleAddKeyword = () => {
@@ -245,6 +260,7 @@ export const RecordCard = ({ record }: { record: Record }) => {
             isEditing={isEditing}
             onKeywordClick={handleBadgeClick}
             onAddKeyword={handleAddKeyword}
+            onDeleteKeyword={handleDeleteKeyword}
           />
         </VStack>
       </HStack>

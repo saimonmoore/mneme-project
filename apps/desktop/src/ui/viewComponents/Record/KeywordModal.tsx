@@ -13,7 +13,6 @@ import {
   Text,
 } from '@mneme/components';
 import { Keyword } from '@mneme/desktop/domain/Keyword/Keyword';
-import { useState } from 'react';
 
 interface KeywordModalProps {
   isOpen: boolean;
@@ -27,8 +26,6 @@ interface KeywordModalProps {
   saveButtonText: string;
   inputValue?: string;
   isDisabled?: boolean;
-  onDelete?: () => void;
-  canDelete?: boolean;
 }
 
 export function KeywordModal({
@@ -43,23 +40,12 @@ export function KeywordModal({
   saveButtonText,
   inputValue = '',
   isDisabled = false,
-  onDelete,
-  canDelete = false,
 }: KeywordModalProps) {
-  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const primaryAction = isAdding
     ? 'Adding...'
     : isUpdating
     ? 'Updating...'
     : saveButtonText;
-
-  const handleDeleteClick = () => {
-    if (deleteConfirmation && onDelete) {
-      onDelete();
-    } else {
-      setDeleteConfirmation(true);
-    }
-  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -81,36 +67,21 @@ export function KeywordModal({
           </Input>
         </ModalBody>
         <ModalFooter>
-          <HStack justifyContent="space-between" width="100%">
-            {canDelete && (
-              <Button
-                action="secondary"
-                onPress={handleDeleteClick}
-                isDisabled={isUpdating || isDisabled}
-              >
-                <Text color="$white">
-                  {deleteConfirmation ? "Really Delete???" : "Delete!!!"}
-                </Text>
-              </Button>
-            )}
-            <HStack>
-              <Button
-                variant="outline"
-                action="secondary"
-                mr="$3"
-                onPress={onClose}
-              >
-                <Text>Cancel</Text>
-              </Button>
-              <Button
-                action="primary"
-                onPress={onSave}
-                isDisabled={isUpdating || isDisabled}
-              >
-                <Text color="$white">{primaryAction}</Text>
-              </Button>
-            </HStack>
-          </HStack>
+          <Button
+            variant="outline"
+            action="secondary"
+            mr="$3"
+            onPress={onClose}
+          >
+            <Text>Cancel</Text>
+          </Button>
+          <Button
+            action="primary"
+            onPress={onSave}
+            isDisabled={isUpdating || isDisabled}
+          >
+            <Text color="$white">{primaryAction}</Text>
+          </Button>
         </ModalFooter>
       </ModalContent>
     </Modal>

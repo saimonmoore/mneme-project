@@ -7,7 +7,6 @@ interface EditKeywordModalProps {
   selectedKeyword: Keyword | undefined;
   setSelectedKeyword: (keyword: Keyword) => void;
   onSave: () => void;
-  onDelete: () => void;
   isUpdating: boolean;
 }
 
@@ -17,7 +16,6 @@ export function EditKeywordModal({
   selectedKeyword,
   setSelectedKeyword,
   onSave,
-  onDelete,
   isUpdating,
 }: EditKeywordModalProps) {
   return (
@@ -30,8 +28,6 @@ export function EditKeywordModal({
       isUpdating={isUpdating}
       title="Edit Keyword"
       saveButtonText="Save"
-      onDelete={onDelete}
-      canDelete
     />
   );
 }

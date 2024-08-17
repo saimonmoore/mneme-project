@@ -32,6 +32,7 @@ export function AddKeywordModal({
       setKeyword={handleSetKeyword}
       onSave={() => {onSave(); setInputValue(''); }}
       isUpdating={isAdding}
+      isAdding={isAdding}
       title="Add Keyword"
       saveButtonText="Add"
       inputValue={inputValue}
