@@ -2,6 +2,7 @@ import {
   Box,
   Heading,
 } from "@mneme/components";
+import { LoggedInLayout } from '@mneme/desktop/ui/viewComponents/layout/LoggedIn/LoggedInLayout';
 
 import { RouteProp, useRoute } from '@react-navigation/native';
 
@@ -14,8 +15,10 @@ export const RecordByKeywordsPage = () => {
   const keyword = route.params?.label;
 
   return (
-    <Box w="$full" alignItems="center">
-      <Heading>{keyword}</Heading>
-    </Box>
+    <LoggedInLayout>
+      <Box w="$full" alignItems="center">
+        <Heading>{keyword}</Heading>
+      </Box>
+    </LoggedInLayout>
   );
 };

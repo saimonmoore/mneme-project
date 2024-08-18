@@ -1,14 +1,10 @@
-import {
-  Box,
-} from "@mneme/components";
-
-import { RecordList } from "@mneme/desktop/ui/viewComponents/Record/RecordList";
+import { MyRecords } from '@mneme/desktop/ui/viewComponents/Record/MyRecords';
+import { LoggedInLayout } from '@mneme/desktop/ui/viewComponents/layout/LoggedIn/LoggedInLayout';
 
 export const Dashboard = () => {
-
   return (
-    <Box w="$full" alignItems="center">
-      <RecordList />
-    </Box>
+    <LoggedInLayout>
+      <MyRecords />
+    </LoggedInLayout>
   );
 };

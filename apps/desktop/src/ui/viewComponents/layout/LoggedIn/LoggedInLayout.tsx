@@ -18,6 +18,7 @@ import {
   Notification,
   NotificationType,
 } from "@mneme/desktop/ui/viewComponents/Notification/Notification";
+import { RecordsProvider } from "@mneme/desktop/contexts/RecordsContext";
 
 export const LoggedInLayout = ({ children }: { children: React.ReactNode }) => {
   const toast = useToast();
@@ -67,7 +68,9 @@ export const LoggedInLayout = ({ children }: { children: React.ReactNode }) => {
           </HStack>
         </Header.Right>
       </Header>
-      {children}
+      <RecordsProvider>
+        {children}
+      </RecordsProvider>
     </VStack>
   );
 };
