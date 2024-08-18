@@ -256,7 +256,7 @@ export const RecordCard = ({ record }: { record: Record }) => {
             )}
           </Box>
           <KeywordList
-            keywords={updatedKeywords as Keyword[]}
+            keywords={Array.from(keywords) || []}
             isEditing={isEditing}
             onKeywordClick={handleBadgeClick}
             onAddKeyword={handleAddKeyword}

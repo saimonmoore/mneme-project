@@ -4,14 +4,15 @@ import {
   AddRecordAction,
   UpdateRecordAction,
 } from '@mneme/desktop/adapters/Record/RecordAdapter';
+import { Keyword } from '@mneme/desktop/domain/Keyword/Keyword';
 
-export const useFindRecordsByKeyword = (keywordLabel: string) => {
+export const useFindRecordsByKeyword = (keyword: Keyword) => {
   const {
     data,
     isLoading: loading,
     error,
     refetch,
-  } = FindRecordsByKeywordAction(keywordLabel);
+  } = FindRecordsByKeywordAction(keyword);
 
   return {
     executeQuery: refetch,

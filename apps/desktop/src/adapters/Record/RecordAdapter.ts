@@ -3,23 +3,23 @@ import { Record } from '@mneme/desktop/domain/Record/Record';
 import { Mneme } from '@mneme/core';
 import { type Hash } from '@mneme/domain';
 import { useMneme } from '@mneme/core-web';
-import type { KeywordInputDto } from '@mneme/desktop/domain/Keyword/Keyword';
+import type { Keyword, KeywordInputDto } from '@mneme/desktop/domain/Keyword/Keyword';
 
 // Find records by keyword
-const findRecordsByKeyword = async (keywordLabel: string, mneme: Mneme) => {
+const findRecordsByKeyword = async (keyword: Keyword, mneme: Mneme) => {
   try {
-    return await Array.fromAsync(mneme.myRecordsForKeyword(keywordLabel));
+    return await Array.fromAsync(mneme.myRecordsForKeyword(keyword));
   } catch (error: unknown) {
     throw new Error((error as Error).message);
   }
 };
 
-export const FindRecordsByKeywordAction = (keywordLabel: string) => {
+export const FindRecordsByKeywordAction = (keyword: Keyword) => {
   const { mneme } = useMneme();
 
   return useQuery({
-    queryKey: ['recordsByKeyword', keywordLabel],
-    queryFn: async () => findRecordsByKeyword(keywordLabel, mneme!),
+    queryKey: ['recordsByKeyword', keyword],
+    queryFn: async () => findRecordsByKeyword(keyword, mneme!),
     enabled: false,
   });
 };
