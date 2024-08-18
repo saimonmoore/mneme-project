@@ -16,6 +16,7 @@ import { FriendInputDto } from "@/modules/Friend/domain/dtos";
 import { KeywordInputDto } from "@/modules/Record/domain/dtos/KeywordInputDto.js";
 
 import type { Hash } from "@mneme/domain";
+import { Keyword } from "@/modules/Record/domain/entities";
 
 type MnemeListener = {
   event: string;
@@ -200,15 +201,19 @@ export class Mneme {
     yield* this.privateRecordManager.myKeywordsByLabel(text);
   }
 
+  async findKeywordByLabel(label: string) {
+    return this.privateRecordManager.findKeywordByLabel(label);
+  }
+
   async *myPublicKeywordsByLabel(text: string) {
     yield* this.publicRecordManager.myKeywordsByLabel(text);
   }
 
-  async *myRecordsForKeyword(keyword: string) {
+  async *myRecordsForKeyword(keyword: Keyword) {
     yield* this.privateRecordManager.myRecordsForKeyword(keyword);
   }
 
-  async *myPublicRecordsForKeyword(keyword: string) {
+  async *myPublicRecordsForKeyword(keyword: Keyword) {
     yield* this.publicRecordManager.myRecordsForKeyword(keyword);
   }
 

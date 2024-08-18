@@ -120,20 +120,49 @@ export class RecordUseCase {
   }
 
   @sessionRequired
-  async *myRecordsForKeyword(keyword: string) {
+  async *myRecordsForKeyword(keyword: Keyword) {
     const currentUserHash = this.getCurrentUserHash();
-    const keywordHash = sha256(keyword);
 
-    const result = await this.store.get(
-      `${Keyword.KEYWORDS_BY_USER_KEY(currentUserHash)}${keywordHash}`,
-    );
+    const keywordHash = `${Keyword.KEYWORDS_BY_USER_KEY(currentUserHash)}${keyword.hash}`;
+
+    logger.info('[Core][RecordUseCase][*myRecordsForKeyword] =======> ', {
+      keyword,
+      keywordHash,
+    });
+
+    const result = await this.store.get(keywordHash);
+
+    logger.info('[Core][RecordUseCase][*myRecordsForKeyword] =======> ', {
+      result,
+    });
 
     if (!result) {
-      logger.info('No records found for keyword: ' + keyword);
+      logger.info('[Core][RecordUseCase][*myRecordsForKeyword] No records found for keyword: ' + keyword);
       return;
     }
 
     yield* this.findRecordsByKey(result.value.records);
+  }
+
+  @sessionRequired
+  async findKeywordByLabel(label: string) {
+    const currentUserHash = this.getCurrentUserHash();
+
+    const searchKey =
+      Keyword.MY_KEYWORDS_BY_LABEL_KEY(currentUserHash) + camelcase(label);
+    const result = await this.store.get(searchKey);
+
+    if (!result) {
+      return null;
+    }
+
+    const keyword = Keyword.fromProperties({
+      ...result.value.keyword,
+    });
+
+    keyword.records = result.value.records;
+
+    return keyword.toProperties();
   }
 
   // /userHash/records/recordHash
@@ -148,9 +177,17 @@ export class RecordUseCase {
     record.setCreator(currentUser as User);
 
     const analysis = await AnalysisUseCase.analyse(data.url);
+    logger.info('[Core][RecordUseCase#addRecord] Analysis: ', {
+      analysis,
+    });
 
     if (analysis?.keywords?.length) {
       record.keywords = analysis.keywords;
+
+      logger.info('[Core][RecordUseCase#addRecord] Analysis keywords: ', {
+        keywords: analysis.keywords,
+        record,
+      });
     }
 
     if (analysis?.categorization?.title) {
@@ -235,46 +272,57 @@ export class RecordUseCase {
       throw new Error('Unauthorized to update this record');
     }
 
-    const keywordsToAdd = [updatedKeywords].flat().filter(
-      (keyword) => !keyword.hash
-    );
+    const keywordsToAdd = [updatedKeywords]
+      .flat()
+      .filter((keyword) => !keyword.hash);
 
     const keywordsToDelete = record.keywords.filter(
       (keyword) =>
-        ![updatedKeywords].flat().map((k) => k.hash).includes(keyword.hash),
+        ![updatedKeywords]
+          .flat()
+          .map((k) => k.hash)
+          .includes(keyword.hash),
     );
 
-    const keywordsToUpdate = [updatedKeywords].flat().filter(
-      (keyword) => keyword.hash,
+    const keywordsToUpdate = [updatedKeywords]
+      .flat()
+      .filter((keyword) => keyword.hash);
+
+    logger.info(
+      '[Core][RecordUseCase#updatePrivateRecord] filtered keywords: ',
+      {
+        keywordsToAdd,
+        keywordsToDelete,
+        keywordsToUpdate,
+      },
     );
-
-    logger.info('[Core][RecordUseCase#updatePrivateRecord] filtered keywords: ', {
-      keywordsToAdd,
-      keywordsToDelete,
-      keywordsToUpdate,
-    });
-
 
     record.addKeywords(keywordsToAdd);
 
     logger.info('[Core][RecordUseCase#updatePrivateRecord] Added keywords: ', {
       keywordsToAdd,
-      record
+      record,
     });
 
     record.deleteKeywords(keywordsToDelete);
 
-    logger.info('[Core][RecordUseCase#updatePrivateRecord] Deleted keywords: ', {
-      keywordsToDelete,
-      record
-    });
+    logger.info(
+      '[Core][RecordUseCase#updatePrivateRecord] Deleted keywords: ',
+      {
+        keywordsToDelete,
+        record,
+      },
+    );
 
     record.updateKeywords(keywordsToUpdate);
 
-    logger.info('[Core][RecordUseCase#updatePrivateRecord] Updated keywords: ', {
-      keywordsToUpdate,
-      record
-    });
+    logger.info(
+      '[Core][RecordUseCase#updatePrivateRecord] Updated keywords: ',
+      {
+        keywordsToUpdate,
+        record,
+      },
+    );
 
     const updateOperation = JSON.stringify({
       type: Record.ACTIONS.UPDATE,
@@ -349,16 +397,28 @@ export class RecordUseCase {
   private async *findRecordsByKey(records: string[]) {
     const currentUserHash = this.getCurrentUserHash();
 
-    for (const key of records) {
+    logger.info('[Core][RecordUseCase][findRecordsByKey] =======> ', {
+      records,
+    });
+
+    for (const hash of records) {
       const entry = await this.store.get(
-        Record.RECORDS_BY_USER_KEY(currentUserHash) + key,
+        Record.RECORDS_BY_USER_KEY(currentUserHash) + hash,
       );
+
+      logger.info('[Core][RecordUseCase][findRecordsByKey] =======> ', {
+        entry,
+      });
 
       if (entry) {
         const record = Record.fromProperties(
           entry.value.record as RecordInputDto,
         );
         await this.findAndSetCreator(record);
+
+        logger.info('[Core][RecordUseCase][findRecordsByKey] =======> ', {
+          record,
+        });
 
         yield record;
       }
